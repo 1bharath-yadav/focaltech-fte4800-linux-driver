@@ -1,0 +1,3 @@
+done: 64 runs, 0 hits
+distinct replies: [('0000 0000', 33), ('ffff ffff', 24), ('ffff 0000', 3), ('0000 ffff', 3), ('000f 0000', 1)]
+(end)

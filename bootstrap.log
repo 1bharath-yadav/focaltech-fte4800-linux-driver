@@ -1,0 +1,41 @@
+Cloning into 'upstream'...
+
+=== Upstream FTE driver ===
+57:}focal_spi_read_buff_t;
+101:static ssize_t focal_spi_read(struct focal_fp_data *fp_data,uint16_t tx_len,uint16_t rx_len)
+133:static irqreturn_t focal_spi_irq_handler(int irq, void *dev_id)
+145:static void focal_spi_power_off(struct focal_fp_data *data)
+150:static void focal_spi_power_on(struct focal_fp_data *data)
+155:static void focal_spi_reset(struct focal_fp_data *data)
+165: * focal_spi_get_gpio_config - Get GPIO config from ACPI/DT
+166: * @data: focal_spi_fp_data pointer
+168:static int focal_spi_get_gpio_config(struct focal_fp_data *data)
+190:static int focal_spi_create_touch_input(struct focal_fp_data *data)
+234:	focal_spi_read_buff_t *spi_buf=NULL;
+236:	if(count>=sizeof(focal_spi_read_buff_t)){
+242:		spi_buf=(focal_spi_read_buff_t*)ctx->fp_data->wr_buf;
+289:	status=focal_spi_read(ctx->fp_data, tx_len,rx_len);
+318:	if(count>=sizeof(focal_spi_read_buff_t)){
+329:	focal_spi_read_buff_t *spi_buf=(focal_spi_read_buff_t*)ctx->fp_data->wr_buf;
+335:	status=spi_write(ctx->fp_data->spi,ctx->fp_data->wr_buf+sizeof(focal_spi_read_buff_t),count-sizeof(focal_spi_read_buff_t));
+401:			focal_spi_reset(ctx->fp_data);break;
+403:			focal_spi_power_off(ctx->fp_data);break;
+405:			focal_spi_power_on(ctx->fp_data);break;
+429:			//focal_spi_cs_ctl(ctx->fp_data,arg);
+482:static int focal_spi_probe(struct spi_device *spi)
+507:	error = focal_spi_get_gpio_config(fp_data);
+511:	focal_spi_reset(fp_data);
+513:	error = focal_spi_create_touch_input(fp_data);
+518:					  NULL, focal_spi_irq_handler,
+532:static int focal_spi_suspend(struct device *dev)
+547:	//focal_spi_power(data, false);
+552:static int focal_spi_resume(struct device *dev)
+557:	//focal_spi_power(data, true);
+
+=== Kernel build environment ===
+kernel=7.2.5-3-omarchy
+headers=present
+
+=== ACPI/SPI target ===
+/sys/devices/pci0000:00/0000:00:12.6/pxa2xx-spi.0/spi_master/spi1/spi-FTE4800:00
+unbound

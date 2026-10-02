@@ -1,0 +1,400 @@
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:03 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:03 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:04 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:04 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:05 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:05 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:05 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:05 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:05 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:05 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:05 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:05 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:05 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:05 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:05 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:05 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:05 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:05 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:05 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:05 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:05 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:05 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:05 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM entering state 2
+Oct 02 22:21:05 zerobook fprintd[234642]: focaltech I: [ 473]:capture_loop state CAPTURE_LOOP_AWAIT_FINGER_ON
+Oct 02 22:21:05 zerobook fprintd[234642]: Idle cancelling on ongoing operation!
+Oct 02 22:21:05 zerobook fprintd[234642]: Deactivating image device
+Oct 02 22:21:05 zerobook fprintd[234642]: Image device internal state change from FPI_IMAGE_DEVICE_STATE_AWAIT_FINGER_ON to FPI_IMAGE_DEVICE_STATE_DEACTIVATING
+Oct 02 22:21:05 zerobook fprintd[234642]: focaltech I: [ 760]:dev_change_state FPI_IMAGE_DEVICE_STATE_DEACTIVATING
+Oct 02 22:21:05 zerobook fprintd[234642]: focaltech I: [ 744]:deactivating, marking completed
+Oct 02 22:21:05 zerobook fprintd[234642]: [focaltech] CAPTURE_LOOP_NUM completed successfully
+Oct 02 22:21:05 zerobook fprintd[234642]: focaltech I: [ 545]:capture finishing
+Oct 02 22:21:05 zerobook fprintd[234642]: focaltech I: [ 747]:'dev_deactivate' success.
+Oct 02 22:21:05 zerobook fprintd[234642]: Image device deactivation completed
+Oct 02 22:21:05 zerobook fprintd[234642]: Image device internal state change from FPI_IMAGE_DEVICE_STATE_DEACTIVATING to FPI_IMAGE_DEVICE_STATE_INACTIVE
+Oct 02 22:21:05 zerobook fprintd[234642]: focaltech I: [ 760]:dev_change_state FPI_IMAGE_DEVICE_STATE_INACTIVE
+Oct 02 22:21:05 zerobook fprintd[234642]: Device reported generic error (Operation was cancelled) during action; action was: FPI_DEVICE_ACTION_ENROLL
+Oct 02 22:21:05 zerobook fprintd[234642]: Device reported enroll completion
+Oct 02 22:21:05 zerobook fprintd[234642]: Device reported finger status change: FP_FINGER_STATUS_NONE
+Oct 02 22:21:05 zerobook fprintd[234642]: Finger present 0
+Oct 02 22:21:05 zerobook fprintd[234642]: Finger needed 0
+Oct 02 22:21:05 zerobook fprintd[234642]: Completing action FPI_DEVICE_ACTION_ENROLL in idle!
+Oct 02 22:21:05 zerobook fprintd[234642]: Updated temperature model after 14.29 seconds, ratio 0.27 -> 0.33, active 0 -> 0, FP_TEMPERATURE_WARM -> FP_TEMPERATURE_WARM
+Oct 02 22:21:05 zerobook fprintd[234642]: enroll_cb: result enroll-failed
+Oct 02 22:21:05 zerobook fprintd[234642]: focaltech I: [ 679]:'dev_deinit' close the do_capture thread.
+Oct 02 22:21:05 zerobook fprintd[234642]: Image device close completed
+Oct 02 22:21:05 zerobook fprintd[234642]: Device reported close completion
+Oct 02 22:21:05 zerobook fprintd[234642]: Completing action FPI_DEVICE_ACTION_CLOSE in idle!
+Oct 02 22:21:05 zerobook fprintd[234642]: Updated temperature model after 0.00 seconds, ratio 0.33 -> 0.33, active 0 -> 0, FP_TEMPERATURE_WARM -> FP_TEMPERATURE_WARM
+Oct 02 22:21:05 zerobook fprintd[234642]: focaltech I: [ 595]:do_capture_loop exit!
+Oct 02 22:22:47 zerobook fprintd[234642]: Updated temperature model after 102.58 seconds, ratio 0.33 -> 0.27, active 0 -> 0, FP_TEMPERATURE_WARM -> FP_TEMPERATURE_COLD
+Oct 02 22:23:17 zerobook fprintd[234642]: fd=12
+Oct 02 22:23:17 zerobook fprintd[234642]: [focal]  chipid2=9365
+Oct 02 22:23:17 zerobook fprintd[234642]: [focal]  width=64,height=80
+Oct 02 22:23:17 zerobook fprintd[234642]: -I-: [focal] got finger touched event.-I-: [focal] got finger touched event.-I-: [focal] got finger touched event.-I-: [focal] got finger touched event.-I-: [focal] got finger touched event.-I-: [focal] got finger touched event.
+Oct 02 22:23:17 zerobook systemd[1]: fprintd.service: Deactivated successfully.
+Oct 02 22:23:17 zerobook systemd[1]: fprintd.service: Consumed 5.077s CPU time over 3min 17.665s wall clock time, 7.4M memory peak.
+Oct 02 22:35:13 zerobook systemd[1]: Starting Fingerprint Authentication Daemon...
+Oct 02 22:35:13 zerobook fprintd[240411]: About to load configuration file '/etc/fprintd.conf'
+Oct 02 22:35:13 zerobook fprintd[240411]: Launching FprintObject
+Oct 02 22:35:13 zerobook fprintd[240411]: Initializing FpContext (libfprint version 1.94.4)
+Oct 02 22:35:13 zerobook fprintd[240411]: Preparing devices for resume
+Oct 02 22:35:13 zerobook fprintd[240411]: No driver found for USB device 1D6B:0003
+Oct 02 22:35:13 zerobook fprintd[240411]: No driver found for USB device 24AE:2013
+Oct 02 22:35:13 zerobook fprintd[240411]: No driver found for USB device 8087:0033
+Oct 02 22:35:13 zerobook fprintd[240411]: No driver found for USB device 1D6B:0002
+Oct 02 22:35:13 zerobook fprintd[240411]: find support dev: /sys/devices/virtual/misc/focal_moh_spi
+Oct 02 22:35:13 zerobook fprintd[240411]: focaltech I: [ 789]:fpi_device_focaltech_init: 'self = 0x5c31f4642090'
+Oct 02 22:35:13 zerobook fprintd[240411]: Got delay inhibitor for sleep.
+Oct 02 22:35:13 zerobook fprintd[240411]: Device reported probe completion
+Oct 02 22:35:13 zerobook fprintd[240411]: Completing action FPI_DEVICE_ACTION_PROBE in idle!
+Oct 02 22:35:13 zerobook fprintd[240411]: Updated temperature model after 0.00 seconds, ratio 0.27 -> 0.27, active 0 -> 0, FP_TEMPERATURE_COLD -> FP_TEMPERATURE_COLD
+Oct 02 22:35:13 zerobook fprintd[240411]: Device FocalTech Systems Co., Ltd fingerprint scan type changed to 'press'
+Oct 02 22:35:13 zerobook fprintd[240411]: Device FocalTech Systems Co., Ltd fingerprint enroll stages changed to 13
+Oct 02 22:35:13 zerobook fprintd[240411]: Finger present 0
+Oct 02 22:35:13 zerobook fprintd[240411]: Finger needed 0
+Oct 02 22:35:13 zerobook fprintd[240411]: entering main loop
+Oct 02 22:35:13 zerobook fprintd[240411]: D-Bus service launched with name: net.reactivated.Fprint
+Oct 02 22:35:13 zerobook systemd[1]: Started Fingerprint Authentication Daemon.
+Oct 02 22:35:15 zerobook fprintd[240411]: Requesting authorization from :1.1098 to call method 'Claim' for device 'FocalTech Systems Co., Ltd fingerprint'
+Oct 02 22:35:15 zerobook fprintd[240411]: Getting authorization to perform Polkit action net.reactivated.fprint.device.verify
+Oct 02 22:35:15 zerobook fprintd[240411]: Authorization granted to :1.1098 to call method 'Claim' for device 'FocalTech Systems Co., Ltd fingerprint'!
+Oct 02 22:35:15 zerobook fprintd[240411]: user 'archer' claiming the device: 0
+Oct 02 22:35:15 zerobook fprintd[240411]: focaltech I: [ 626]:'dev_init' driver_data:0
+Oct 02 22:35:32 zerobook fprintd[240411]: focaltech:sensor I: [1272]:fw9362_dev_init ret: 0
+Oct 02 22:35:32 zerobook fprintd[240411]: focaltech:protocol I: [ 257]:get sensor width:64, height:80
+Oct 02 22:35:32 zerobook fprintd[240411]: focaltech:algorithm I: [  92]:current chip id = 9362
+Oct 02 22:35:32 zerobook fprintd[240411]: focaltech:algorithm I: [ 121]:version.algorithm_core: v2.1.0.24-r4742-x86_64_64bit-20220824
+Oct 02 22:35:32 zerobook fprintd[240411]: focaltech:algorithm I: [ 122]:version.algorithm_api : v1.5.76-r4745-x86_64_64bit-20220824
+Oct 02 22:35:32 zerobook fprintd[240411]: focaltech I: [ 636]:sensor size: 64, 80
+Oct 02 22:35:32 zerobook fprintd[240411]: focaltech I: [ 660]:do_capture_loop thread 0x5c31f4654f40
+Oct 02 22:35:32 zerobook fprintd[240411]: Image device open completed
+Oct 02 22:35:32 zerobook fprintd[240411]: Device reported open completion
+Oct 02 22:35:32 zerobook fprintd[240411]: Completing action FPI_DEVICE_ACTION_OPEN in idle!
+Oct 02 22:35:32 zerobook fprintd[240411]: Updated temperature model after 19.30 seconds, ratio 0.27 -> 0.26, active 0 -> 0, FP_TEMPERATURE_COLD -> FP_TEMPERATURE_COLD
+Oct 02 22:35:32 zerobook fprintd[240411]: claimed device 0
+Oct 02 22:35:32 zerobook fprintd[240411]: Requesting authorization from :1.1098 to call method 'EnrollStart' for device 'FocalTech Systems Co., Ltd fingerprint'
+Oct 02 22:35:32 zerobook fprintd[240411]: Getting authorization to perform Polkit action net.reactivated.fprint.device.enroll
+Oct 02 22:35:35 zerobook fprintd[240411]: focaltech I: [ 679]:'dev_deinit' close the do_capture thread.
+Oct 02 22:35:35 zerobook fprintd[240411]: Image device close completed
+Oct 02 22:35:35 zerobook fprintd[240411]: Device reported close completion
+Oct 02 22:35:35 zerobook fprintd[240411]: Completing action FPI_DEVICE_ACTION_CLOSE in idle!
+Oct 02 22:35:35 zerobook fprintd[240411]: Updated temperature model after 2.72 seconds, ratio 0.26 -> 0.26, active 0 -> 0, FP_TEMPERATURE_COLD -> FP_TEMPERATURE_COLD
+Oct 02 22:35:35 zerobook fprintd[240411]: focaltech I: [ 595]:do_capture_loop exit!
+Oct 02 22:35:35 zerobook fprintd[240411]: Authorization denied to :1.1098 to call method 'EnrollStart' for device 'FocalTech Systems Co., Ltd fingerprint': Not Authorized: net.reactivated.fprint.device.enroll

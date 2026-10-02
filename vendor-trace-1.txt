@@ -1,0 +1,146 @@
+[ 8348.167419] focal-trace: IOCTL cmd=0x808a arg=0
+[ 8348.167427] focal-trace: IOCTL cmd=0x8086 arg=1
+[ 8348.228838] focalfp-spi spi-FTE4800:00: reset: pulsed low 10ms, idle level now 1 (active_low=0)
+[ 8348.228928] focal-trace: WR len=4 data[09 f6 c6 01]
+[ 8348.241806] focal-trace: WR ret=0
+[ 8348.246860] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 c6 00] rx[0a]
+[ 8348.246913] focal-trace: WR len=4 data[09 f6 c6 01]
+[ 8348.247287] focal-trace: WR ret=0
+[ 8348.252032] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 c6 00] rx[0a]
+[ 8348.252050] focal-trace: WR len=4 data[09 f6 c6 01]
+[ 8348.252311] focal-trace: WR ret=0
+[ 8348.257067] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 c6 00] rx[0a]
+[ 8348.257083] focal-trace: WR len=4 data[09 f6 c6 01]
+[ 8348.257330] focal-trace: WR ret=0
+[ 8348.262143] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 c6 00] rx[0a]
+[ 8348.262663] focal-trace: RD tx=6 rx=4 ret=0 tx[04 fb 9a 8b 00 00] rx[ca ca ca ca]
+[ 8348.262706] focal-trace: WR len=8 data[05 fa 9a 84 00 00 ff ff]
+[ 8348.263036] focal-trace: WR ret=0
+[ 8348.263537] focal-trace: RD tx=6 rx=4 ret=0 tx[04 fb 9a 8b 00 00] rx[ce ce ce ce]
+[ 8348.263548] focal-trace: WR len=8 data[05 fa 9a 84 00 00 ff ff]
+[ 8348.263965] focal-trace: WR ret=0
+[ 8348.264442] focal-trace: RD tx=6 rx=4 ret=0 tx[04 fb 9a 8b 00 00] rx[ce ce ce ce]
+[ 8348.264454] focal-trace: WR len=8 data[05 fa 9a 84 00 00 ff ff]
+[ 8348.264694] focal-trace: WR ret=0
+[ 8348.264699] focal-trace: WR len=4 data[09 f6 fd 0a]
+[ 8348.264913] focal-trace: WR ret=0
+[ 8348.264917] focal-trace: WR len=4 data[09 f6 fe 7f]
+[ 8348.265159] focal-trace: WR ret=0
+[ 8348.266662] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 fe 00] rx[0e]
+[ 8348.266667] focal-trace: WR len=4 data[09 f6 fd 0a]
+[ 8348.266908] focal-trace: WR ret=0
+[ 8348.266926] focal-trace: WR len=4 data[09 f6 fe 7f]
+[ 8348.267174] focal-trace: WR ret=0
+[ 8348.268831] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 fe 00] rx[0e]
+[ 8348.268850] focal-trace: WR len=4 data[09 f6 fd 0a]
+[ 8348.269088] focal-trace: WR ret=0
+[ 8348.269092] focal-trace: WR len=4 data[09 f6 fe 7f]
+[ 8348.269332] focal-trace: WR ret=0
+[ 8348.271034] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 fe 00] rx[0e]
+[ 8348.271058] focal-trace: WR len=4 data[09 f6 fd 0a]
+[ 8348.271314] focal-trace: WR ret=0
+[ 8348.271318] focal-trace: WR len=4 data[09 f6 fe 7f]
+[ 8348.271567] focal-trace: WR ret=0
+[ 8348.273371] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 fe 00] rx[0e]
+[ 8348.273387] focal-trace: WR len=4 data[09 f6 fd 0a]
+[ 8348.273653] focal-trace: WR ret=0
+[ 8348.273657] focal-trace: WR len=4 data[09 f6 fe 7f]
+[ 8348.273976] focal-trace: WR ret=0
+[ 8348.275604] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 fe 00] rx[0e]
+[ 8348.275639] focal-trace: WR len=4 data[09 f6 c6 01]
+[ 8348.275986] focal-trace: WR ret=0
+[ 8348.280725] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 c6 00] rx[0e]
+[ 8348.280758] focal-trace: WR len=4 data[09 f6 c6 01]
+[ 8348.281116] focal-trace: WR ret=0
+[ 8348.285987] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 c6 00] rx[0e]
+[ 8348.286019] focal-trace: WR len=4 data[09 f6 c6 01]
+[ 8348.286283] focal-trace: WR ret=0
+[ 8348.291022] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 c6 00] rx[0e]
+[ 8348.291047] focal-trace: WR len=4 data[09 f6 c6 01]
+[ 8348.291317] focal-trace: WR ret=0
+[ 8348.296211] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 c6 00] rx[0e]
+[ 8348.296832] focal-trace: RD tx=6 rx=4 ret=0 tx[04 fb 9a 8b 00 00] rx[ce ce ce ce]
+[ 8348.297344] focal-trace: RD tx=6 rx=4 ret=0 tx[04 fb 9a 8b 00 00] rx[0e ef ef ef]
+[ 8348.297926] focal-trace: RD tx=6 rx=4 ret=0 tx[04 fb 9a 8b 00 00] rx[ce ce ce ce]
+[ 8348.298425] focal-trace: RD tx=6 rx=4 ret=0 tx[04 fb 9a 8b 00 00] rx[0e ef ef ef]
+[ 8348.298434] focal-trace: WR len=8 data[05 fa 9a 84 00 00 ff ff]
+[ 8348.298671] focal-trace: WR ret=0
+[ 8348.298707] focal-trace: WR len=3 data[5a a5 00]
+[ 8348.298952] focal-trace: WR ret=0
+[ 8348.300662] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[0e]
+[ 8348.300691] focal-trace: WR len=3 data[c0 3f 00]
+[ 8348.301015] focal-trace: WR ret=0
+[ 8348.302840] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[0e]
+[ 8348.303951] focal-trace: WR len=3 data[c0 3f 00]
+[ 8348.304260] focal-trace: WR ret=0
+[ 8348.306124] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[0e]
+[ 8348.307223] focal-trace: WR len=3 data[c0 3f 00]
+[ 8348.307532] focal-trace: WR ret=0
+[ 8348.309406] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[0e]
+[ 8348.310693] focal-trace: WR len=3 data[c0 3f 00]
+[ 8348.311065] focal-trace: WR ret=0
+[ 8348.312813] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[0e]
+[ 8348.313917] focal-trace: WR len=3 data[c0 3f 00]
+[ 8348.314277] focal-trace: WR ret=0
+[ 8348.316056] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[0e]
+[ 8348.317169] focal-trace: WR len=3 data[a5 5a 00]
+[ 8348.317486] focal-trace: WR ret=0
+[ 8348.318079] focal-trace: RD tx=6 rx=4 ret=0 tx[04 fb 9a 8b 00 00] rx[0e ef ef ef]
+[ 8348.318658] focal-trace: RD tx=6 rx=4 ret=0 tx[04 fb 9a 8b 00 00] rx[ce ce ce ce]
+[ 8348.319172] focal-trace: RD tx=6 rx=4 ret=0 tx[04 fb 9a 8b 00 00] rx[0e ef ef ef]
+[ 8348.319566] focal-trace: RD tx=6 rx=4 ret=0 tx[04 fb 9a 8b 00 00] rx[ce ce ce ce]
+[ 8348.319572] focal-trace: WR len=8 data[05 fa 9a 84 00 00 ff ff]
+[ 8348.320010] focal-trace: WR ret=0
+[ 8348.320034] focal-trace: WR len=3 data[5a a5 00]
+[ 8348.320287] focal-trace: WR ret=0
+[ 8348.322040] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[0e]
+[ 8348.322057] focal-trace: WR len=3 data[c0 3f 00]
+[ 8348.322230] focal-trace: WR ret=0
+[ 8348.323909] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[0e]
+[ 8348.325003] focal-trace: WR len=3 data[c0 3f 00]
+[ 8348.325295] focal-trace: WR ret=0
+[ 8348.327084] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[0e]
+[ 8348.328177] focal-trace: WR len=3 data[c0 3f 00]
+[ 8348.328484] focal-trace: WR ret=0
+[ 8348.330305] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[0e]
+[ 8348.331519] focal-trace: WR len=3 data[c0 3f 00]
+[ 8348.331880] focal-trace: WR ret=0
+[ 8348.333494] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[0e]
+[ 8348.334715] focal-trace: WR len=3 data[c0 3f 00]
+[ 8348.335091] focal-trace: WR ret=0
+[ 8348.336684] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[0e]
+[ 8348.337781] focal-trace: WR len=3 data[a5 5a 00]
+[ 8348.338172] focal-trace: WR ret=0
+[ 8348.338698] focal-trace: RD tx=6 rx=4 ret=0 tx[04 fb 9a 8b 00 00] rx[0e ef ef ef]
+[ 8348.339244] focal-trace: RD tx=6 rx=4 ret=0 tx[04 fb 9a 8b 00 00] rx[ce ce ce ce]
+[ 8348.339690] focal-trace: RD tx=6 rx=4 ret=0 tx[04 fb 9a 8b 00 00] rx[0e ef ef ef]
+[ 8348.340171] focal-trace: RD tx=6 rx=4 ret=0 tx[04 fb 9a 8b 00 00] rx[ce ce ce ce]
+[ 8348.340178] focal-trace: WR len=8 data[05 fa 9a 84 00 00 ff ff]
+[ 8348.340451] focal-trace: WR ret=0
+[ 8348.340462] focal-trace: WR len=3 data[5a a5 00]
+[ 8348.340820] focal-trace: WR ret=0
+[ 8348.342542] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[0e]
+[ 8348.342566] focal-trace: WR len=3 data[c0 3f 00]
+[ 8348.342879] focal-trace: WR ret=0
+[ 8348.344531] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[0e]
+[ 8348.345626] focal-trace: WR len=3 data[c0 3f 00]
+[ 8348.345979] focal-trace: WR ret=0
+[ 8348.347693] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[0e]
+[ 8348.348830] focal-trace: WR len=3 data[c0 3f 00]
+[ 8348.349129] focal-trace: WR ret=0
+[ 8348.350850] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[0e]
+[ 8348.351934] focal-trace: WR len=3 data[c0 3f 00]
+[ 8348.352210] focal-trace: WR ret=0
+[ 8348.353932] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[0e]
+[ 8348.355044] focal-trace: WR len=3 data[c0 3f 00]
+[ 8348.355346] focal-trace: WR ret=0
+[ 8348.357250] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[0e]
+[ 8348.358503] focal-trace: WR len=3 data[a5 5a 00]
+[ 8348.358918] focal-trace: WR ret=0
+[ 8348.358941] focal-trace: IOCTL cmd=0x8086 arg=1
+[ 8348.420914] focalfp-spi spi-FTE4800:00: reset: pulsed low 10ms, idle level now 1 (active_low=0)
+[ 8348.420943] focal-trace: WR len=4 data[09 f6 c6 01]
+[ 8348.444410] focal-trace: WR ret=0
+[ 8348.449323] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 c6 00] rx[0a]
+[ 8348.449351] focal-trace: WR len=4 data[09 f6 c6 01]
+[ 8348.449599] focal-trace: WR

@@ -1,0 +1,27 @@
+park-low             mode=0 held  cmd55=1 gpio {'INT': 'hi', 'RST': 'lo'}->{'INT': 'hi', 'RST': 'lo'} -> 0000 0000
+park-low             mode=0 held  cmd55=0 gpio {'INT': 'hi', 'RST': 'lo'}->{'INT': 'hi', 'RST': 'lo'} -> 0000 0000
+park-low             mode=0 2msg  cmd55=1 gpio {'INT': 'hi', 'RST': 'lo'}->{'INT': 'hi', 'RST': 'lo'} -> 0000 0000
+park-low             mode=0 2msg  cmd55=0 gpio {'INT': 'hi', 'RST': 'lo'}->{'INT': 'hi', 'RST': 'lo'} -> 0000 0000
+park-low             mode=0 split cmd55=1 gpio {'INT': 'hi', 'RST': 'lo'}->{'INT': 'hi', 'RST': 'lo'} -> 0000 0000
+park-low             mode=0 split cmd55=0 gpio {'INT': 'hi', 'RST': 'lo'}->{'INT': 'hi', 'RST': 'lo'} -> 0000 0000
+park-low             mode=3 held  cmd55=1 gpio {'INT': 'hi', 'RST': 'lo'}->{'INT': 'hi', 'RST': 'lo'} -> 0000 0000
+park-low             mode=3 held  cmd55=0 gpio {'INT': 'hi', 'RST': 'lo'}->{'INT': 'hi', 'RST': 'lo'} -> 0000 0000
+park-low             mode=3 2msg  cmd55=1 gpio {'INT': 'hi', 'RST': 'lo'}->{'INT': 'hi', 'RST': 'lo'} -> 0000 0000
+park-low             mode=3 2msg  cmd55=0 gpio {'INT': 'hi', 'RST': 'lo'}->{'INT': 'hi', 'RST': 'lo'} -> 0000 0000
+park-low             mode=3 split cmd55=1 gpio {'INT': 'hi', 'RST': 'lo'}->{'INT': 'hi', 'RST': 'lo'} -> 0000 0000
+park-low             mode=3 split cmd55=0 gpio {'INT': 'hi', 'RST': 'lo'}->{'INT': 'hi', 'RST': 'lo'} -> 0000 0000
+pulse-high-then-low  mode=0 held  cmd55=1 gpio {'INT': 'hi', 'RST': 'lo'}->{'INT': 'hi', 'RST': 'lo'} -> 0000 0000
+pulse-high-then-low  mode=0 held  cmd55=0 gpio {'INT': 'hi', 'RST': 'lo'}->{'INT': 'hi', 'RST': 'lo'} -> 0000 0000
+pulse-high-then-low  mode=0 2msg  cmd55=1 gpio {'INT': 'hi', 'RST': 'lo'}->{'INT': 'hi', 'RST': 'lo'} -> 0000 0000
+pulse-high-then-low  mode=0 2msg  cmd55=0 gpio {'INT': 'hi', 'RST': 'lo'}->{'INT': 'hi', 'RST': 'lo'} -> 0000 0000
+pulse-high-then-low  mode=0 split cmd55=1 gpio {'INT': 'hi', 'RST': 'lo'}->{'INT': 'hi', 'RST': 'lo'} -> 0000 0000
+pulse-high-then-low  mode=0 split cmd55=0 gpio {'INT': 'hi', 'RST': 'lo'}->{'INT': 'hi', 'RST': 'lo'} -> 0000 0000
+pulse-high-then-low  mode=3 held  cmd55=1 gpio {'INT': 'hi', 'RST': 'lo'}->{'INT': 'hi', 'RST': 'lo'} -> 0000 0000
+pulse-high-then-low  mode=3 held  cmd55=0 gpio {'INT': 'hi', 'RST': 'lo'}->{'INT': 'hi', 'RST': 'lo'} -> 0000 0000
+pulse-high-then-low  mode=3 2msg  cmd55=1 gpio {'INT': 'hi', 'RST': 'lo'}->{'INT': 'hi', 'RST': 'lo'} -> 0000 0000
+pulse-high-then-low  mode=3 2msg  cmd55=0 gpio {'INT': 'hi', 'RST': 'lo'}->{'INT': 'hi', 'RST': 'lo'} -> 0000 0000
+pulse-high-then-low  mode=3 split cmd55=1 gpio {'INT': 'hi', 'RST': 'lo'}->{'INT': 'hi', 'RST': 'lo'} -> 0000 0000
+pulse-high-then-low  mode=3 split cmd55=0 gpio {'INT': 'hi', 'RST': 'lo'}->{'INT': 'hi', 'RST': 'lo'} -> 0000 0000
+done hits = 0
+== dmesg health
+(end)

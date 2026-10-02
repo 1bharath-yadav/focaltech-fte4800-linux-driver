@@ -1,0 +1,2 @@
+Using device /net/reactivated/Fprint/Device/0
+Enrolling right-index-finger finger.

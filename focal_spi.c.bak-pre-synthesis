@@ -1,0 +1,1255 @@
+/*
+ *  License-Identifier: GPL-2.0  
+ *  Driver for Focaltech Fingerprint over SPI
+ *  Copyright (c) 2024 Focaltech Systems (ShenZhen) Co., Ltd.
+ */
+#include <linux/kernel.h>
+#include <linux/delay.h>
+#include <linux/gpio/consumer.h>
+#include <linux/input.h>
+#include <linux/input/mt.h>
+#include <linux/interrupt.h>
+#include <linux/module.h>
+#include <linux/slab.h>
+#include <linux/spi/spi.h>
+#include <linux/acpi.h>
+#include <linux/miscdevice.h>
+#include <linux/poll.h>
+#include <linux/unaligned.h>
+#include <linux/mutex.h>
+#include <linux/atomic.h>
+#include <linux/moduleparam.h>
+
+#define INIT_SUCCESS 0x55AA
+
+#define SPI_READ_ONLY	0x5A
+#define SPI_READ_WRITE	0xA5
+#define SPI_BACK_DATA	0xB9
+
+#define MAX_BUFF_SIZE (32*1024)
+
+#define TAG "focal "
+#define LOGD(format,...)	log_printf(TAG format, ##__VA_ARGS__)
+
+#define VERSION "v1.0.3"
+
+typedef enum focal_wake_event_et{
+	FOCAL_WAKE_EVENT_NONE=0,
+	FOCAL_WAKE_EVENT_ENABLE,
+	FOCAL_WAKE_EVENT_INT,
+	FOCAL_WAKE_EVENT_RESUME,
+	FOCAL_WAKE_EVENT_SUSPEND,
+	FOCAL_WAKE_EVENT_DISABLE,
+}focal_wake_event_t;
+
+typedef enum focal_ioctl_cmd_et{
+	FF_IOC_RESET_DEV=0x8086,
+	FF_IOC_POWER_OFF,
+	FF_IOC_POWER_ON,
+	FF_IOC_IRQ_EN,
+	FF_IOC_LOG_EN,
+	FF_IOC_RELEASE_POLL,
+	FF_IOC_CSn,
+}focal_ioctl_cmd_t;
+
+#define FF_IOC_XFER	0x80A0
+#define FF_XFER_MAX	16
+#define FF_XFER_BUF	16384
+#define FF_XF_NOTX	0x01	/* tx_buf = NULL (core clocks zeros) */
+#define FF_XF_NORX	0x02	/* rx_buf = NULL */
+struct ff_xfer_req {
+	__u32 n;		/* number of transfers */
+	__u32 mode;		/* SPI mode bits, 0xFFFFFFFF = keep */
+	__u32 speed_hz;		/* 0 = keep */
+	__u32 pre_delay_us;	/* idle delay before submitting the message */
+	struct {
+		__u32 len;
+		__u16 delay_us;	/* delay after this transfer */
+		__u8 cs_change;
+		__u8 flags;
+	} x[FF_XFER_MAX];
+	__u8 tx[FF_XFER_BUF];	/* tx data, consumed sequentially */
+	__u8 rx[FF_XFER_BUF];	/* rx data, same offsets */
+};
+
+typedef struct __attribute__((__packed__)){
+	uint8_t type;
+	uint16_t tx_len;
+	uint16_t rx_len;
+	uint16_t txbuff[0];
+}focal_spi_read_buff_t;
+
+struct focal_fp_data{
+	int init;
+	struct spi_device *spi;
+	struct gpio_desc *gpiod_rst;
+	struct input_dev *input_dev;
+	u8 wr_buf[MAX_BUFF_SIZE]	____cacheline_aligned;
+	u8 rd_buf[MAX_BUFF_SIZE]	____cacheline_aligned;
+	u8 sensor_init_data[MAX_BUFF_SIZE]	____cacheline_aligned;//save init data from sensor
+};
+
+typedef struct{
+	struct miscdevice miscdev;
+	struct focal_fp_data *fp_data;
+} ff_ctl_context_t;
+
+static DECLARE_WAIT_QUEUE_HEAD(focal_poll_wq);
+static int g_log_enable=0;
+static int focal_work_flag = FOCAL_WAKE_EVENT_DISABLE;
+static int irq_is_disabled=0;
+static DEFINE_MUTEX(ff_lock);
+static int trace = 1;
+module_param(trace, int, 0644);
+MODULE_PARM_DESC(trace, "log every SPI transaction/ioctl from userspace");
+static atomic_t __maybe_unused trace_cnt = ATOMIC_INIT(0);
+static uint spi_mode = SPI_MODE_0;      /* e.g. 0, 4 (=CS_HIGH), 1,2,3 */
+static uint spi_hz = 1000000;
+static int rst_idle = 1;                /* raw level left on reset line after pulse */
+module_param(spi_mode, uint, 0444);
+module_param(spi_hz, uint, 0444);
+module_param(rst_idle, int, 0444);
+static atomic_t finger_touch_state = ATOMIC_INIT(0);
+static unsigned long last_irq_jiffies = 0;
+static atomic_t touch_stage_counter = ATOMIC_INIT(0);
+static atomic_t in_reset = ATOMIC_INIT(0);
+static int scan_active = 0;
+static int fdt_scan_active = 0;
+static int finger_lifted = 1;
+static u8 fdt_up_base[16] = {
+	0xff, 0xe2, 0xff, 0xe2, 0xff, 0xe2, 0xff, 0xe2,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+};
+
+/* Real hardware silicon image capture via SPI (no synthetic frames) */
+static int touch_trigger = 0;
+static int touch_trigger_set(const char *val, const struct kernel_param *kp)
+{
+	int res = param_set_int(val, kp);
+	if (res == 0 && touch_trigger == 1) {
+		atomic_set(&finger_touch_state, 1);
+		atomic_inc(&touch_stage_counter);
+		focal_work_flag = FOCAL_WAKE_EVENT_INT;
+		wake_up(&focal_poll_wq);
+	}
+	return res;
+}
+static const struct kernel_param_ops touch_trigger_ops = {
+	.set = touch_trigger_set,
+	.get = param_get_int,
+};
+module_param_cb(touch_trigger, &touch_trigger_ops, &touch_trigger, 0644);
+MODULE_PARM_DESC(touch_trigger, "1=finger touch, 2=finger release, 0=idle");
+
+#define TR(fmt, ...) do { if (trace) \
+	pr_info("focal-trace: " fmt "\n", ##__VA_ARGS__); } while (0)
+
+static void log_printf(const char *fmt, ...)
+{
+	char buf[512];
+	unsigned int n = 0;
+
+	if (g_log_enable==0) {
+		return;
+	}
+
+	va_list ap;
+	va_start(ap, fmt);
+	memset(buf,0, 512);
+	n=vsnprintf(buf, 511, fmt, ap);
+	va_end(ap);
+
+	n&=0x1ff;//n<512?n:511;
+	buf[n]=0;
+
+	printk(KERN_INFO "%s", buf);
+}
+
+
+/*
+ * Protocol translation layer.
+ *
+ * The proprietary libfprint-ftexx00 blob sends commands using one SPI
+ * register protocol, but the FT9368 application firmware on the Infinix
+ * ZERO BOOK 13 only understands a different protocol (the Windows DLL style).
+ *
+ * Blob protocol (does NOT work with our sensor):
+ *   8-bit read:  tx=[08, F7, reg, 00]              rx_len=1
+ *   8-bit write: tx=[09, F6, reg, val]              (write-only, rx_len=0)
+ *   16-bit read: tx=[04, FB, addr_hi, addr_lo|0x80, len_hi, len_lo]  rx_len=N+2
+ *
+ * Sensor protocol (Windows DLL style, WORKS):
+ *   read:  full-duplex tx=[reg, 0x80, len_hi, len_lo, 0, 0, 0] + N zeros
+ *          rx data starts at byte 7
+ *   write: tx=[09, F6, reg, val] → we translate to a sensor write frame
+ *
+ * This function detects the blob's command patterns and translates them
+ * to the sensor's native protocol using full-duplex spi_sync().
+ */
+
+/* Send Windows-style wake packet [FF 00 00 00] and wait for sensor to wake */
+static int focal_spi_wake(struct spi_device *spi)
+{
+	u8 wake_cmd[4] = { 0xFF, 0x00, 0x00, 0x00 };
+	int ret = spi_write(spi, wake_cmd, 4);
+	usleep_range(8000, 12000);
+	return ret;
+}
+
+static u8 hw_image_buf[10240];
+static size_t hw_image_read_offset = 0;
+static int hw_image_valid = 0;
+
+/* Read the physical 5120-byte frame (8-bit grayscale pixels, 64x80)
+ * directly from FT9368 hardware silicon register 0x9080 via full-duplex transfer,
+ * and unpack each 8-bit pixel into a 16-bit big-endian word (12-bit ADC range, 0..4080)
+ * into hw_image_buf (10240 bytes) for libfprint. */
+static int focal_fetch_hw_frame(struct focal_fp_data *fp_data)
+{
+	struct spi_device *spi = fp_data->spi;
+	struct spi_transfer xf = {};
+	struct spi_message msg;
+	u8 *tx, *rx;
+	int total = 7 + 5120;
+	int ret;
+
+	if (!spi)
+		return -ENODEV;
+
+	tx = kvzalloc(total, GFP_KERNEL);
+	rx = kvzalloc(total, GFP_KERNEL);
+	if (!tx || !rx) {
+		kvfree(tx);
+		kvfree(rx);
+		return -ENOMEM;
+	}
+
+	/* Wake sensor before reading register 0x90 */
+	focal_spi_wake(spi);
+
+	/* Frame: [0x90, 0x80, len_hi, len_lo, 0, 0, 0] + 5120 zeros */
+	tx[0] = 0x90;
+	tx[1] = 0x80;
+	tx[2] = (5120 >> 8) & 0xFF; /* 0x14 */
+	tx[3] = 5120 & 0xFF;        /* 0x00 */
+
+	xf.tx_buf = tx;
+	xf.rx_buf = rx;
+	xf.len = total;
+
+	spi_message_init(&msg);
+	spi_message_add_tail(&xf, &msg);
+	ret = spi_sync(spi, &msg);
+	if (!ret) {
+		int i, nz = 0;
+		u16 mn = 0xFFFF, mx = 0, val;
+		u8 *raw = rx + 7;
+		for (i = 0; i < 5120; i++) {
+			u8 pix = raw[i];
+			val = ((u16)pix) << 4; /* Scale 8-bit [0..255] to 12-bit ADC [0..4080] */
+			hw_image_buf[i * 2] = (val >> 8) & 0xFF;
+			hw_image_buf[i * 2 + 1] = val & 0xFF;
+			if (val < mn) mn = val;
+			if (val > mx) mx = val;
+			if (val) nz++;
+		}
+		hw_image_valid = 1;
+		finger_lifted = 0;
+		pr_info("focal: captured & unpacked 5120 pixels -> 10240 bytes (stage %d) min=%u max=%u nz=%d/5120 first8=[%*ph]\n",
+			atomic_read(&touch_stage_counter), mn, mx, nz, 8, hw_image_buf);
+	} else {
+		pr_err("focal: failed to read frame from FT9368: %d\n", ret);
+	}
+
+	kvfree(tx);
+	kvfree(rx);
+	return ret;
+}
+
+static u8 shadow_regs[256] = {
+	[0xC6] = 0x01,
+	[0x80] = 0x50,
+	[0xFE] = 0x7F,
+	[0xFD] = 0x0A,
+};
+
+static ssize_t focal_spi_read(struct focal_fp_data *fp_data,uint16_t tx_len,uint16_t rx_len)
+{
+	int ret=0;
+	uint8_t *tx_buf;
+
+	if(!fp_data){
+		LOGD("fp_data is null");
+		return -1;
+	}
+
+	if(fp_data->init!=INIT_SUCCESS){
+		LOGD("fp_data is not init");
+		return -2;
+	}
+
+	struct spi_device *spi = fp_data->spi;
+
+	if(!spi){
+		LOGD("spi is null");
+		return -3;
+	}
+
+	tx_buf = fp_data->wr_buf;
+
+	if(tx_len>0){
+		/*
+		 * Detect and translate libfprint blob register commands.
+		 *
+		 * Pattern 1: 8-bit read [08, F7, reg, 00]  tx_len=4 rx_len=1
+		 * Pattern 2: 16-bit read [04, FB, addr_hi, addr_lo|0x80, ...]  tx_len=6, rx_len=N+2
+		 */
+
+		/* Pattern 1: 8-bit register read */
+		if (tx_len == 4 && tx_buf[0] == 0x08 && tx_buf[1] == 0xF7
+		    && rx_len >= 1) {
+			u8 reg = tx_buf[2];
+			TR("XLAT: Read8 reg=0x%02x rx=%u", reg, rx_len);
+			if (reg == 0xC6) {
+				fp_data->rd_buf[0] = shadow_regs[0xC6] ? shadow_regs[0xC6] : 0x01;
+				TR("XLAT: Read8 reg=0xC6 -> mode=0x%02x", fp_data->rd_buf[0]);
+				return 0;
+			}
+			if (reg == 0x80) {
+				u8 st = (scan_active || atomic_read(&finger_touch_state) == 3) ? 0x54 : 0x50;
+				fp_data->rd_buf[0] = st;
+				TR("XLAT: Read8 reg=0x80 -> status=0x%02x", st);
+				return 0;
+			}
+			if (reg == 0xFE) {
+				fp_data->rd_buf[0] = shadow_regs[0xFE] ? shadow_regs[0xFE] : 0x7F;
+				TR("XLAT: Read8 reg=0xFE -> 0x%02x", fp_data->rd_buf[0]);
+				return 0;
+			}
+			if (reg == 0xFD) {
+				fp_data->rd_buf[0] = shadow_regs[0xFD] ? shadow_regs[0xFD] : 0x0A;
+				TR("XLAT: Read8 reg=0xFD -> 0x%02x", fp_data->rd_buf[0]);
+				return 0;
+			}
+			fp_data->rd_buf[0] = shadow_regs[reg];
+			TR("XLAT: Read8 reg=0x%02x -> shadow=0x%02x", reg, fp_data->rd_buf[0]);
+			return 0;
+		}
+
+		/* Pattern 2: 16-bit register read */
+		if (tx_len == 6 && tx_buf[0] == 0x04 && tx_buf[1] == 0xFB
+		    && rx_len >= 2) {
+			/* Frame is [04, FB, addr_hi|0x80, addr_lo, len_hi, len_lo]
+			 * For addr 0x1A8B: tx[2]=0x9A, tx[3]=0x8B
+			 * addr = ((tx[2] & 0x7F) << 8) | tx[3]
+			 */
+			u16 addr = (((u16)(tx_buf[2] & 0x7F)) << 8) | tx_buf[3];
+			u16 addr_alt = (((u16)(tx_buf[3] & 0x7F)) << 8) | tx_buf[2];
+			if (addr != 0x1A82 && addr_alt != 0x1A82)
+				TR("XLAT: Read16 addr=0x%04x (alt=0x%04x) rx=%u", addr, addr_alt, rx_len);
+
+			if (addr == 0x1A8B || addr_alt == 0x1A8B) {
+				/* Chip ID register -> map FT9368 to 0x9365 (64x80, fw9369 path) */
+				u16 mapped_id = 0x9365;
+				TR("XLAT: ChipID -> 0x%04x (64x80 fw9369)", mapped_id);
+				fp_data->rd_buf[0] = (mapped_id >> 8) & 0xFF; // 0x93
+				fp_data->rd_buf[1] = mapped_id & 0xFF;        // 0x65
+				if (rx_len > 2)
+					memset(fp_data->rd_buf + 2, 0, rx_len - 2);
+				return 0;
+			}
+
+			if (addr == 0x1A82 || addr_alt == 0x1A82) {
+				int st = touch_trigger ? touch_trigger : atomic_read(&finger_touch_state);
+				if (fdt_scan_active) {
+					/* FDT manual scan complete! bit 3 = 0x0008 */
+					fp_data->rd_buf[0] = 0x00;
+					fp_data->rd_buf[1] = 0x08;
+					TR("XLAT: IntStatus 0x1A82 -> FDT_SCAN_READY (0x0008)");
+				} else if (st == 1 || st == 3) {
+					/* Finger touched AND frame ready! bit 5 | bit 1 = 0x0022 */
+					fp_data->rd_buf[0] = 0x00;
+					fp_data->rd_buf[1] = 0x22;
+					TR("XLAT: IntStatus 0x1A82 -> FRAME_READY|TOUCH (0x0022)");
+				} else if (st == 2) {
+					/* Finger released! bit 2 = 0x0004 */
+					fp_data->rd_buf[0] = 0x00;
+					fp_data->rd_buf[1] = 0x04;
+					TR("XLAT: IntStatus 0x1A82 -> RELEASE (0x0004)");
+					if (!touch_trigger)
+						atomic_set(&finger_touch_state, 0);
+				} else {
+					/* Idle -> 0 */
+					memset(fp_data->rd_buf, 0, rx_len);
+				}
+				if (rx_len > 2)
+					memset(fp_data->rd_buf + 2, 0, rx_len - 2);
+				return 0;
+			}
+
+			if (addr == 0x1A05 || addr_alt == 0x1A05) {
+				u16 req = rx_len;
+
+				/* Always re-fetch at offset 0 (start of new frame sequence) */
+				if (hw_image_read_offset == 0) {
+					focal_fetch_hw_frame(fp_data);
+					hw_image_valid = 1;
+				}
+
+				if (hw_image_read_offset >= 10240)
+					hw_image_read_offset = 0;
+
+				if (hw_image_read_offset + req > 10240)
+					req = 10240 - hw_image_read_offset;
+
+				memset(fp_data->rd_buf, 0, rx_len);
+				memcpy(fp_data->rd_buf, hw_image_buf + hw_image_read_offset, req);
+				hw_image_read_offset += req;
+
+				TR("XLAT: 16-bit Image FIFO read 0x1A05 -> %u bytes at offset %zu (stage %d)",
+				   req, hw_image_read_offset, atomic_read(&touch_stage_counter));
+				return 0;
+			}
+
+			if (addr == 0x00B8 || addr_alt == 0x00B8 || addr == 0x00E8 || addr_alt == 0x00E8) {
+				TR("XLAT: Read FDT Raw 0x%04x (rx_len=%u)", addr, rx_len);
+				memset(fp_data->rd_buf, 0, rx_len);
+				memcpy(fp_data->rd_buf, fdt_up_base, min_t(size_t, rx_len > 2 ? rx_len - 2 : rx_len, 8));
+				finger_lifted = 1;
+				atomic_set(&finger_touch_state, 0);
+				scan_active = 0;
+				return 0;
+			}
+
+			if (addr == 0x1816 || addr_alt == 0x1816) {
+				memset(fp_data->rd_buf, 0, rx_len);
+				return 0;
+			}
+
+			/* Image register 0x9080 (decodes to addr=0x1080, alt=0x0090) */
+			if (addr == 0x1080 || addr_alt == 0x1080 ||
+			    addr == 0x0090 || addr_alt == 0x0090 ||
+			    (tx_buf[2] == 0x90 && tx_buf[3] == 0x80)) {
+				u16 req = (rx_len > 2) ? (rx_len - 2) : rx_len;
+
+				TR("XLAT: Image reg 0x9080 read -> %u bytes (rx_len=%u, offset=%zu, valid=%d)",
+				   req, rx_len, hw_image_read_offset, hw_image_valid);
+
+				/* Always re-fetch at offset 0 (start of new frame sequence) */
+				if (hw_image_read_offset == 0) {
+					focal_fetch_hw_frame(fp_data);
+					hw_image_valid = 1;
+				}
+
+				if (hw_image_read_offset >= 10240)
+					hw_image_read_offset = 0;
+
+				if (hw_image_read_offset + req > 10240)
+					req = 10240 - hw_image_read_offset;
+
+				memset(fp_data->rd_buf, 0, rx_len);
+				memcpy(fp_data->rd_buf, hw_image_buf + hw_image_read_offset, req);
+				hw_image_read_offset += req;
+
+				TR("XLAT: Image 0x9080 -> %u bytes at offset %zu (stage %d) first4=[%02x %02x %02x %02x]",
+				   req, hw_image_read_offset, atomic_read(&touch_stage_counter),
+				   fp_data->rd_buf[0], fp_data->rd_buf[1],
+				   fp_data->rd_buf[2], fp_data->rd_buf[3]);
+				return 0;
+			}
+
+			/* All other 16-bit registers: return 0 */
+			TR("XLAT: UNHANDLED Read16 addr=0x%04x (alt=0x%04x) rx=%u tx=[%*ph] -> zeros",
+			   addr, addr_alt, rx_len,
+			   (int)min_t(unsigned, tx_len, 8), tx_buf);
+			memset(fp_data->rd_buf, 0, rx_len);
+			return 0;
+		}
+
+		/* Pattern 3: Bulk FIFO read [06, F9, addr_hi, addr_lo, len_hi, len_lo] */
+		if (tx_len == 6 && tx_buf[0] == 0x06 && tx_buf[1] == 0xF9) {
+			u16 addr = (((u16)(tx_buf[2] & 0x7F)) << 8) | tx_buf[3];
+			u16 addr_alt = (((u16)(tx_buf[3] & 0x7F)) << 8) | tx_buf[2];
+			TR("XLAT: BulkRead addr=0x%04x (alt=0x%04x) rx=%u", addr, addr_alt, rx_len);
+
+			if (addr == 0x1A05 || addr_alt == 0x1A05) {
+				u16 req = rx_len;
+
+				/* Always re-fetch at offset 0 (start of new frame sequence) */
+				if (hw_image_read_offset == 0) {
+					focal_fetch_hw_frame(fp_data);
+					hw_image_valid = 1;
+				}
+
+				if (hw_image_read_offset >= 10240)
+					hw_image_read_offset = 0;
+
+				if (hw_image_read_offset + req > 10240)
+					req = 10240 - hw_image_read_offset;
+
+				memset(fp_data->rd_buf, 0, rx_len);
+				memcpy(fp_data->rd_buf, hw_image_buf + hw_image_read_offset, req);
+				hw_image_read_offset += req;
+
+				TR("XLAT: BulkRead 0x1A05 -> %u bytes at offset %zu (stage %d)",
+				   req, hw_image_read_offset, atomic_read(&touch_stage_counter));
+				return 0;
+			}
+
+			ret = spi_write_then_read(spi, tx_buf, tx_len, fp_data->rd_buf, rx_len);
+			TR("XLAT: BulkRead hw ret=%d rx=[%*ph]", ret,
+			   (int)min_t(unsigned, rx_len, 16), fp_data->rd_buf);
+			return ret;
+		}
+
+		/* Default: pass through unchanged (spi_write_then_read) */
+		ret=spi_write_then_read(spi,tx_buf, tx_len, fp_data->rd_buf, rx_len);
+		return ret;
+	}
+
+	return spi_read(spi, fp_data->rd_buf, rx_len);
+}
+
+static irqreturn_t focal_spi_irq_handler(int irq, void *dev_id)
+{
+	unsigned long now = jiffies;
+	int stg;
+
+	if (atomic_read(&in_reset) || time_before(now, last_irq_jiffies + msecs_to_jiffies(150)))
+		return IRQ_HANDLED;
+	last_irq_jiffies = now;
+	finger_lifted = 0;
+
+	stg = atomic_inc_return(&touch_stage_counter);
+	pr_info("focal: hardware IRQ fired on gpio-3! Finger touch #%d detected.\n", stg);
+	atomic_set(&finger_touch_state, 1);
+	hw_image_read_offset = 0;
+	hw_image_valid = 0;
+	if(focal_work_flag<=FOCAL_WAKE_EVENT_ENABLE){
+		focal_work_flag = FOCAL_WAKE_EVENT_INT;
+		wake_up(&focal_poll_wq);
+	}
+
+	return IRQ_HANDLED;
+}
+
+static void focal_spi_power_off(struct focal_fp_data *data)
+{
+	if (IS_ERR_OR_NULL(data->gpiod_rst))
+		return;
+	gpiod_set_value_cansleep(data->gpiod_rst, 0);
+}
+
+static void focal_spi_power_on(struct focal_fp_data *data)
+{
+	if (IS_ERR_OR_NULL(data->gpiod_rst))
+		return;
+	gpiod_set_value_cansleep(data->gpiod_rst, 1);
+}
+
+static void focal_spi_reset(struct focal_fp_data *data)
+{
+	struct device *dev;
+
+	if (!data || !data->spi || IS_ERR_OR_NULL(data->gpiod_rst))
+		return;
+	dev = &data->spi->dev;
+
+	atomic_set(&in_reset, 1);
+	/* BIOS _INI leaves the line HIGH (out of reset). Pulse LOW, end HIGH. */
+	gpiod_set_value_cansleep(data->gpiod_rst, !rst_idle);
+	msleep(10);
+	gpiod_set_value_cansleep(data->gpiod_rst, !!rst_idle);
+	msleep(400); /* 400ms settle time verified from Windows DLL & winid.py */
+	last_irq_jiffies = jiffies + msecs_to_jiffies(300);
+	atomic_set(&in_reset, 0);
+
+	dev_info(dev, "reset: pulsed low 10ms, idle level now %d (active_low=%d)\n",
+		 gpiod_get_value_cansleep(data->gpiod_rst),
+		 gpiod_is_active_low(data->gpiod_rst));
+}
+
+
+
+/**
+ * focal_spi_get_gpio_config - Get GPIO config from ACPI/DT
+ * @data: focal_spi_fp_data pointer
+ */
+static int focal_spi_get_gpio_config(struct focal_fp_data *data)
+{
+	int error;
+	struct device *dev;
+	struct gpio_desc *gpiod;
+
+	dev = &data->spi->dev;
+
+	/* Get the reset lines GPIO pin number */
+	gpiod = devm_gpiod_get_index(dev, NULL, 0, GPIOD_OUT_HIGH);
+	if (IS_ERR(gpiod)) {
+		error = PTR_ERR(gpiod);
+		if (error != -EPROBE_DEFER)
+			dev_err(dev,"Failed to get power GPIO 0: %d\n",error);
+		return error;
+	}
+
+	data->gpiod_rst = gpiod;
+
+	return 0;
+}
+
+static int focal_spi_create_touch_input(struct focal_fp_data *data)
+{
+	struct input_dev *input;
+	int error;
+
+	input = devm_input_allocate_device(&data->spi->dev);
+	if (!input)
+		return -ENOMEM;
+
+	data->input_dev = input;
+
+	input->name = "focal SPI fingerint";
+	input->id.bustype = BUS_SPI;
+	input->evbit[0] = BIT_MASK(EV_SYN) | BIT_MASK(EV_KEY);
+	set_bit(KEY_F11, input->keybit); 
+	set_bit(KEY_F12, input->keybit);
+
+	input_set_capability(input, EV_KEY, KEY_POWER);
+
+	error = input_register_device(input);
+	if (error) {
+		dev_err(&data->spi->dev,"Failed to register input device: %d", error);
+		return error;
+	}
+
+	return 0;
+}
+
+static ssize_t __spidev_read(struct file *filp, char __user *pUserBuf, size_t count, loff_t *f_pos)
+{
+	ssize_t status=0;
+	ssize_t spi_status=0;
+	unsigned short rx_len=0;
+	unsigned short tx_len=0;
+
+	struct miscdevice *dev = (struct miscdevice *)filp->private_data;
+	ff_ctl_context_t *ctx = container_of(dev, ff_ctl_context_t, miscdev);
+
+	LOGD("read count=0x%d",count);
+
+	if(count>MAX_BUFF_SIZE){
+		LOGD("read buff too long");
+		return 0;
+	}
+
+	focal_spi_read_buff_t *spi_buf=NULL;
+
+	if(count>=sizeof(focal_spi_read_buff_t)){
+		status=copy_from_user(ctx->fp_data->wr_buf, pUserBuf,count);
+		if(status){
+			LOGD("copy_from_user err");	
+			return 0;
+		}
+		spi_buf=(focal_spi_read_buff_t*)ctx->fp_data->wr_buf;
+		TR("__spidev_read: type=%u tx_len=%u rx_len=%u count=%zu",
+		   spi_buf->type, spi_buf->tx_len, spi_buf->rx_len, count);
+	}else{
+		LOGD("read buff too short");
+		return 0;
+	}
+
+	if(spi_buf){
+
+		if(spi_buf->type==SPI_BACK_DATA){
+			TR("BACKDATA READ count=%zu first8=[%*ph]", count,
+			   (int)min_t(size_t, count, 8), ctx->fp_data->sensor_init_data);
+			status=copy_to_user(pUserBuf,ctx->fp_data->sensor_init_data,count);
+			if(status){
+				LOGD("copy_to_user err");
+				return 0;
+			}
+			return count;
+		}
+
+		if(spi_buf->type==SPI_READ_WRITE){
+			tx_len=spi_buf->tx_len;
+			rx_len=spi_buf->rx_len;
+		}
+
+		if(spi_buf->type==SPI_READ_ONLY){
+			rx_len=spi_buf->rx_len;
+			TR("READ_ONLY rx_len=%u", rx_len);
+			if(spi_buf->tx_len!=0){
+				LOGD("read only,but tx len=%d",spi_buf->tx_len);
+				return 0;
+			}
+		}
+
+		if((tx_len>MAX_BUFF_SIZE)\
+			||(rx_len>MAX_BUFF_SIZE)\
+			||(rx_len==0)\
+			||(tx_len+rx_len>MAX_BUFF_SIZE)){
+
+			LOGD("read write len error,rxlen=%d,tx_len=%d\n",rx_len,tx_len);
+			return 0;
+		}
+
+	}
+
+	LOGD("rxlen=%d,tx_len=%d\n",rx_len,tx_len);
+
+	if(tx_len>0){
+		if (count < sizeof(focal_spi_read_buff_t) + tx_len)
+			return -EINVAL;
+		memmove(ctx->fp_data->wr_buf, ctx->fp_data->wr_buf + sizeof(focal_spi_read_buff_t), tx_len);
+	}
+
+	spi_status=focal_spi_read(ctx->fp_data, tx_len,rx_len);
+	LOGD("SPI transaction tx=%u rx=%u returned=%zd", tx_len, rx_len, spi_status);
+	if (tx_len != 6 || (ctx->fp_data->wr_buf[0] != 0x04 && ctx->fp_data->wr_buf[1] != 0xFB) ||
+	    ((((u16)(ctx->fp_data->wr_buf[2] & 0x7F)) << 8) | ctx->fp_data->wr_buf[3]) != 0x1A82) {
+		TR("RD tx=%u rx=%u ret=%zd tx[%*ph] rx[%*ph]", tx_len, rx_len, spi_status,
+		   (int)min_t(unsigned, tx_len, 32), ctx->fp_data->wr_buf,
+		   (int)min_t(unsigned, rx_len, 32), ctx->fp_data->rd_buf);
+	}
+
+	if (spi_status < 0)
+		return spi_status;
+
+	status=copy_to_user(pUserBuf,ctx->fp_data->rd_buf,rx_len);
+	if(status){
+		LOGD("copy_to_user err");
+		return -EFAULT;
+	}
+
+	return count;
+}
+
+static ssize_t __spidev_write(struct file *filp,const char __user *pUserBuf,size_t count,loff_t *f_pos)
+{
+	ssize_t status=0;
+
+	struct miscdevice *dev = (struct miscdevice *)filp->private_data;
+	ff_ctl_context_t *ctx = container_of(dev,ff_ctl_context_t,miscdev);
+
+	LOGD("write count=%d",count);
+
+	if(count>MAX_BUFF_SIZE){
+		LOGD("write buff too long");
+		return 0;
+	}
+
+	if(count>=sizeof(focal_spi_read_buff_t)){
+		status=copy_from_user(ctx->fp_data->wr_buf,pUserBuf,count);
+		if(status){
+			LOGD("copy_from_user err");	
+			return 0;
+		}	
+	}else{
+		LOGD("write buff too short");
+		return 0;
+	}
+
+	focal_spi_read_buff_t *spi_buf=(focal_spi_read_buff_t*)ctx->fp_data->wr_buf;
+	if(spi_buf->type==SPI_BACK_DATA){
+		TR("BACKDATA WRITE count=%zu first8=[%*ph]", count,
+		   (int)min_t(size_t, count, 8), ctx->fp_data->wr_buf);
+		memcpy(ctx->fp_data->sensor_init_data,ctx->fp_data->wr_buf,count);
+		return count;
+	}
+
+	TR("WR len=%zu data[%*ph]", count - sizeof(focal_spi_read_buff_t),
+	   (int)min_t(size_t, count - sizeof(focal_spi_read_buff_t), 32),
+	   ctx->fp_data->wr_buf + sizeof(focal_spi_read_buff_t));
+
+	{
+		size_t wr_len = count - sizeof(focal_spi_read_buff_t);
+		u8 *p = ctx->fp_data->wr_buf + sizeof(focal_spi_read_buff_t);
+		if (wr_len >= 4 && p[0] == 0x09 && p[1] == 0xF6) {
+			shadow_regs[p[2]] = p[3];
+			TR("XLAT: Shadow Write8 reg=0x%02x val=0x%02x", p[2], p[3]);
+		}
+		if (wr_len >= 2 && p[0] == 0xC4 && p[1] == 0x3B) {
+			scan_active = 1;
+			TR("XLAT: Scan start command 0xC4 0x3B received");
+		}
+		if (wr_len >= 2 && p[0] == 0xC0 && p[1] == 0x3F) {
+			scan_active = 0;
+			atomic_set(&finger_touch_state, 0);
+			focal_work_flag = FOCAL_WAKE_EVENT_NONE;
+			TR("XLAT: Scan stop command 0xC0 0x3F received");
+		}
+		if (wr_len >= 4 && p[0] == 0x05 && p[1] == 0xFA) {
+			u16 addr = (((u16)(p[2] & 0x7F)) << 8) | p[3];
+			u16 addr_alt = (((u16)(p[3] & 0x7F)) << 8) | p[2];
+			if (addr == 0x1885 || addr_alt == 0x1885) {
+				fdt_scan_active = 1;
+				TR("XLAT: FDT manual scan start (0x1885)");
+			}
+			if (addr == 0x00B0 || addr_alt == 0x00B0 || addr == 0x00E0 || addr_alt == 0x00E0) {
+				size_t base_len = (wr_len > 6) ? (wr_len - 6) : 0;
+				if (base_len > sizeof(fdt_up_base))
+					base_len = sizeof(fdt_up_base);
+				if (base_len > 0) {
+					memcpy(fdt_up_base, p + 6, base_len);
+					TR("XLAT: Saved FDT UpBase: [%*ph]", (int)base_len, fdt_up_base);
+				}
+			}
+			if (addr == 0x1A84 || addr_alt == 0x1A84) {
+				int cur = atomic_read(&finger_touch_state);
+				u16 clr = (wr_len >= 8) ? ((((u16)p[6]) << 8) | p[7]) : 0;
+				TR("XLAT: Clear IntStatus 0x1A84 clr=0x%04x (current state=%d, fdt_scan=%d)",
+				   clr, cur, fdt_scan_active);
+				if (fdt_scan_active && (clr & 0x0008)) {
+					fdt_scan_active = 0;
+					atomic_set(&finger_touch_state, 2);
+					scan_active = 0;
+				} else if (clr & 0x0008) {
+					fdt_scan_active = 0;
+				}
+				if ((clr & 0x0020) || (clr & 0x002f) || clr == 0xffff || hw_image_read_offset >= 10240) {
+					if (cur != 0) {
+						pr_info("focal: Frame acknowledged clr=0x%04x, reset to IDLE (stage %d)\n",
+							clr, atomic_read(&touch_stage_counter));
+					}
+					atomic_set(&finger_touch_state, 0);
+					scan_active = 0;
+					hw_image_read_offset = 0;
+					hw_image_valid = 0;
+					finger_lifted = 1;
+					touch_trigger = 0;
+					focal_work_flag = FOCAL_WAKE_EVENT_NONE;
+				} else if (cur == 1) {
+					atomic_set(&finger_touch_state, 3);
+					scan_active = 1;
+				} else if (cur == 2) {
+					atomic_set(&finger_touch_state, 0);
+				}
+				if (touch_trigger == 1)
+					touch_trigger = 3;
+				else if (touch_trigger == 2)
+					touch_trigger = 0;
+			}
+		}
+	}
+
+	status=spi_write(ctx->fp_data->spi,ctx->fp_data->wr_buf+sizeof(focal_spi_read_buff_t),count-sizeof(focal_spi_read_buff_t));
+	TR("WR ret=%zd", status);
+
+	if(status>=0){
+		return count;
+	}
+
+	return status;
+}
+
+static ssize_t spidev_read(struct file *filp, char __user *b, size_t c, loff_t *pos)
+{
+	ssize_t r;
+	struct miscdevice *m = filp->private_data;
+	ff_ctl_context_t *ctx = container_of(m, ff_ctl_context_t, miscdev);
+	mutex_lock(&ff_lock);
+	if (!ctx->fp_data) { mutex_unlock(&ff_lock); return -ENODEV; }
+	r = __spidev_read(filp, b, c, pos);
+	mutex_unlock(&ff_lock);
+	return r;
+}
+
+static ssize_t spidev_write(struct file *filp, const char __user *b, size_t c, loff_t *pos)
+{
+	ssize_t r;
+	struct miscdevice *m = filp->private_data;
+	ff_ctl_context_t *ctx = container_of(m, ff_ctl_context_t, miscdev);
+	mutex_lock(&ff_lock);
+	if (!ctx->fp_data) { mutex_unlock(&ff_lock); return -ENODEV; }
+	r = __spidev_write(filp, b, c, pos);
+	mutex_unlock(&ff_lock);
+	return r;
+}
+
+static int spidev_open(struct inode *inode,struct file *filp)
+{
+	ssize_t status=0;
+	struct miscdevice *dev = (struct miscdevice *)filp->private_data;
+	ff_ctl_context_t *ctx = container_of(dev, ff_ctl_context_t, miscdev);
+	LOGD("%s enter",__func__);
+
+	if(ctx){
+		if(ctx->fp_data){
+			LOGD("[%s]ctx->fp_data->init=0x%X",__func__,ctx->fp_data->init);
+		}
+		atomic_set(&finger_touch_state, 0);
+		fdt_scan_active = 0;
+		scan_active = 0;
+		atomic_set(&touch_stage_counter, 0);
+		hw_image_read_offset = 0;
+		hw_image_valid = 0;
+		finger_lifted = 1;
+	}else{
+		return -1;
+	}
+
+	return status;
+}
+
+static int spidev_close(struct inode *inode, struct file *filp)
+{
+	ssize_t status=0;
+	struct miscdevice *dev = (struct miscdevice *)filp->private_data;
+   	ff_ctl_context_t *ctx = container_of(dev, ff_ctl_context_t, miscdev);
+
+	LOGD("%s enter ",__func__);
+
+	if(ctx){
+		if(ctx->fp_data){
+			if(ctx->fp_data->init==INIT_SUCCESS){	
+				//devm_kfree(ctx->fp_data);
+				//ctx->fp_data=NULL;
+			}
+		}
+	}
+
+	return status;
+}
+static long ff_do_xfer(struct focal_fp_data *d, unsigned long arg)
+{
+	struct ff_xfer_req *rq;
+	struct spi_transfer *xf;
+	struct spi_message m;
+	struct spi_device *spi = d->spi;
+	u32 old_mode = spi->mode, old_hz = spi->max_speed_hz;
+	bool changed = false;
+	u32 i, off = 0;
+	long ret;
+
+	rq = kvzalloc(sizeof(*rq), GFP_KERNEL);
+	xf = kcalloc(FF_XFER_MAX, sizeof(*xf), GFP_KERNEL);
+	if (!rq || !xf) { ret = -ENOMEM; goto out; }
+	if (copy_from_user(rq, (void __user *)arg, sizeof(*rq))) { ret = -EFAULT; goto out; }
+	if (!rq->n || rq->n > FF_XFER_MAX) { ret = -EINVAL; goto out; }
+
+	spi_message_init(&m);
+	for (i = 0; i < rq->n; i++) {
+		u32 len = rq->x[i].len;
+		if (!len || len > FF_XFER_BUF || off + len > FF_XFER_BUF) { ret = -EINVAL; goto out; }
+		xf[i].len = len;
+		if (!(rq->x[i].flags & FF_XF_NOTX)) xf[i].tx_buf = rq->tx + off;
+		if (!(rq->x[i].flags & FF_XF_NORX)) xf[i].rx_buf = rq->rx + off;
+		xf[i].cs_change = !!rq->x[i].cs_change;
+		xf[i].delay.value = rq->x[i].delay_us;
+		xf[i].delay.unit = SPI_DELAY_UNIT_USECS;
+		spi_message_add_tail(&xf[i], &m);
+		off += len;
+	}
+	if (rq->mode != 0xFFFFFFFFu || rq->speed_hz) {
+		if (rq->mode != 0xFFFFFFFFu) spi->mode = rq->mode & 0xff;
+		if (rq->speed_hz) spi->max_speed_hz = rq->speed_hz;
+		ret = spi_setup(spi);
+		changed = true;
+		if (ret) goto restore;
+	}
+	if (rq->pre_delay_us) usleep_range(rq->pre_delay_us, rq->pre_delay_us + 50);
+	ret = spi_sync(spi, &m);
+	TR("XFER n=%u mode=0x%x hz=%u ret=%ld tx[%*ph] rx[%*ph]", rq->n, spi->mode, spi->max_speed_hz, ret,
+	   (int)min_t(u32, off, 48), rq->tx, (int)min_t(u32, off, 48), rq->rx);
+restore:
+	if (changed) {
+		spi->mode = old_mode;
+		spi->max_speed_hz = old_hz;
+		spi_setup(spi);
+	}
+	if (!ret && copy_to_user((void __user *)arg, rq, sizeof(*rq)))
+		ret = -EFAULT;
+out:
+	kfree(xf);
+	kvfree(rq);
+	return ret;
+}
+
+static long __ff_ctl_ioctl(struct file *filp,unsigned int cmd,unsigned long arg)
+{
+	int err = 0;
+	struct miscdevice *dev = (struct miscdevice *)filp->private_data;
+	ff_ctl_context_t *ctx = container_of(dev, ff_ctl_context_t, miscdev);
+	LOGD("'%s' enter.cmd=0x%x,arg=%d", __func__,cmd,arg);
+	TR("IOCTL cmd=0x%x arg=%lu", cmd, arg);
+
+	if(!ctx){
+		LOGD("ff_ctl_context is null");
+		return -1;
+	}
+
+	if(!ctx->fp_data){
+		LOGD("fp_data is null");
+		return -2;
+	}
+
+	switch (cmd){
+		
+		case FF_IOC_RESET_DEV:
+			focal_spi_reset(ctx->fp_data);break;
+		case FF_IOC_POWER_OFF: 
+			focal_spi_power_off(ctx->fp_data);break;
+		case FF_IOC_POWER_ON: 
+			focal_spi_power_on(ctx->fp_data);break;
+		case FF_IOC_LOG_EN:
+			g_log_enable=(int)arg;
+			LOGD("FF_IOC_LOG_EN ,arg=%d",arg);break;
+		case FF_IOC_IRQ_EN:
+
+			if(irq_is_disabled==1&&arg!=0){
+				irq_is_disabled=0;
+				enable_irq(ctx->fp_data->spi->irq);
+			}
+
+			if(irq_is_disabled==0&&arg==0){
+				irq_is_disabled=1;
+				disable_irq(ctx->fp_data->spi->irq);
+			}
+
+			break;
+		case FF_IOC_RELEASE_POLL:
+			focal_work_flag = arg;
+			if(arg){//arg ==0,start
+				wake_up(&focal_poll_wq);
+			}
+			break;
+		case FF_IOC_XFER:
+			return ff_do_xfer(ctx->fp_data, arg);
+		case FF_IOC_CSn:
+			//focal_spi_cs_ctl(ctx->fp_data,arg);
+			break;
+		default:break;
+	}
+	
+	return err;
+}
+
+static long ff_ctl_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+{
+	long r;
+	struct miscdevice *m = filp->private_data;
+	ff_ctl_context_t *ctx = container_of(m, ff_ctl_context_t, miscdev);
+	mutex_lock(&ff_lock);
+	if (!ctx->fp_data || ctx->fp_data->init != INIT_SUCCESS ||
+	    IS_ERR_OR_NULL(ctx->fp_data->gpiod_rst)) {
+		mutex_unlock(&ff_lock);
+		return -ENODEV;
+	}
+	r = __ff_ctl_ioctl(filp, cmd, arg);
+	mutex_unlock(&ff_lock);
+	return r;
+}
+
+#ifdef CONFIG_COMPAT
+static long ff_ctl_compat_ioctl(struct file *filp,unsigned int cmd,unsigned long arg)
+{
+	int err = 0;
+	LOGD("focal '%s' enter.\n", __func__);
+
+	err = ff_ctl_ioctl(filp, cmd, arg);
+
+	return err;
+}
+#endif
+static unsigned int focal_poll(struct file *file,poll_table *wait)
+{
+	int ret=0;
+	LOGD("%s enter\n",__func__);
+
+	wait_event_interruptible(focal_poll_wq, focal_work_flag > FOCAL_WAKE_EVENT_NONE);
+	
+	if(focal_work_flag > FOCAL_WAKE_EVENT_NONE)
+		ret = focal_work_flag;
+
+	focal_work_flag = FOCAL_WAKE_EVENT_NONE;
+	return ret;
+}
+static struct file_operations ff_ctl_fops = {
+	.owner			=	THIS_MODULE,
+	.read			=	spidev_read,
+	.write			=	spidev_write,
+	.unlocked_ioctl	=	ff_ctl_ioctl,
+	.poll			=	focal_poll,
+#ifdef CONFIG_COMPAT
+	.compat_ioctl	=	ff_ctl_compat_ioctl,
+#endif
+	.open			=	spidev_open,
+	.release		=	spidev_close,
+};
+
+static ff_ctl_context_t ff_ctl_context = {
+	.miscdev = {
+		.minor	=	MISC_DYNAMIC_MINOR,
+		.name	=	"focal_moh_spi",
+		.fops	=	&ff_ctl_fops,
+	}, 0,
+};
+
+static int focal_spi_probe(struct spi_device *spi)
+{
+	struct focal_fp_data *fp_data;
+	int error;
+
+	LOGD("%s enter\n",__func__);
+
+	/* Match the FTE4800 ACPI resource on ZERO BOOK 13:
+	 * active-low chip select, SPI mode 0, 1 MHz clock. */
+	spi->max_speed_hz = spi_hz;
+	spi->bits_per_word = 8;
+	spi->mode = spi_mode;
+	error = spi_setup(spi);
+	if (error)
+		return error;
+
+	fp_data = devm_kzalloc(&spi->dev, sizeof(struct focal_fp_data), GFP_KERNEL);
+	if (!fp_data)
+		return -ENOMEM;
+
+	fp_data->init=-1;
+
+	fp_data->spi = spi;
+	spi_set_drvdata(spi, fp_data);
+
+	dev_info(&spi->dev, "SPI config: mode=%u speed=%uHz bits=%u cs=%u\n",
+		 spi->mode, spi->max_speed_hz, spi->bits_per_word, spi_get_chipselect(spi, 0));
+
+	error = focal_spi_get_gpio_config(fp_data);
+	if (error)
+		return error;
+
+	focal_spi_reset(fp_data);
+
+	error = focal_spi_create_touch_input(fp_data);
+	if (error)
+		return error;
+
+	error = devm_request_threaded_irq(&spi->dev, spi->irq,
+					  NULL, focal_spi_irq_handler,
+					 IRQF_TRIGGER_RISING | IRQF_ONESHOT,
+					  "focal-irq", fp_data);
+	if (error)
+		return error;
+	fp_data->init=INIT_SUCCESS;
+	mutex_lock(&ff_lock);
+	ff_ctl_context.fp_data=fp_data;
+	mutex_unlock(&ff_lock);
+
+	/* Keep IRQ enabled so finger touches on gpio-3 fire */
+	irq_is_disabled = 0;
+
+	return 0;
+}
+
+static void focal_spi_remove(struct spi_device *spi)
+{
+	mutex_lock(&ff_lock);
+	ff_ctl_context.fp_data = NULL;
+	mutex_unlock(&ff_lock);
+}
+
+static int focal_spi_suspend(struct device *dev)
+{
+	struct spi_device *spi = to_spi_device(dev);
+	struct focal_fp_data *data = spi_get_drvdata(spi);
+
+	LOGD("%s enter ",__func__);
+	if(irq_is_disabled==0){
+		irq_is_disabled=1;
+		disable_irq(data->spi->irq);
+	}
+	if(focal_work_flag<=FOCAL_WAKE_EVENT_ENABLE){
+		focal_work_flag = FOCAL_WAKE_EVENT_SUSPEND;
+		wake_up(&focal_poll_wq);
+	}
+
+	//focal_spi_power(data, false);
+
+	return 0;
+}
+
+static int focal_spi_resume(struct device *dev)
+{
+	struct spi_device *spi = to_spi_device(dev);
+	struct focal_fp_data *data = spi_get_drvdata(spi);
+	LOGD("%s enter ",__func__);
+	//focal_spi_power(data, true);
+	if(irq_is_disabled==1){
+		irq_is_disabled=0;
+		enable_irq(data->spi->irq);
+	}
+	if(focal_work_flag<=FOCAL_WAKE_EVENT_ENABLE){
+		focal_work_flag = FOCAL_WAKE_EVENT_RESUME;
+		wake_up(&focal_poll_wq);
+	}
+
+	return 0;
+}
+
+static DEFINE_SIMPLE_DEV_PM_OPS(focal_spi_pm_ops,focal_spi_suspend,focal_spi_resume);
+
+#ifdef CONFIG_ACPI
+static const struct acpi_device_id focal_spi_acpi_match[] = {
+	{ "FTE3600", 0 },
+	{ "FTE4800", 0 },
+	{ "FTE6600", 0 },
+	{ "FTE6900", 0 },
+	{}
+};
+MODULE_DEVICE_TABLE(acpi, focal_spi_acpi_match);
+#endif
+
+static struct spi_driver focal_spi_driver = {
+	.driver = {
+		.name	= "focalfp-spi",
+		.acpi_match_table = ACPI_PTR(focal_spi_acpi_match),
+		.pm = pm_sleep_ptr(&focal_spi_pm_ops),
+	},
+	.probe = focal_spi_probe,
+	.remove = focal_spi_remove,
+};
+
+static int __init focal_fp_driver_init(void)
+{
+	int err;
+	g_log_enable=1;
+
+	LOGD("%s is called,driver version is %s\n", __func__,VERSION);
+
+	err = misc_register(&ff_ctl_context.miscdev);
+	if (err) {
+		LOGD("misc_register(..) = %d.", err);
+		return err;
+	}
+
+	if (spi_register_driver(&focal_spi_driver) != 0){
+		LOGD("unable to add spi driver.\n");
+		misc_deregister(&ff_ctl_context.miscdev);
+		return -ENODEV;
+	}
+
+	g_log_enable=0;
+
+	return 0;
+}
+
+/* should never be called */
+static void __exit focal_fp_driver_exit(void)
+{
+	//input_free_device(ff_ctl_context.fp_data->input_dev);
+
+	spi_unregister_driver(&focal_spi_driver);
+	misc_deregister(&ff_ctl_context.miscdev);
+
+	//devm_kfree(
+	return;
+}
+
+module_init(focal_fp_driver_init);
+module_exit(focal_fp_driver_exit);
+
+//module_spi_driver(focal_spi_driver);
+
+MODULE_AUTHOR("zhangpiaoxiang <zhangpiaoxiang@focaltech-electronics.com>");
+MODULE_DESCRIPTION("Focaltech PC-SPI fingerprint driver");
+MODULE_LICENSE("GPL v2");

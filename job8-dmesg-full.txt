@@ -1,0 +1,1893 @@
+[36155.813100] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36155.813103] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36155.813105] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36155.813107] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36155.813108] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36155.813111] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36155.813113] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36155.813114] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36155.813116] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36155.813119] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36155.813121] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36155.813122] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36155.813123] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36155.813126] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36155.813128] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36155.813129] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36155.813131] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36155.813134] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36155.813136] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36155.813137] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36155.813139] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36155.813141] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36155.813143] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36155.813145] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36155.813146] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36155.813150] focal-trace: WR len=8 data[05 fa 98 00 00 00 4f ff]
+[36155.813376] focal-trace: WR ret=0
+[36155.813379] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36155.814442] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36155.815514] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36155.816760] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36155.817945] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36155.819054] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=1018 count=11
+[36155.819062] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=1018
+[36155.872247] focal: captured & unpacked 5120 pixels -> 10240 bytes (stage 0) min=0 max=0 nz=0/5120 first8=[00 00 00 00 00 00 00 00]
+[36155.872270] focal-trace: XLAT: BulkRead 0x1A05 -> 1018 bytes at offset 1018 (stage 0)
+[36155.872278] focal-trace: RD tx=6 rx=1018 ret=0 tx[06 f9 9a 05 01 fb] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36155.872300] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=266 count=11
+[36155.872306] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=266
+[36155.872312] focal-trace: XLAT: BulkRead 0x1A05 -> 266 bytes at offset 1284 (stage 0)
+[36155.872316] focal-trace: RD tx=6 rx=266 ret=0 tx[06 f9 9a 05 00 83] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36155.872331] focal-trace: WR len=8 data[05 fa 9a 84 00 00 00 20]
+[36155.872335] focal-trace: XLAT: Clear IntStatus 0x1A84 clr=0x0020 (current state=0, fdt_scan=0)
+[36155.872534] focal-trace: WR ret=0
+[36155.872565] focal-trace: WR len=3 data[5a a5 00]
+[36155.872804] focal-trace: WR ret=0
+[36155.873862] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36155.873870] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36155.873873] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36155.873876] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36155.873884] focal-trace: WR len=3 data[a5 5a 00]
+[36155.874080] focal-trace: WR ret=0
+[36155.874085] focal-trace: WR len=8 data[05 fa 98 01 00 00 37 7e]
+[36155.874298] focal-trace: WR ret=0
+[36155.874303] focal-trace: WR len=8 data[05 fa 98 00 00 00 4f fe]
+[36155.874521] focal-trace: WR ret=0
+[36155.874526] focal-trace: WR len=8 data[05 fa 98 16 00 00 00 00]
+[36155.874730] focal-trace: WR ret=0
+[36155.874734] focal-trace: WR len=8 data[05 fa 98 07 00 00 0d e7]
+[36155.874954] focal-trace: WR ret=0
+[36155.874961] focal-trace: WR len=8 data[05 fa 98 06 00 00 02 3b]
+[36155.875190] focal-trace: WR ret=0
+[36155.875194] focal-trace: WR len=8 data[05 fa 98 0a 00 00 00 01]
+[36155.875406] focal-trace: WR ret=0
+[36155.875410] focal-trace: WR len=8 data[05 fa 98 0b 00 00 01 04]
+[36155.875628] focal-trace: WR ret=0
+[36155.875634] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36155.875638] focal-trace: XLAT: Read16 addr=0x1812 (alt=0x1298) rx=4
+[36155.875642] focal-trace: XLAT: UNHANDLED Read16 addr=0x1812 (alt=0x1298) rx=4 tx=[04 fb 98 12 00 00] -> zeros
+[36155.875646] focal-trace: RD tx=6 rx=4 ret=0 tx[04 fb 98 12 00 00] rx[00 00 00 00]
+[36155.875653] focal-trace: WR len=8 data[05 fa 98 12 00 00 01 00]
+[36155.875897] focal-trace: WR ret=0
+[36155.875903] focal-trace: WR len=3 data[c8 37 00]
+[36155.876064] focal-trace: WR ret=0
+[36155.877138] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36155.877145] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36155.877148] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36155.877150] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36155.877156] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36155.877160] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36155.877163] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36155.877165] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36155.877169] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36155.877172] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36155.877174] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36155.877176] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36155.877180] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36155.877184] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36155.877186] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36155.877189] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36155.877193] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36155.877197] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36155.877199] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36155.877201] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36155.877205] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36155.877209] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36155.877211] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36155.877213] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36155.877217] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36155.877219] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36155.877221] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36155.877223] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36155.877227] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36155.877230] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36155.877233] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36155.877235] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36155.877239] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36155.877243] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36155.877245] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36155.877248] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36155.877252] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36155.877255] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36155.877258] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36155.877260] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36155.877265] focal-trace: WR len=8 data[05 fa 98 00 00 00 4f ff]
+[36155.877486] focal-trace: WR ret=0
+[36155.877492] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36155.878571] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36155.879653] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36155.880736] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36155.881807] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36155.882970] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=1018 count=11
+[36155.882974] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=1018
+[36155.936078] focal: captured & unpacked 5120 pixels -> 10240 bytes (stage 0) min=0 max=0 nz=0/5120 first8=[00 00 00 00 00 00 00 00]
+[36155.936089] focal-trace: XLAT: BulkRead 0x1A05 -> 1018 bytes at offset 1018 (stage 0)
+[36155.936092] focal-trace: RD tx=6 rx=1018 ret=0 tx[06 f9 9a 05 01 fb] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36155.936106] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=266 count=11
+[36155.936109] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=266
+[36155.936111] focal-trace: XLAT: BulkRead 0x1A05 -> 266 bytes at offset 1284 (stage 0)
+[36155.936113] focal-trace: RD tx=6 rx=266 ret=0 tx[06 f9 9a 05 00 83] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36155.936123] focal-trace: WR len=8 data[05 fa 9a 84 00 00 00 20]
+[36155.936125] focal-trace: XLAT: Clear IntStatus 0x1A84 clr=0x0020 (current state=0, fdt_scan=0)
+[36155.936332] focal-trace: WR ret=0
+[36155.936346] focal-trace: WR len=3 data[5a a5 00]
+[36155.936481] focal-trace: WR ret=0
+[36155.937553] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36155.937562] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36155.937569] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36155.937574] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36155.937579] focal-trace: WR len=3 data[a5 5a 00]
+[36155.937740] focal-trace: WR ret=0
+[36155.937743] focal-trace: WR len=8 data[05 fa 98 01 00 00 37 7e]
+[36155.937922] focal-trace: WR ret=0
+[36155.937924] focal-trace: WR len=8 data[05 fa 98 00 00 00 4f fe]
+[36155.938109] focal-trace: WR ret=0
+[36155.938112] focal-trace: WR len=8 data[05 fa 98 16 00 00 00 00]
+[36155.938303] focal-trace: WR ret=0
+[36155.938306] focal-trace: WR len=8 data[05 fa 98 07 00 00 0d e7]
+[36155.938507] focal-trace: WR ret=0
+[36155.938510] focal-trace: WR len=8 data[05 fa 98 06 00 00 02 3b]
+[36155.938681] focal-trace: WR ret=0
+[36155.938683] focal-trace: WR len=8 data[05 fa 98 0a 00 00 00 01]
+[36155.938937] focal-trace: WR ret=0
+[36155.938941] focal-trace: WR len=8 data[05 fa 98 0b 00 00 01 04]
+[36155.939159] focal-trace: WR ret=0
+[36155.939163] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36155.939166] focal-trace: XLAT: Read16 addr=0x1812 (alt=0x1298) rx=4
+[36155.939169] focal-trace: XLAT: UNHANDLED Read16 addr=0x1812 (alt=0x1298) rx=4 tx=[04 fb 98 12 00 00] -> zeros
+[36155.939172] focal-trace: RD tx=6 rx=4 ret=0 tx[04 fb 98 12 00 00] rx[00 00 00 00]
+[36155.939177] focal-trace: WR len=8 data[05 fa 98 12 00 00 01 00]
+[36155.939400] focal-trace: WR ret=0
+[36155.939405] focal-trace: WR len=3 data[c8 37 00]
+[36155.939558] focal-trace: WR ret=0
+[36155.940623] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36155.940626] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36155.940628] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36155.940630] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36155.940634] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36155.940636] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36155.940638] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36155.940639] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36155.940642] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36155.940644] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36155.940646] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36155.940647] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36155.940650] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36155.940652] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36155.940653] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36155.940654] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36155.940657] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36155.940659] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36155.940661] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36155.940662] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36155.940665] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36155.940667] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36155.940668] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36155.940670] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36155.940673] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36155.940674] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36155.940676] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36155.940677] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36155.940680] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36155.940682] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36155.940683] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36155.940685] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36155.940688] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36155.940689] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36155.940691] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36155.940692] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36155.940695] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36155.940697] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36155.940699] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36155.940700] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36155.940703] focal-trace: WR len=8 data[05 fa 98 00 00 00 4f ff]
+[36155.940913] focal-trace: WR ret=0
+[36155.940921] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36155.941987] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36155.943050] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36155.944109] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36155.945168] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36155.946243] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=1018 count=11
+[36155.946251] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=1018
+[36155.999138] focal: captured & unpacked 5120 pixels -> 10240 bytes (stage 0) min=0 max=0 nz=0/5120 first8=[00 00 00 00 00 00 00 00]
+[36155.999149] focal-trace: XLAT: BulkRead 0x1A05 -> 1018 bytes at offset 1018 (stage 0)
+[36155.999153] focal-trace: RD tx=6 rx=1018 ret=0 tx[06 f9 9a 05 01 fb] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36155.999167] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=266 count=11
+[36155.999170] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=266
+[36155.999172] focal-trace: XLAT: BulkRead 0x1A05 -> 266 bytes at offset 1284 (stage 0)
+[36155.999174] focal-trace: RD tx=6 rx=266 ret=0 tx[06 f9 9a 05 00 83] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36155.999182] focal-trace: WR len=8 data[05 fa 9a 84 00 00 00 20]
+[36155.999184] focal-trace: XLAT: Clear IntStatus 0x1A84 clr=0x0020 (current state=0, fdt_scan=0)
+[36155.999400] focal-trace: WR ret=0
+[36155.999414] focal-trace: WR len=3 data[5a a5 00]
+[36155.999563] focal-trace: WR ret=0
+[36156.000646] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.000655] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.000662] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.000667] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.000670] focal-trace: WR len=3 data[a5 5a 00]
+[36156.000806] focal-trace: WR ret=0
+[36156.000808] focal-trace: WR len=8 data[05 fa 98 01 00 00 37 7e]
+[36156.001044] focal-trace: WR ret=0
+[36156.001047] focal-trace: WR len=8 data[05 fa 98 00 00 00 4f fe]
+[36156.001237] focal-trace: WR ret=0
+[36156.001239] focal-trace: WR len=8 data[05 fa 98 16 00 00 00 00]
+[36156.001505] focal-trace: WR ret=0
+[36156.001507] focal-trace: WR len=8 data[05 fa 98 07 00 00 0d e7]
+[36156.001748] focal-trace: WR ret=0
+[36156.001750] focal-trace: WR len=8 data[05 fa 98 06 00 00 02 3b]
+[36156.001912] focal-trace: WR ret=0
+[36156.001916] focal-trace: WR len=8 data[05 fa 98 0a 00 00 00 01]
+[36156.002083] focal-trace: WR ret=0
+[36156.002086] focal-trace: WR len=8 data[05 fa 98 0b 00 00 01 04]
+[36156.002266] focal-trace: WR ret=0
+[36156.002268] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.002270] focal-trace: XLAT: Read16 addr=0x1812 (alt=0x1298) rx=4
+[36156.002272] focal-trace: XLAT: UNHANDLED Read16 addr=0x1812 (alt=0x1298) rx=4 tx=[04 fb 98 12 00 00] -> zeros
+[36156.002274] focal-trace: RD tx=6 rx=4 ret=0 tx[04 fb 98 12 00 00] rx[00 00 00 00]
+[36156.002278] focal-trace: WR len=8 data[05 fa 98 12 00 00 01 00]
+[36156.002460] focal-trace: WR ret=0
+[36156.002462] focal-trace: WR len=3 data[c8 37 00]
+[36156.002585] focal-trace: WR ret=0
+[36156.003655] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.003663] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.003668] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.003671] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.003673] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.003675] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.003676] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.003677] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.003679] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.003680] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.003681] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.003682] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.003684] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.003685] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.003686] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.003687] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.003689] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.003691] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.003692] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.003693] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.003695] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.003696] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.003697] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.003698] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.003700] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.003702] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.003703] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.003704] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.003705] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.003707] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.003708] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.003709] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.003711] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.003712] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.003714] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.003715] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.003717] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.003718] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.003719] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.003720] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.003722] focal-trace: WR len=8 data[05 fa 98 00 00 00 4f ff]
+[36156.003908] focal-trace: WR ret=0
+[36156.003910] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.004973] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.006042] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.007113] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.008193] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.009266] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=1018 count=11
+[36156.009272] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=1018
+[36156.062242] focal: captured & unpacked 5120 pixels -> 10240 bytes (stage 0) min=0 max=0 nz=0/5120 first8=[00 00 00 00 00 00 00 00]
+[36156.062264] focal-trace: XLAT: BulkRead 0x1A05 -> 1018 bytes at offset 1018 (stage 0)
+[36156.062269] focal-trace: RD tx=6 rx=1018 ret=0 tx[06 f9 9a 05 01 fb] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36156.062294] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=266 count=11
+[36156.062299] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=266
+[36156.062303] focal-trace: XLAT: BulkRead 0x1A05 -> 266 bytes at offset 1284 (stage 0)
+[36156.062306] focal-trace: RD tx=6 rx=266 ret=0 tx[06 f9 9a 05 00 83] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36156.062320] focal-trace: WR len=8 data[05 fa 9a 84 00 00 00 20]
+[36156.062324] focal-trace: XLAT: Clear IntStatus 0x1A84 clr=0x0020 (current state=0, fdt_scan=0)
+[36156.062556] focal-trace: WR ret=0
+[36156.062582] focal-trace: WR len=3 data[5a a5 00]
+[36156.062747] focal-trace: WR ret=0
+[36156.063820] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.063825] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.063828] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.063830] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.063836] focal-trace: WR len=3 data[a5 5a 00]
+[36156.064020] focal-trace: WR ret=0
+[36156.064026] focal-trace: WR len=8 data[05 fa 98 01 00 00 37 7e]
+[36156.064247] focal-trace: WR ret=0
+[36156.064254] focal-trace: WR len=8 data[05 fa 98 00 00 00 4f fe]
+[36156.064473] focal-trace: WR ret=0
+[36156.064477] focal-trace: WR len=8 data[05 fa 98 16 00 00 00 00]
+[36156.064694] focal-trace: WR ret=0
+[36156.064701] focal-trace: WR len=8 data[05 fa 98 07 00 00 0d e7]
+[36156.064926] focal-trace: WR ret=0
+[36156.064932] focal-trace: WR len=8 data[05 fa 98 06 00 00 02 3b]
+[36156.065166] focal-trace: WR ret=0
+[36156.065170] focal-trace: WR len=8 data[05 fa 98 0a 00 00 00 01]
+[36156.065366] focal-trace: WR ret=0
+[36156.065369] focal-trace: WR len=8 data[05 fa 98 0b 00 00 01 04]
+[36156.065564] focal-trace: WR ret=0
+[36156.065567] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.065570] focal-trace: XLAT: Read16 addr=0x1812 (alt=0x1298) rx=4
+[36156.065573] focal-trace: XLAT: UNHANDLED Read16 addr=0x1812 (alt=0x1298) rx=4 tx=[04 fb 98 12 00 00] -> zeros
+[36156.065577] focal-trace: RD tx=6 rx=4 ret=0 tx[04 fb 98 12 00 00] rx[00 00 00 00]
+[36156.065582] focal-trace: WR len=8 data[05 fa 98 12 00 00 01 00]
+[36156.065784] focal-trace: WR ret=0
+[36156.065787] focal-trace: WR len=3 data[c8 37 00]
+[36156.065965] focal-trace: WR ret=0
+[36156.067025] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.067028] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.067030] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.067032] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.067035] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.067037] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.067038] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.067040] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.067042] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.067044] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.067045] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.067047] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.067049] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.067051] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.067052] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.067054] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.067056] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.067058] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.067059] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.067061] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.067063] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.067065] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.067066] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.067068] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.067070] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.067072] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.067073] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.067075] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.067077] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.067079] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.067080] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.067082] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.067084] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.067086] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.067087] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.067088] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.067091] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.067093] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.067094] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.067095] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.067098] focal-trace: WR len=8 data[05 fa 98 00 00 00 4f ff]
+[36156.067293] focal-trace: WR ret=0
+[36156.067295] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.068367] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.069443] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.070510] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.071613] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.072706] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=1018 count=11
+[36156.072714] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=1018
+[36156.126187] focal: captured & unpacked 5120 pixels -> 10240 bytes (stage 0) min=0 max=0 nz=0/5120 first8=[00 00 00 00 00 00 00 00]
+[36156.126210] focal-trace: XLAT: BulkRead 0x1A05 -> 1018 bytes at offset 1018 (stage 0)
+[36156.126216] focal-trace: RD tx=6 rx=1018 ret=0 tx[06 f9 9a 05 01 fb] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36156.126240] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=266 count=11
+[36156.126245] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=266
+[36156.126249] focal-trace: XLAT: BulkRead 0x1A05 -> 266 bytes at offset 1284 (stage 0)
+[36156.126253] focal-trace: RD tx=6 rx=266 ret=0 tx[06 f9 9a 05 00 83] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36156.126267] focal-trace: WR len=8 data[05 fa 9a 84 00 00 00 20]
+[36156.126271] focal-trace: XLAT: Clear IntStatus 0x1A84 clr=0x0020 (current state=0, fdt_scan=0)
+[36156.126516] focal-trace: WR ret=0
+[36156.126542] focal-trace: WR len=3 data[5a a5 00]
+[36156.126706] focal-trace: WR ret=0
+[36156.127778] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.127788] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.127795] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.127800] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.127806] focal-trace: WR len=3 data[a5 5a 00]
+[36156.128129] focal-trace: WR ret=0
+[36156.128148] focal-trace: WR len=8 data[05 fa 98 01 00 00 37 7e]
+[36156.128422] focal-trace: WR ret=0
+[36156.128426] focal-trace: WR len=8 data[05 fa 98 00 00 00 4f fe]
+[36156.128634] focal-trace: WR ret=0
+[36156.128637] focal-trace: WR len=8 data[05 fa 98 16 00 00 00 00]
+[36156.128892] focal-trace: WR ret=0
+[36156.128896] focal-trace: WR len=8 data[05 fa 98 07 00 00 0d e7]
+[36156.129211] focal-trace: WR ret=0
+[36156.129228] focal-trace: WR len=8 data[05 fa 98 06 00 00 02 3b]
+[36156.129464] focal-trace: WR ret=0
+[36156.129467] focal-trace: WR len=8 data[05 fa 98 0a 00 00 00 01]
+[36156.129695] focal-trace: WR ret=0
+[36156.129698] focal-trace: WR len=8 data[05 fa 98 0b 00 00 01 04]
+[36156.129922] focal-trace: WR ret=0
+[36156.129926] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.129930] focal-trace: XLAT: Read16 addr=0x1812 (alt=0x1298) rx=4
+[36156.129932] focal-trace: XLAT: UNHANDLED Read16 addr=0x1812 (alt=0x1298) rx=4 tx=[04 fb 98 12 00 00] -> zeros
+[36156.129936] focal-trace: RD tx=6 rx=4 ret=0 tx[04 fb 98 12 00 00] rx[00 00 00 00]
+[36156.129941] focal-trace: WR len=8 data[05 fa 98 12 00 00 01 00]
+[36156.130158] focal-trace: WR ret=0
+[36156.130161] focal-trace: WR len=3 data[c8 37 00]
+[36156.130319] focal-trace: WR ret=0
+[36156.131395] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.131405] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.131411] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.131416] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.131422] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.131424] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.131425] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.131426] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.131429] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.131430] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.131431] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.131432] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.131435] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.131436] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.131437] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.131438] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.131441] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.131442] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.131443] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.131445] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.131447] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.131448] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.131449] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.131451] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.131453] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.131455] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.131456] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.131457] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.131459] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.131461] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.131462] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.131463] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.131465] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.131467] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.131468] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.131469] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.131471] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.131473] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.131474] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.131475] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.131477] focal-trace: WR len=8 data[05 fa 98 00 00 00 4f ff]
+[36156.131667] focal-trace: WR ret=0
+[36156.131669] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.132837] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.134000] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.135073] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.136150] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.137227] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=1018 count=11
+[36156.137234] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=1018
+[36156.190312] focal: captured & unpacked 5120 pixels -> 10240 bytes (stage 0) min=0 max=0 nz=0/5120 first8=[00 00 00 00 00 00 00 00]
+[36156.190324] focal-trace: XLAT: BulkRead 0x1A05 -> 1018 bytes at offset 1018 (stage 0)
+[36156.190328] focal-trace: RD tx=6 rx=1018 ret=0 tx[06 f9 9a 05 01 fb] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36156.190341] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=266 count=11
+[36156.190344] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=266
+[36156.190347] focal-trace: XLAT: BulkRead 0x1A05 -> 266 bytes at offset 1284 (stage 0)
+[36156.190349] focal-trace: RD tx=6 rx=266 ret=0 tx[06 f9 9a 05 00 83] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36156.190356] focal-trace: WR len=8 data[05 fa 9a 84 00 00 00 20]
+[36156.190358] focal-trace: XLAT: Clear IntStatus 0x1A84 clr=0x0020 (current state=0, fdt_scan=0)
+[36156.190586] focal-trace: WR ret=0
+[36156.190601] focal-trace: WR len=3 data[5a a5 00]
+[36156.190737] focal-trace: WR ret=0
+[36156.191819] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.191826] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.191827] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.191829] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.191833] focal-trace: WR len=3 data[a5 5a 00]
+[36156.192008] focal-trace: WR ret=0
+[36156.192011] focal-trace: WR len=8 data[05 fa 98 01 00 00 37 7e]
+[36156.192199] focal-trace: WR ret=0
+[36156.192202] focal-trace: WR len=8 data[05 fa 98 00 00 00 4f fe]
+[36156.192388] focal-trace: WR ret=0
+[36156.192390] focal-trace: WR len=8 data[05 fa 98 16 00 00 00 00]
+[36156.192713] focal-trace: WR ret=0
+[36156.192730] focal-trace: WR len=8 data[05 fa 98 07 00 00 0d e7]
+[36156.193029] focal-trace: WR ret=0
+[36156.193043] focal-trace: WR len=8 data[05 fa 98 06 00 00 02 3b]
+[36156.193326] focal-trace: WR ret=0
+[36156.193340] focal-trace: WR len=8 data[05 fa 98 0a 00 00 00 01]
+[36156.193549] focal-trace: WR ret=0
+[36156.193552] focal-trace: WR len=8 data[05 fa 98 0b 00 00 01 04]
+[36156.193715] focal-trace: WR ret=0
+[36156.193718] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.193721] focal-trace: XLAT: Read16 addr=0x1812 (alt=0x1298) rx=4
+[36156.193724] focal-trace: XLAT: UNHANDLED Read16 addr=0x1812 (alt=0x1298) rx=4 tx=[04 fb 98 12 00 00] -> zeros
+[36156.193727] focal-trace: RD tx=6 rx=4 ret=0 tx[04 fb 98 12 00 00] rx[00 00 00 00]
+[36156.193732] focal-trace: WR len=8 data[05 fa 98 12 00 00 01 00]
+[36156.194007] focal-trace: WR ret=0
+[36156.194019] focal-trace: WR len=3 data[c8 37 00]
+[36156.194273] focal-trace: WR ret=0
+[36156.195364] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.195377] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.195378] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.195380] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.195384] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.195386] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.195388] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.195389] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.195391] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.195393] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.195394] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.195395] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.195397] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.195398] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.195399] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.195400] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.195402] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.195403] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.195404] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.195405] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.195407] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.195409] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.195410] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.195411] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.195413] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.195414] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.195415] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.195416] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.195418] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.195419] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.195420] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.195421] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.195423] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.195424] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.195425] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.195426] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.195428] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.195429] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.195430] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.195431] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.195434] focal-trace: WR len=8 data[05 fa 98 00 00 00 4f ff]
+[36156.195626] focal-trace: WR ret=0
+[36156.195628] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.196789] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.197981] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.199049] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.200109] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.201166] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=1018 count=11
+[36156.201168] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=1018
+[36156.254230] focal: captured & unpacked 5120 pixels -> 10240 bytes (stage 0) min=0 max=0 nz=0/5120 first8=[00 00 00 00 00 00 00 00]
+[36156.254242] focal-trace: XLAT: BulkRead 0x1A05 -> 1018 bytes at offset 1018 (stage 0)
+[36156.254245] focal-trace: RD tx=6 rx=1018 ret=0 tx[06 f9 9a 05 01 fb] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36156.254260] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=266 count=11
+[36156.254262] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=266
+[36156.254265] focal-trace: XLAT: BulkRead 0x1A05 -> 266 bytes at offset 1284 (stage 0)
+[36156.254267] focal-trace: RD tx=6 rx=266 ret=0 tx[06 f9 9a 05 00 83] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36156.254276] focal-trace: WR len=8 data[05 fa 9a 84 00 00 00 20]
+[36156.254278] focal-trace: XLAT: Clear IntStatus 0x1A84 clr=0x0020 (current state=0, fdt_scan=0)
+[36156.254494] focal-trace: WR ret=0
+[36156.254509] focal-trace: WR len=3 data[5a a5 00]
+[36156.254660] focal-trace: WR ret=0
+[36156.255877] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.255884] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.255887] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.255888] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.255894] focal-trace: WR len=3 data[a5 5a 00]
+[36156.256135] focal-trace: WR ret=0
+[36156.256148] focal-trace: WR len=8 data[05 fa 98 01 00 00 37 7e]
+[36156.256421] focal-trace: WR ret=0
+[36156.256433] focal-trace: WR len=8 data[05 fa 98 00 00 00 4f fe]
+[36156.256625] focal-trace: WR ret=0
+[36156.256640] focal-trace: WR len=8 data[05 fa 98 16 00 00 00 00]
+[36156.256818] focal-trace: WR ret=0
+[36156.256823] focal-trace: WR len=8 data[05 fa 98 07 00 00 0d e7]
+[36156.257231] focal-trace: WR ret=0
+[36156.257249] focal-trace: WR len=8 data[05 fa 98 06 00 00 02 3b]
+[36156.257432] focal-trace: WR ret=0
+[36156.257443] focal-trace: WR len=8 data[05 fa 98 0a 00 00 00 01]
+[36156.257627] focal-trace: WR ret=0
+[36156.257630] focal-trace: WR len=8 data[05 fa 98 0b 00 00 01 04]
+[36156.257821] focal-trace: WR ret=0
+[36156.257824] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.257827] focal-trace: XLAT: Read16 addr=0x1812 (alt=0x1298) rx=4
+[36156.257830] focal-trace: XLAT: UNHANDLED Read16 addr=0x1812 (alt=0x1298) rx=4 tx=[04 fb 98 12 00 00] -> zeros
+[36156.257833] focal-trace: RD tx=6 rx=4 ret=0 tx[04 fb 98 12 00 00] rx[00 00 00 00]
+[36156.257838] focal-trace: WR len=8 data[05 fa 98 12 00 00 01 00]
+[36156.258045] focal-trace: WR ret=0
+[36156.258049] focal-trace: WR len=3 data[c8 37 00]
+[36156.258191] focal-trace: WR ret=0
+[36156.259255] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.259260] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.259262] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.259264] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.259276] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.259280] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.259281] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.259283] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.259286] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.259288] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.259289] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.259290] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.259293] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.259295] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.259296] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.259297] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.259300] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.259302] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.259303] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.259305] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.259307] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.259309] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.259310] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.259312] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.259314] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.259316] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.259318] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.259319] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.259321] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.259323] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.259324] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.259326] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.259328] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.259330] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.259331] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.259333] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.259335] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.259337] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.259339] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.259340] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.259343] focal-trace: WR len=8 data[05 fa 98 00 00 00 4f ff]
+[36156.260422] focal-trace: WR ret=0
+[36156.260448] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.261548] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.262771] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.264009] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.265163] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.266257] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=1018 count=11
+[36156.266267] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=1018
+[36156.319132] focal: captured & unpacked 5120 pixels -> 10240 bytes (stage 0) min=0 max=0 nz=0/5120 first8=[00 00 00 00 00 00 00 00]
+[36156.319146] focal-trace: XLAT: BulkRead 0x1A05 -> 1018 bytes at offset 1018 (stage 0)
+[36156.319150] focal-trace: RD tx=6 rx=1018 ret=0 tx[06 f9 9a 05 01 fb] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36156.319170] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=266 count=11
+[36156.319174] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=266
+[36156.319177] focal-trace: XLAT: BulkRead 0x1A05 -> 266 bytes at offset 1284 (stage 0)
+[36156.319180] focal-trace: RD tx=6 rx=266 ret=0 tx[06 f9 9a 05 00 83] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36156.319190] focal-trace: WR len=8 data[05 fa 9a 84 00 00 00 20]
+[36156.319193] focal-trace: XLAT: Clear IntStatus 0x1A84 clr=0x0020 (current state=0, fdt_scan=0)
+[36156.319407] focal-trace: WR ret=0
+[36156.319425] focal-trace: WR len=3 data[5a a5 00]
+[36156.319583] focal-trace: WR ret=0
+[36156.320650] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.320654] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.320656] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.320658] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.320663] focal-trace: WR len=3 data[a5 5a 00]
+[36156.320811] focal-trace: WR ret=0
+[36156.320816] focal-trace: WR len=8 data[05 fa 98 01 00 00 37 7e]
+[36156.321074] focal-trace: WR ret=0
+[36156.321078] focal-trace: WR len=8 data[05 fa 98 00 00 00 4f fe]
+[36156.321295] focal-trace: WR ret=0
+[36156.321298] focal-trace: WR len=8 data[05 fa 98 16 00 00 00 00]
+[36156.321632] focal-trace: WR ret=0
+[36156.321657] focal-trace: WR len=8 data[05 fa 98 07 00 00 0d e7]
+[36156.322045] focal-trace: WR ret=0
+[36156.322066] focal-trace: WR len=8 data[05 fa 98 06 00 00 02 3b]
+[36156.322329] focal-trace: WR ret=0
+[36156.322341] focal-trace: WR len=8 data[05 fa 98 0a 00 00 00 01]
+[36156.322696] focal-trace: WR ret=0
+[36156.322718] focal-trace: WR len=8 data[05 fa 98 0b 00 00 01 04]
+[36156.323002] focal-trace: WR ret=0
+[36156.323025] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.323031] focal-trace: XLAT: Read16 addr=0x1812 (alt=0x1298) rx=4
+[36156.323037] focal-trace: XLAT: UNHANDLED Read16 addr=0x1812 (alt=0x1298) rx=4 tx=[04 fb 98 12 00 00] -> zeros
+[36156.323044] focal-trace: RD tx=6 rx=4 ret=0 tx[04 fb 98 12 00 00] rx[00 00 00 00]
+[36156.323056] focal-trace: WR len=8 data[05 fa 98 12 00 00 01 00]
+[36156.323283] focal-trace: WR ret=0
+[36156.323291] focal-trace: WR len=3 data[c8 37 00]
+[36156.323465] focal-trace: WR ret=0
+[36156.324555] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.324566] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.324570] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.324572] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.324581] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.324585] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.324588] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.324591] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.324597] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.324600] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.324603] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.324606] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.324611] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.324614] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.324617] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.324620] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.324625] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.324628] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.324631] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.324633] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.324638] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.324642] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.324644] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.324647] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.324652] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.324655] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.324658] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.324660] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.324666] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.324670] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.324673] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.324676] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.324682] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.324685] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.324688] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.324690] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.324694] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.324697] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.324700] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.324702] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.324708] focal-trace: WR len=8 data[05 fa 98 00 00 00 4f ff]
+[36156.324974] focal-trace: WR ret=0
+[36156.324983] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.326072] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.327206] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.328298] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.329378] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.330574] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=1018 count=11
+[36156.330585] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=1018
+[36156.383076] focal: captured & unpacked 5120 pixels -> 10240 bytes (stage 0) min=0 max=0 nz=0/5120 first8=[00 00 00 00 00 00 00 00]
+[36156.383089] focal-trace: XLAT: BulkRead 0x1A05 -> 1018 bytes at offset 1018 (stage 0)
+[36156.383093] focal-trace: RD tx=6 rx=1018 ret=0 tx[06 f9 9a 05 01 fb] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36156.383111] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=266 count=11
+[36156.383114] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=266
+[36156.383117] focal-trace: XLAT: BulkRead 0x1A05 -> 266 bytes at offset 1284 (stage 0)
+[36156.383119] focal-trace: RD tx=6 rx=266 ret=0 tx[06 f9 9a 05 00 83] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36156.383128] focal-trace: WR len=8 data[05 fa 9a 84 00 00 00 20]
+[36156.383131] focal-trace: XLAT: Clear IntStatus 0x1A84 clr=0x0020 (current state=0, fdt_scan=0)
+[36156.383360] focal-trace: WR ret=0
+[36156.383378] focal-trace: WR len=3 data[5a a5 00]
+[36156.383517] focal-trace: WR ret=0
+[36156.384600] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.384609] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.384611] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.384613] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.384617] focal-trace: WR len=3 data[a5 5a 00]
+[36156.384773] focal-trace: WR ret=0
+[36156.384776] focal-trace: WR len=8 data[05 fa 98 01 00 00 37 7e]
+[36156.385044] focal-trace: WR ret=0
+[36156.385053] focal-trace: WR len=8 data[05 fa 98 00 00 00 4f fe]
+[36156.385257] focal-trace: WR ret=0
+[36156.385260] focal-trace: WR len=8 data[05 fa 98 16 00 00 00 00]
+[36156.385451] focal-trace: WR ret=0
+[36156.385454] focal-trace: WR len=8 data[05 fa 98 07 00 00 0d e7]
+[36156.385643] focal-trace: WR ret=0
+[36156.385646] focal-trace: WR len=8 data[05 fa 98 06 00 00 02 3b]
+[36156.385893] focal-trace: WR ret=0
+[36156.385896] focal-trace: WR len=8 data[05 fa 98 0a 00 00 00 01]
+[36156.386107] focal-trace: WR ret=0
+[36156.386110] focal-trace: WR len=8 data[05 fa 98 0b 00 00 01 04]
+[36156.386305] focal-trace: WR ret=0
+[36156.386309] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.386313] focal-trace: XLAT: Read16 addr=0x1812 (alt=0x1298) rx=4
+[36156.386316] focal-trace: XLAT: UNHANDLED Read16 addr=0x1812 (alt=0x1298) rx=4 tx=[04 fb 98 12 00 00] -> zeros
+[36156.386319] focal-trace: RD tx=6 rx=4 ret=0 tx[04 fb 98 12 00 00] rx[00 00 00 00]
+[36156.386325] focal-trace: WR len=8 data[05 fa 98 12 00 00 01 00]
+[36156.386520] focal-trace: WR ret=0
+[36156.386523] focal-trace: WR len=3 data[c8 37 00]
+[36156.386653] focal-trace: WR ret=0
+[36156.387715] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.387719] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.387721] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.387723] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.387727] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.387729] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.387731] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.387733] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.387753] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.387755] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.387757] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.387759] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.387763] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.387767] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.387770] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.387772] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.387776] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.387778] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.387779] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.387781] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.387784] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.387786] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.387788] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.387790] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.387811] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.387815] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.387817] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.387819] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.387824] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.387828] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.387830] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.387832] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.387835] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.387837] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.387846] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.387849] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.387854] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.387871] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.387873] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.387875] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.387880] focal-trace: WR len=8 data[05 fa 98 00 00 00 4f ff]
+[36156.388079] focal-trace: WR ret=0
+[36156.388084] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.389148] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.390221] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.391313] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.392392] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.393470] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=1018 count=11
+[36156.393479] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=1018
+[36156.446253] focal: captured & unpacked 5120 pixels -> 10240 bytes (stage 0) min=0 max=0 nz=0/5120 first8=[00 00 00 00 00 00 00 00]
+[36156.446270] focal-trace: XLAT: BulkRead 0x1A05 -> 1018 bytes at offset 1018 (stage 0)
+[36156.446274] focal-trace: RD tx=6 rx=1018 ret=0 tx[06 f9 9a 05 01 fb] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36156.446295] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=266 count=11
+[36156.446298] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=266
+[36156.446302] focal-trace: XLAT: BulkRead 0x1A05 -> 266 bytes at offset 1284 (stage 0)
+[36156.446305] focal-trace: RD tx=6 rx=266 ret=0 tx[06 f9 9a 05 00 83] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36156.446315] focal-trace: WR len=8 data[05 fa 9a 84 00 00 00 20]
+[36156.446318] focal-trace: XLAT: Clear IntStatus 0x1A84 clr=0x0020 (current state=0, fdt_scan=0)
+[36156.446541] focal-trace: WR ret=0
+[36156.446562] focal-trace: WR len=3 data[5a a5 00]
+[36156.446707] focal-trace: WR ret=0
+[36156.447894] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.447902] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.447905] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.447906] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.447913] focal-trace: WR len=3 data[a5 5a 00]
+[36156.448199] focal-trace: WR ret=0
+[36156.448213] focal-trace: WR len=8 data[05 fa 98 01 00 00 37 7e]
+[36156.448462] focal-trace: WR ret=0
+[36156.448465] focal-trace: WR len=8 data[05 fa 98 00 00 00 4f fe]
+[36156.448768] focal-trace: WR ret=0
+[36156.448772] focal-trace: WR len=8 data[05 fa 98 16 00 00 00 00]
+[36156.449133] focal-trace: WR ret=0
+[36156.449152] focal-trace: WR len=8 data[05 fa 98 07 00 00 0d e7]
+[36156.449343] focal-trace: WR ret=0
+[36156.449349] focal-trace: WR len=8 data[05 fa 98 06 00 00 02 3b]
+[36156.449537] focal-trace: WR ret=0
+[36156.449540] focal-trace: WR len=8 data[05 fa 98 0a 00 00 00 01]
+[36156.449702] focal-trace: WR ret=0
+[36156.449704] focal-trace: WR len=8 data[05 fa 98 0b 00 00 01 04]
+[36156.449925] focal-trace: WR ret=0
+[36156.449932] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.449936] focal-trace: XLAT: Read16 addr=0x1812 (alt=0x1298) rx=4
+[36156.449941] focal-trace: XLAT: UNHANDLED Read16 addr=0x1812 (alt=0x1298) rx=4 tx=[04 fb 98 12 00 00] -> zeros
+[36156.449945] focal-trace: RD tx=6 rx=4 ret=0 tx[04 fb 98 12 00 00] rx[00 00 00 00]
+[36156.449971] focal-trace: WR len=8 data[05 fa 98 12 00 00 01 00]
+[36156.450196] focal-trace: WR ret=0
+[36156.450201] focal-trace: WR len=3 data[c8 37 00]
+[36156.450344] focal-trace: WR ret=0
+[36156.451420] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.451429] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.451435] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.451440] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.451445] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.451447] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.451449] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.451450] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.451452] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.451454] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.451455] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.451456] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.451458] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.451460] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.451461] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.451462] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.451464] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.451466] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.451467] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.451468] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.451470] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.451472] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.451473] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.451474] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.451476] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.451478] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.451479] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.451480] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.451482] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.451484] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.451485] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.451486] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.451488] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.451490] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.451491] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.451492] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.451494] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.451496] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.451497] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.451498] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.451500] focal-trace: WR len=8 data[05 fa 98 00 00 00 4f ff]
+[36156.451698] focal-trace: WR ret=0
+[36156.451700] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.452771] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.453877] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.454993] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.456153] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.457245] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=1018 count=11
+[36156.457256] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=1018
+[36156.510254] focal: captured & unpacked 5120 pixels -> 10240 bytes (stage 0) min=0 max=0 nz=0/5120 first8=[00 00 00 00 00 00 00 00]
+[36156.510271] focal-trace: XLAT: BulkRead 0x1A05 -> 1018 bytes at offset 1018 (stage 0)
+[36156.510275] focal-trace: RD tx=6 rx=1018 ret=0 tx[06 f9 9a 05 01 fb] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36156.510295] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=266 count=11
+[36156.510298] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=266
+[36156.510302] focal-trace: XLAT: BulkRead 0x1A05 -> 266 bytes at offset 1284 (stage 0)
+[36156.510305] focal-trace: RD tx=6 rx=266 ret=0 tx[06 f9 9a 05 00 83] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36156.510316] focal-trace: WR len=8 data[05 fa 9a 84 00 00 00 20]
+[36156.510319] focal-trace: XLAT: Clear IntStatus 0x1A84 clr=0x0020 (current state=0, fdt_scan=0)
+[36156.510571] focal-trace: WR ret=0
+[36156.510592] focal-trace: WR len=3 data[5a a5 00]
+[36156.510720] focal-trace: WR ret=0
+[36156.511803] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.511811] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.511816] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.511818] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.511827] focal-trace: WR len=3 data[a5 5a 00]
+[36156.512077] focal-trace: WR ret=0
+[36156.512092] focal-trace: WR len=8 data[05 fa 98 01 00 00 37 7e]
+[36156.512314] focal-trace: WR ret=0
+[36156.512316] focal-trace: WR len=8 data[05 fa 98 00 00 00 4f fe]
+[36156.512514] focal-trace: WR ret=0
+[36156.512517] focal-trace: WR len=8 data[05 fa 98 16 00 00 00 00]
+[36156.512710] focal-trace: WR ret=0
+[36156.512712] focal-trace: WR len=8 data[05 fa 98 07 00 00 0d e7]
+[36156.513010] focal-trace: WR ret=0
+[36156.513024] focal-trace: WR len=8 data[05 fa 98 06 00 00 02 3b]
+[36156.513262] focal-trace: WR ret=0
+[36156.513265] focal-trace: WR len=8 data[05 fa 98 0a 00 00 00 01]
+[36156.513478] focal-trace: WR ret=0
+[36156.513480] focal-trace: WR len=8 data[05 fa 98 0b 00 00 01 04]
+[36156.513650] focal-trace: WR ret=0
+[36156.513653] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.513656] focal-trace: XLAT: Read16 addr=0x1812 (alt=0x1298) rx=4
+[36156.513659] focal-trace: XLAT: UNHANDLED Read16 addr=0x1812 (alt=0x1298) rx=4 tx=[04 fb 98 12 00 00] -> zeros
+[36156.513662] focal-trace: RD tx=6 rx=4 ret=0 tx[04 fb 98 12 00 00] rx[00 00 00 00]
+[36156.513666] focal-trace: WR len=8 data[05 fa 98 12 00 00 01 00]
+[36156.513898] focal-trace: WR ret=0
+[36156.513901] focal-trace: WR len=3 data[c8 37 00]
+[36156.514112] focal-trace: WR ret=0
+[36156.515171] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.515174] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.515176] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.515177] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.515179] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.515181] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.515182] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.515183] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.515189] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.515195] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.515199] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.515203] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.515207] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.515209] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.515210] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.515211] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.515212] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.515214] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.515215] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.515216] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.515218] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.515219] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.515220] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.515221] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.515223] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.515224] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.515225] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.515226] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.515228] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.515230] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.515231] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.515232] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.515234] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.515235] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.515236] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.515237] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.515239] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.515240] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.515241] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.515242] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.515244] focal-trace: WR len=8 data[05 fa 98 00 00 00 4f ff]
+[36156.515518] focal-trace: WR ret=0
+[36156.515520] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.516699] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.517812] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.518979] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.520057] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.521139] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=1018 count=11
+[36156.521146] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=1018
+[36156.574397] focal: captured & unpacked 5120 pixels -> 10240 bytes (stage 0) min=0 max=0 nz=0/5120 first8=[00 00 00 00 00 00 00 00]
+[36156.574416] focal-trace: XLAT: BulkRead 0x1A05 -> 1018 bytes at offset 1018 (stage 0)
+[36156.574421] focal-trace: RD tx=6 rx=1018 ret=0 tx[06 f9 9a 05 01 fb] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36156.574446] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=266 count=11
+[36156.574450] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=266
+[36156.574455] focal-trace: XLAT: BulkRead 0x1A05 -> 266 bytes at offset 1284 (stage 0)
+[36156.574458] focal-trace: RD tx=6 rx=266 ret=0 tx[06 f9 9a 05 00 83] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36156.574471] focal-trace: WR len=8 data[05 fa 9a 84 00 00 00 20]
+[36156.574474] focal-trace: XLAT: Clear IntStatus 0x1A84 clr=0x0020 (current state=0, fdt_scan=0)
+[36156.574719] focal-trace: WR ret=0
+[36156.574741] focal-trace: WR len=3 data[5a a5 00]
+[36156.574945] focal-trace: WR ret=0
+[36156.576059] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.576069] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.576072] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.576074] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.576083] focal-trace: WR len=3 data[a5 5a 00]
+[36156.576399] focal-trace: WR ret=0
+[36156.576419] focal-trace: WR len=8 data[05 fa 98 01 00 00 37 7e]
+[36156.576632] focal-trace: WR ret=0
+[36156.576635] focal-trace: WR len=8 data[05 fa 98 00 00 00 4f fe]
+[36156.576823] focal-trace: WR ret=0
+[36156.576826] focal-trace: WR len=8 data[05 fa 98 16 00 00 00 00]
+[36156.577065] focal-trace: WR ret=0
+[36156.577068] focal-trace: WR len=8 data[05 fa 98 07 00 00 0d e7]
+[36156.577265] focal-trace: WR ret=0
+[36156.577268] focal-trace: WR len=8 data[05 fa 98 06 00 00 02 3b]
+[36156.577461] focal-trace: WR ret=0
+[36156.577463] focal-trace: WR len=8 data[05 fa 98 0a 00 00 00 01]
+[36156.577651] focal-trace: WR ret=0
+[36156.577654] focal-trace: WR len=8 data[05 fa 98 0b 00 00 01 04]
+[36156.577906] focal-trace: WR ret=0
+[36156.577909] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.577913] focal-trace: XLAT: Read16 addr=0x1812 (alt=0x1298) rx=4
+[36156.577916] focal-trace: XLAT: UNHANDLED Read16 addr=0x1812 (alt=0x1298) rx=4 tx=[04 fb 98 12 00 00] -> zeros
+[36156.577919] focal-trace: RD tx=6 rx=4 ret=0 tx[04 fb 98 12 00 00] rx[00 00 00 00]
+[36156.577924] focal-trace: WR len=8 data[05 fa 98 12 00 00 01 00]
+[36156.578126] focal-trace: WR ret=0
+[36156.578129] focal-trace: WR len=3 data[c8 37 00]
+[36156.578269] focal-trace: WR ret=0
+[36156.579343] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.579352] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.579358] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.579361] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.579364] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.579366] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.579367] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.579368] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.579371] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.579372] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.579373] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.579374] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.579377] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.579378] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.579379] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.579380] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.579382] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.579384] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.579385] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.579386] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.579388] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.579390] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.579391] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.579392] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.579394] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.579396] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.579397] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.579398] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.579400] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.579402] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.579403] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.579404] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.579406] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.579408] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.579409] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.579410] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.579412] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.579413] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.579415] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.579416] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.579418] focal-trace: WR len=8 data[05 fa 98 00 00 00 4f ff]
+[36156.579751] focal-trace: WR ret=0
+[36156.579753] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.580853] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.581915] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.582973] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.584032] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.585092] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=1018 count=11
+[36156.585095] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=1018
+[36156.638220] focal: captured & unpacked 5120 pixels -> 10240 bytes (stage 0) min=0 max=0 nz=0/5120 first8=[00 00 00 00 00 00 00 00]
+[36156.638233] focal-trace: XLAT: BulkRead 0x1A05 -> 1018 bytes at offset 1018 (stage 0)
+[36156.638237] focal-trace: RD tx=6 rx=1018 ret=0 tx[06 f9 9a 05 01 fb] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36156.638253] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=266 count=11
+[36156.638256] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=266
+[36156.638259] focal-trace: XLAT: BulkRead 0x1A05 -> 266 bytes at offset 1284 (stage 0)
+[36156.638261] focal-trace: RD tx=6 rx=266 ret=0 tx[06 f9 9a 05 00 83] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36156.638272] focal-trace: WR len=8 data[05 fa 9a 84 00 00 00 20]
+[36156.638274] focal-trace: XLAT: Clear IntStatus 0x1A84 clr=0x0020 (current state=0, fdt_scan=0)
+[36156.638492] focal-trace: WR ret=0
+[36156.638508] focal-trace: WR len=3 data[5a a5 00]
+[36156.638667] focal-trace: WR ret=0
+[36156.639747] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.639758] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.639762] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.639763] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.639768] focal-trace: WR len=3 data[a5 5a 00]
+[36156.640108] focal-trace: WR ret=0
+[36156.640126] focal-trace: WR len=8 data[05 fa 98 01 00 00 37 7e]
+[36156.640356] focal-trace: WR ret=0
+[36156.640359] focal-trace: WR len=8 data[05 fa 98 00 00 00 4f fe]
+[36156.640555] focal-trace: WR ret=0
+[36156.640557] focal-trace: WR len=8 data[05 fa 98 16 00 00 00 00]
+[36156.640916] focal-trace: WR ret=0
+[36156.640920] focal-trace: WR len=8 data[05 fa 98 07 00 00 0d e7]
+[36156.641170] focal-trace: WR ret=0
+[36156.641177] focal-trace: WR len=8 data[05 fa 98 06 00 00 02 3b]
+[36156.641364] focal-trace: WR ret=0
+[36156.641369] focal-trace: WR len=8 data[05 fa 98 0a 00 00 00 01]
+[36156.641549] focal-trace: WR ret=0
+[36156.641551] focal-trace: WR len=8 data[05 fa 98 0b 00 00 01 04]
+[36156.641739] focal-trace: WR ret=0
+[36156.641746] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.641751] focal-trace: XLAT: Read16 addr=0x1812 (alt=0x1298) rx=4
+[36156.641755] focal-trace: XLAT: UNHANDLED Read16 addr=0x1812 (alt=0x1298) rx=4 tx=[04 fb 98 12 00 00] -> zeros
+[36156.641758] focal-trace: RD tx=6 rx=4 ret=0 tx[04 fb 98 12 00 00] rx[00 00 00 00]
+[36156.641764] focal-trace: WR len=8 data[05 fa 98 12 00 00 01 00]
+[36156.642035] focal-trace: WR ret=0
+[36156.642060] focal-trace: WR len=3 data[c8 37 00]
+[36156.642311] focal-trace: WR ret=0
+[36156.643389] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.643393] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.643395] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.643397] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.643403] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.643405] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.643407] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.643408] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.643411] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.643413] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.643414] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.643415] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.643418] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.643419] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.643420] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.643422] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.643424] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.643425] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.643427] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.643428] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.643430] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.643432] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.643433] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.643435] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.643437] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.643438] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.643440] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.643441] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.643443] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.643445] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.643446] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.643448] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.643450] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.643452] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.643453] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.643454] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.643456] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.643458] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.643459] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.643460] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.643464] focal-trace: WR len=8 data[05 fa 98 00 00 00 4f ff]
+[36156.643689] focal-trace: WR ret=0
+[36156.643692] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.644879] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.646076] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.647144] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.648202] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.649260] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=1018 count=11
+[36156.649262] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=1018
+[36156.702256] focal: captured & unpacked 5120 pixels -> 10240 bytes (stage 0) min=0 max=0 nz=0/5120 first8=[00 00 00 00 00 00 00 00]
+[36156.702271] focal-trace: XLAT: BulkRead 0x1A05 -> 1018 bytes at offset 1018 (stage 0)
+[36156.702275] focal-trace: RD tx=6 rx=1018 ret=0 tx[06 f9 9a 05 01 fb] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36156.702293] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=266 count=11
+[36156.702296] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=266
+[36156.702299] focal-trace: XLAT: BulkRead 0x1A05 -> 266 bytes at offset 1284 (stage 0)
+[36156.702302] focal-trace: RD tx=6 rx=266 ret=0 tx[06 f9 9a 05 00 83] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36156.702312] focal-trace: WR len=8 data[05 fa 9a 84 00 00 00 20]
+[36156.702315] focal-trace: XLAT: Clear IntStatus 0x1A84 clr=0x0020 (current state=0, fdt_scan=0)
+[36156.702713] focal-trace: WR ret=0
+[36156.702732] focal-trace: WR len=3 data[5a a5 00]
+[36156.702881] focal-trace: WR ret=0
+[36156.703963] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.703974] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.703976] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.703978] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.703985] focal-trace: WR len=3 data[a5 5a 00]
+[36156.704162] focal-trace: WR ret=0
+[36156.704166] focal-trace: WR len=8 data[05 fa 98 01 00 00 37 7e]
+[36156.704362] focal-trace: WR ret=0
+[36156.704364] focal-trace: WR len=8 data[05 fa 98 00 00 00 4f fe]
+[36156.704714] focal-trace: WR ret=0
+[36156.704732] focal-trace: WR len=8 data[05 fa 98 16 00 00 00 00]
+[36156.704949] focal-trace: WR ret=0
+[36156.704954] focal-trace: WR len=8 data[05 fa 98 07 00 00 0d e7]
+[36156.705144] focal-trace: WR ret=0
+[36156.705146] focal-trace: WR len=8 data[05 fa 98 06 00 00 02 3b]
+[36156.705340] focal-trace: WR ret=0
+[36156.705342] focal-trace: WR len=8 data[05 fa 98 0a 00 00 00 01]
+[36156.705528] focal-trace: WR ret=0
+[36156.705530] focal-trace: WR len=8 data[05 fa 98 0b 00 00 01 04]
+[36156.705690] focal-trace: WR ret=0
+[36156.705692] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.705695] focal-trace: XLAT: Read16 addr=0x1812 (alt=0x1298) rx=4
+[36156.705697] focal-trace: XLAT: UNHANDLED Read16 addr=0x1812 (alt=0x1298) rx=4 tx=[04 fb 98 12 00 00] -> zeros
+[36156.705699] focal-trace: RD tx=6 rx=4 ret=0 tx[04 fb 98 12 00 00] rx[00 00 00 00]
+[36156.705703] focal-trace: WR len=8 data[05 fa 98 12 00 00 01 00]
+[36156.705907] focal-trace: WR ret=0
+[36156.705911] focal-trace: WR len=3 data[c8 37 00]
+[36156.706049] focal-trace: WR ret=0
+[36156.707110] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.707113] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.707115] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.707116] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.707120] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.707122] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.707123] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.707124] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.707127] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.707128] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.707130] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.707131] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.707133] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.707135] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.707136] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.707137] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.707140] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.707141] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.707143] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.707144] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.707146] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.707148] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.707149] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.707150] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.707153] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.707154] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.707156] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.707157] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.707159] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.707161] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.707162] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.707163] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.707166] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.707167] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.707169] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.707170] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.707172] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.707174] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.707175] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.707176] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.707179] focal-trace: WR len=8 data[05 fa 98 00 00 00 4f ff]
+[36156.707382] focal-trace: WR ret=0
+[36156.707384] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.708456] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.709532] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.710659] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.711797] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.712912] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=1018 count=11
+[36156.712917] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=1018
+[36156.766226] focal: captured & unpacked 5120 pixels -> 10240 bytes (stage 0) min=0 max=0 nz=0/5120 first8=[00 00 00 00 00 00 00 00]
+[36156.766241] focal-trace: XLAT: BulkRead 0x1A05 -> 1018 bytes at offset 1018 (stage 0)
+[36156.766245] focal-trace: RD tx=6 rx=1018 ret=0 tx[06 f9 9a 05 01 fb] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36156.766263] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=266 count=11
+[36156.766267] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=266
+[36156.766270] focal-trace: XLAT: BulkRead 0x1A05 -> 266 bytes at offset 1284 (stage 0)
+[36156.766273] focal-trace: RD tx=6 rx=266 ret=0 tx[06 f9 9a 05 00 83] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36156.766284] focal-trace: WR len=8 data[05 fa 9a 84 00 00 00 20]
+[36156.766287] focal-trace: XLAT: Clear IntStatus 0x1A84 clr=0x0020 (current state=0, fdt_scan=0)
+[36156.766505] focal-trace: WR ret=0
+[36156.766522] focal-trace: WR len=3 data[5a a5 00]
+[36156.766682] focal-trace: WR ret=0
+[36156.767884] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.767896] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.767899] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.767901] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.767909] focal-trace: WR len=3 data[a5 5a 00]
+[36156.768216] focal-trace: WR ret=0
+[36156.768235] focal-trace: WR len=8 data[05 fa 98 01 00 00 37 7e]
+[36156.768454] focal-trace: WR ret=0
+[36156.768458] focal-trace: WR len=8 data[05 fa 98 00 00 00 4f fe]
+[36156.768651] focal-trace: WR ret=0
+[36156.768653] focal-trace: WR len=8 data[05 fa 98 16 00 00 00 00]
+[36156.768896] focal-trace: WR ret=0
+[36156.768899] focal-trace: WR len=8 data[05 fa 98 07 00 00 0d e7]
+[36156.769127] focal-trace: WR ret=0
+[36156.769131] focal-trace: WR len=8 data[05 fa 98 06 00 00 02 3b]
+[36156.769332] focal-trace: WR ret=0
+[36156.769336] focal-trace: WR len=8 data[05 fa 98 0a 00 00 00 01]
+[36156.769545] focal-trace: WR ret=0
+[36156.769548] focal-trace: WR len=8 data[05 fa 98 0b 00 00 01 04]
+[36156.769742] focal-trace: WR ret=0
+[36156.769746] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.769751] focal-trace: XLAT: Read16 addr=0x1812 (alt=0x1298) rx=4
+[36156.769754] focal-trace: XLAT: UNHANDLED Read16 addr=0x1812 (alt=0x1298) rx=4 tx=[04 fb 98 12 00 00] -> zeros
+[36156.769758] focal-trace: RD tx=6 rx=4 ret=0 tx[04 fb 98 12 00 00] rx[00 00 00 00]
+[36156.769765] focal-trace: WR len=8 data[05 fa 98 12 00 00 01 00]
+[36156.769977] focal-trace: WR ret=0
+[36156.769984] focal-trace: WR len=3 data[c8 37 00]
+[36156.770148] focal-trace: WR ret=0
+[36156.771214] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.771218] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.771221] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.771223] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.771228] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.771231] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.771233] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.771235] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.771239] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.771241] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.771243] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.771245] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.771248] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.771251] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.771252] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.771254] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.771258] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.771260] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.771262] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.771263] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.771267] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.771270] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.771271] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.771273] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.771276] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.771279] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.771280] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.771282] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.771286] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.771288] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.771290] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.771292] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.771295] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.771297] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.771299] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.771301] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.771304] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.771307] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.771308] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.771310] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.771314] focal-trace: WR len=8 data[05 fa 98 00 00 00 4f ff]
+[36156.771532] focal-trace: WR ret=0
+[36156.771535] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.772601] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.773684] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.774761] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.775868] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.776939] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=1018 count=11
+[36156.776945] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=1018
+[36156.830120] focal: captured & unpacked 5120 pixels -> 10240 bytes (stage 0) min=0 max=0 nz=0/5120 first8=[00 00 00 00 00 00 00 00]
+[36156.830133] focal-trace: XLAT: BulkRead 0x1A05 -> 1018 bytes at offset 1018 (stage 0)
+[36156.830137] focal-trace: RD tx=6 rx=1018 ret=0 tx[06 f9 9a 05 01 fb] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36156.830153] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=266 count=11
+[36156.830156] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=266
+[36156.830159] focal-trace: XLAT: BulkRead 0x1A05 -> 266 bytes at offset 1284 (stage 0)
+[36156.830161] focal-trace: RD tx=6 rx=266 ret=0 tx[06 f9 9a 05 00 83] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36156.830170] focal-trace: WR len=8 data[05 fa 9a 84 00 00 00 20]
+[36156.830173] focal-trace: XLAT: Clear IntStatus 0x1A84 clr=0x0020 (current state=0, fdt_scan=0)
+[36156.830402] focal-trace: WR ret=0
+[36156.830418] focal-trace: WR len=3 data[5a a5 00]
+[36156.830558] focal-trace: WR ret=0
+[36156.831639] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.831649] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.831651] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.831652] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.831656] focal-trace: WR len=3 data[a5 5a 00]
+[36156.831813] focal-trace: WR ret=0
+[36156.831816] focal-trace: WR len=8 data[05 fa 98 01 00 00 37 7e]
+[36156.832058] focal-trace: WR ret=0
+[36156.832066] focal-trace: WR len=8 data[05 fa 98 00 00 00 4f fe]
+[36156.832264] focal-trace: WR ret=0
+[36156.832267] focal-trace: WR len=8 data[05 fa 98 16 00 00 00 00]
+[36156.832456] focal-trace: WR ret=0
+[36156.832458] focal-trace: WR len=8 data[05 fa 98 07 00 00 0d e7]
+[36156.832643] focal-trace: WR ret=0
+[36156.832645] focal-trace: WR len=8 data[05 fa 98 06 00 00 02 3b]
+[36156.832821] focal-trace: WR ret=0
+[36156.832823] focal-trace: WR len=8 data[05 fa 98 0a 00 00 00 01]
+[36156.833082] focal-trace: WR ret=0
+[36156.833084] focal-trace: WR len=8 data[05 fa 98 0b 00 00 01 04]
+[36156.833278] focal-trace: WR ret=0
+[36156.833281] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.833283] focal-trace: XLAT: Read16 addr=0x1812 (alt=0x1298) rx=4
+[36156.833285] focal-trace: XLAT: UNHANDLED Read16 addr=0x1812 (alt=0x1298) rx=4 tx=[04 fb 98 12 00 00] -> zeros
+[36156.833288] focal-trace: RD tx=6 rx=4 ret=0 tx[04 fb 98 12 00 00] rx[00 00 00 00]
+[36156.833292] focal-trace: WR len=8 data[05 fa 98 12 00 00 01 00]
+[36156.833485] focal-trace: WR ret=0
+[36156.833487] focal-trace: WR len=3 data[c8 37 00]
+[36156.833633] focal-trace: WR ret=0
+[36156.834705] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.834713] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.834718] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.834723] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.834733] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.834735] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.834736] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.834737] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.834740] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.834741] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.834742] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.834744] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.834746] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.834747] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.834748] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.834749] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.834752] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.834753] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.834754] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.834755] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.834758] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.834759] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.834760] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.834761] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.834763] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.834765] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.834766] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.834767] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.834769] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.834771] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.834772] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.834773] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.834776] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.834777] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.834778] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.834779] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.834781] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.834783] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.834784] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.834785] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.834787] focal-trace: WR len=8 data[05 fa 98 00 00 00 4f ff]
+[36156.835014] focal-trace: WR ret=0
+[36156.835017] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.836078] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.837138] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.838224] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.839299] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.840377] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=1018 count=11
+[36156.840388] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=1018
+[36156.893216] focal: captured & unpacked 5120 pixels -> 10240 bytes (stage 0) min=0 max=0 nz=0/5120 first8=[00 00 00 00 00 00 00 00]
+[36156.893233] focal-trace: XLAT: BulkRead 0x1A05 -> 1018 bytes at offset 1018 (stage 0)
+[36156.893238] focal-trace: RD tx=6 rx=1018 ret=0 tx[06 f9 9a 05 01 fb] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36156.893259] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=266 count=11
+[36156.893263] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=266
+[36156.893266] focal-trace: XLAT: BulkRead 0x1A05 -> 266 bytes at offset 1284 (stage 0)
+[36156.893269] focal-trace: RD tx=6 rx=266 ret=0 tx[06 f9 9a 05 00 83] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36156.893280] focal-trace: WR len=8 data[05 fa 9a 84 00 00 00 20]
+[36156.893282] focal-trace: XLAT: Clear IntStatus 0x1A84 clr=0x0020 (current state=0, fdt_scan=0)
+[36156.893516] focal-trace: WR ret=0
+[36156.893536] focal-trace: WR len=3 data[5a a5 00]
+[36156.893693] focal-trace: WR ret=0
+[36156.894765] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.894769] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.894772] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.894774] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.894780] focal-trace: WR len=3 data[a5 5a 00]
+[36156.895024] focal-trace: WR ret=0
+[36156.895031] focal-trace: WR len=8 data[05 fa 98 01 00 00 37 7e]
+[36156.895236] focal-trace: WR ret=0
+[36156.895241] focal-trace: WR len=8 data[05 fa 98 00 00 00 4f fe]
+[36156.895418] focal-trace: WR ret=0
+[36156.895421] focal-trace: WR len=8 data[05 fa 98 16 00 00 00 00]
+[36156.895596] focal-trace: WR ret=0
+[36156.895601] focal-trace: WR len=8 data[05 fa 98 07 00 00 0d e7]
+[36156.895806] focal-trace: WR ret=0
+[36156.895809] focal-trace: WR len=8 data[05 fa 98 06 00 00 02 3b]
+[36156.896041] focal-trace: WR ret=0
+[36156.896045] focal-trace: WR len=8 data[05 fa 98 0a 00 00 00 01]
+[36156.896250] focal-trace: WR ret=0
+[36156.896254] focal-trace: WR len=8 data[05 fa 98 0b 00 00 01 04]
+[36156.896448] focal-trace: WR ret=0
+[36156.896451] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.896453] focal-trace: XLAT: Read16 addr=0x1812 (alt=0x1298) rx=4
+[36156.896456] focal-trace: XLAT: UNHANDLED Read16 addr=0x1812 (alt=0x1298) rx=4 tx=[04 fb 98 12 00 00] -> zeros
+[36156.896459] focal-trace: RD tx=6 rx=4 ret=0 tx[04 fb 98 12 00 00] rx[00 00 00 00]
+[36156.896463] focal-trace: WR len=8 data[05 fa 98 12 00 00 01 00]
+[36156.896665] focal-trace: WR ret=0
+[36156.896667] focal-trace: WR len=3 data[c8 37 00]
+[36156.896814] focal-trace: WR ret=0
+[36156.897875] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.897882] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.897888] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.897893] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.897902] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.897908] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.897911] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.897912] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.897915] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.897916] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.897917] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.897918] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.897921] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.897922] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.897923] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.897924] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.897927] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.897928] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.897929] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.897930] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.897932] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.897934] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.897935] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.897936] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.897938] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.897940] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.897941] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.897942] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.897944] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.897946] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.897947] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.897948] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.897951] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.897952] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.897954] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.897955] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.897957] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.897958] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.897959] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.897960] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.897963] focal-trace: WR len=8 data[05 fa 98 00 00 00 4f ff]
+[36156.898161] focal-trace: WR ret=0
+[36156.898163] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.899237] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.900321] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.901397] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.902575] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.903684] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=1018 count=11
+[36156.903690] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=1018
+[36156.957169] focal: captured & unpacked 5120 pixels -> 10240 bytes (stage 0) min=0 max=0 nz=0/5120 first8=[00 00 00 00 00 00 00 00]
+[36156.957186] focal-trace: XLAT: BulkRead 0x1A05 -> 1018 bytes at offset 1018 (stage 0)
+[36156.957191] focal-trace: RD tx=6 rx=1018 ret=0 tx[06 f9 9a 05 01 fb] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36156.957210] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=266 count=11
+[36156.957213] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=266
+[36156.957217] focal-trace: XLAT: BulkRead 0x1A05 -> 266 bytes at offset 1284 (stage 0)
+[36156.957220] focal-trace: RD tx=6 rx=266 ret=0 tx[06 f9 9a 05 00 83] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36156.957245] focal-trace: WR len=8 data[05 fa 9a 84 00 00 00 20]
+[36156.957249] focal-trace: XLAT: Clear IntStatus 0x1A84 clr=0x0020 (current state=0, fdt_scan=0)
+[36156.957466] focal-trace: WR ret=0
+[36156.957486] focal-trace: WR len=3 data[5a a5 00]
+[36156.957628] focal-trace: WR ret=0
+[36156.958714] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.958721] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.958723] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.958726] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.958730] focal-trace: WR len=3 data[a5 5a 00]
+[36156.958935] focal-trace: WR ret=0
+[36156.958939] focal-trace: WR len=8 data[05 fa 98 01 00 00 37 7e]
+[36156.959176] focal-trace: WR ret=0
+[36156.959185] focal-trace: WR len=8 data[05 fa 98 00 00 00 4f fe]
+[36156.959395] focal-trace: WR ret=0
+[36156.959398] focal-trace: WR len=8 data[05 fa 98 16 00 00 00 00]
+[36156.959589] focal-trace: WR ret=0
+[36156.959591] focal-trace: WR len=8 data[05 fa 98 07 00 00 0d e7]
+[36156.959793] focal-trace: WR ret=0
+[36156.959796] focal-trace: WR len=8 data[05 fa 98 06 00 00 02 3b]
+[36156.960024] focal-trace: WR ret=0
+[36156.960028] focal-trace: WR len=8 data[05 fa 98 0a 00 00 00 01]
+[36156.960224] focal-trace: WR ret=0
+[36156.960227] focal-trace: WR len=8 data[05 fa 98 0b 00 00 01 04]
+[36156.960422] focal-trace: WR ret=0
+[36156.960425] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.960428] focal-trace: XLAT: Read16 addr=0x1812 (alt=0x1298) rx=4
+[36156.960431] focal-trace: XLAT: UNHANDLED Read16 addr=0x1812 (alt=0x1298) rx=4 tx=[04 fb 98 12 00 00] -> zeros
+[36156.960435] focal-trace: RD tx=6 rx=4 ret=0 tx[04 fb 98 12 00 00] rx[00 00 00 00]
+[36156.960439] focal-trace: WR len=8 data[05 fa 98 12 00 00 01 00]
+[36156.960629] focal-trace: WR ret=0
+[36156.960632] focal-trace: WR len=3 data[c8 37 00]
+[36156.960777] focal-trace: WR ret=0
+[36156.961857] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.961863] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.961866] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.961868] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.961872] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.961874] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.961876] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.961878] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.961882] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.961884] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.961886] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.961887] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.961891] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.961893] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.961895] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.961897] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.961900] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.961902] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.961904] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.961906] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.961909] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.961912] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.961914] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.961915] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.961919] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.961921] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.961923] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.961925] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.961928] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.961931] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.961932] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.961934] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.961938] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.961940] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.961942] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.961943] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.961947] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36156.961949] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36156.961951] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36156.961953] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36156.961956] focal-trace: WR len=8 data[05 fa 98 00 00 00 4f ff]
+[36156.962153] focal-trace: WR ret=0
+[36156.962156] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.963228] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.964306] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.965372] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.966443] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36156.967639] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=1018 count=11
+[36156.967653] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=1018
+[36157.021059] focal: captured & unpacked 5120 pixels -> 10240 bytes (stage 0) min=0 max=0 nz=0/5120 first8=[00 00 00 00 00 00 00 00]
+[36157.021071] focal-trace: XLAT: BulkRead 0x1A05 -> 1018 bytes at offset 1018 (stage 0)
+[36157.021075] focal-trace: RD tx=6 rx=1018 ret=0 tx[06 f9 9a 05 01 fb] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36157.021088] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=266 count=11
+[36157.021091] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=266
+[36157.021094] focal-trace: XLAT: BulkRead 0x1A05 -> 266 bytes at offset 1284 (stage 0)
+[36157.021096] focal-trace: RD tx=6 rx=266 ret=0 tx[06 f9 9a 05 00 83] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36157.021104] focal-trace: WR len=8 data[05 fa 9a 84 00 00 00 20]
+[36157.021106] focal-trace: XLAT: Clear IntStatus 0x1A84 clr=0x0020 (current state=0, fdt_scan=0)
+[36157.021325] focal-trace: WR ret=0
+[36157.021340] focal-trace: WR len=3 data[5a a5 00]
+[36157.021476] focal-trace: WR ret=0
+[36157.022609] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36157.022617] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36157.022619] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36157.022621] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36157.022628] focal-trace: WR len=3 data[a5 5a 00]
+[36157.022809] focal-trace: WR ret=0
+[36157.022814] focal-trace: WR len=8 data[05 fa 98 01 00 00 37 7e]
+[36157.023108] focal-trace: WR ret=0
+[36157.023113] focal-trace: WR len=8 data[05 fa 98 00 00 00 4f fe]
+[36157.023329] focal-trace: WR ret=0
+[36157.023334] focal-trace: WR len=8 data[05 fa 98 16 00 00 00 00]
+[36157.023545] focal-trace: WR ret=0
+[36157.023549] focal-trace: WR len=8 data[05 fa 98 07 00 00 0d e7]
+[36157.023736] focal-trace: WR ret=0
+[36157.023740] focal-trace: WR len=8 data[05 fa 98 06 00 00 02 3b]
+[36157.024115] focal-trace: WR ret=0
+[36157.024131] focal-trace: WR len=8 data[05 fa 98 0a 00 00 00 01]
+[36157.024440] focal-trace: WR ret=0
+[36157.024461] focal-trace: WR len=8 data[05 fa 98 0b 00 00 01 04]
+[36157.024686] focal-trace: WR ret=0
+[36157.024690] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36157.024694] focal-trace: XLAT: Read16 addr=0x1812 (alt=0x1298) rx=4
+[36157.024698] focal-trace: XLAT: UNHANDLED Read16 addr=0x1812 (alt=0x1298) rx=4 tx=[04 fb 98 12 00 00] -> zeros
+[36157.024701] focal-trace: RD tx=6 rx=4 ret=0 tx[04 fb 98 12 00 00] rx[00 00 00 00]
+[36157.024707] focal-trace: WR len=8 data[05 fa 98 12 00 00 01 00]
+[36157.024919] focal-trace: WR ret=0
+[36157.024925] focal-trace: WR len=3 data[c8 37 00]
+[36157.025121] focal-trace: WR ret=0
+[36157.026203] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36157.026209] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36157.026211] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36157.026213] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36157.026218] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36157.026221] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36157.026223] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36157.026225] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36157.026228] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36157.026230] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36157.026232] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36157.026234] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36157.026237] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36157.026239] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36157.026240] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36157.026242] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36157.026245] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36157.026247] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36157.026249] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36157.026250] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36157.026253] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36157.026255] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36157.026257] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36157.026259] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36157.026262] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36157.026264] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36157.026265] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36157.026267] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36157.026270] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36157.026272] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36157.026274] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36157.026275] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36157.026278] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36157.026281] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36157.026282] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36157.026284] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36157.026287] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36157.026289] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36157.026290] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36157.026292] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36157.026295] focal-trace: WR len=8 data[05 fa 98 00 00 00 4f ff]
+[36157.026493] focal-trace: WR ret=0
+[36157.026496] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36157.027562] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36157.028635] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36157.029719] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36157.030956] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36157.032053] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=1018 count=11
+[36157.032063] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=1018
+[36157.085340] focal: captured & unpacked 5120 pixels -> 10240 bytes (stage 0) min=0 max=0 nz=0/5120 first8=[00 00 00 00 00 00 00 00]
+[36157.085355] focal-trace: XLAT: BulkRead 0x1A05 -> 1018 bytes at offset 1018 (stage 0)
+[36157.085359] focal-trace: RD tx=6 rx=1018 ret=0 tx[06 f9 9a 05 01 fb] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36157.085376] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=266 count=11
+[36157.085380] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=266
+[36157.085383] focal-trace: XLAT: BulkRead 0x1A05 -> 266 bytes at offset 1284 (stage 0)
+[36157.085385] focal-trace: RD tx=6 rx=266 ret=0 tx[06 f9 9a 05 00 83] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36157.085395] focal-trace: WR len=8 data[05 fa 9a 84 00 00 00 20]
+[36157.085398] focal-trace: XLAT: Clear IntStatus 0x1A84 clr=0x0020 (current state=0, fdt_scan=0)
+[36157.085623] focal-trace: WR ret=0
+[36157.085644] focal-trace: WR len=3 data[5a a5 00]
+[36157.085787] focal-trace: WR ret=0
+[36157.086921] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36157.086933] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36157.086937] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36157.086939] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36157.086950] focal-trace: WR len=3 data[a5 5a 00]
+[36157.087188] focal-trace: WR ret=0
+[36157.087197] focal-trace: WR len=8 data[05 fa 98 01 00 00 37 48]
+[36157.087410] focal-trace: WR ret=0
+[36157.087417] focal-trace: WR len=8 data[05 fa 98 00 00 00 4f fe]
+[36157.087631] focal-trace: WR ret=0
+[36157.087636] focal-trace: WR len=8 data[05 fa 98 16 00 00 00 00]
+[36157.087885] focal-trace: WR ret=0
+[36157.087889] focal-trace: WR len=8 data[05 fa 98 07 00 00 0d e7]
+[36157.088094] focal-trace: WR ret=0
+[36157.088098] focal-trace: WR len=8 data[05 fa 98 06 00 00 02 3b]
+[36157.088395] focal-trace: WR ret=0
+[36157.088420] focal-trace: WR len=8 data[05 fa 98 0a 00 00 00 01]
+[36157.088656] focal-trace: WR ret=0
+[36157.088662] focal-trace: WR len=8 data[05 fa 98 0b 00 00 01 04]
+[36157.088921] focal-trace: WR ret=0
+[36157.088929] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36157.088961] focal-trace: XLAT: Read16 addr=0x1812 (alt=0x1298) rx=4
+[36157.088967] focal-trace: XLAT: UNHANDLED Read16 addr=0x1812 (alt=0x1298) rx=4 tx=[04 fb 98 12 00 00] -> zeros
+[36157.088971] focal-trace: RD tx=6 rx=4 ret=0 tx[04 fb 98 12 00 00] rx[00 00 00 00]
+[36157.088984] focal-trace: WR len=8 data[05 fa 98 12 00 00 01 00]
+[36157.089213] focal-trace: WR ret=0
+[36157.089217] focal-trace: WR len=3 data[c4 3b 00]
+[36157.089219] focal-trace: XLAT: Scan start command 0xC4 0x3B received
+[36157.089373] focal-trace: WR ret=0
+[36157.090451] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36157.090462] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36157.090464] focal-trace: XLAT: Read8 reg=0x80 -> status=0x54
+[36157.090465] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[54]
+[36157.090469] focal-trace: WR len=8 data[05 fa 98 00 00 00 4f ff]
+[36157.090690] focal-trace: WR ret=0
+[36157.090693] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36157.091897] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36157.093064] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36157.094163] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36157.095267] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36157.096387] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=1018 count=11
+[36157.096399] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=1018
+[36157.149262] focal: captured & unpacked 5120 pixels -> 10240 bytes (stage 0) min=0 max=0 nz=0/5120 first8=[00 00 00 00 00 00 00 00]
+[36157.149272] focal-trace: XLAT: BulkRead 0x1A05 -> 1018 bytes at offset 1018 (stage 0)
+[36157.149275] focal-trace: RD tx=6 rx=1018 ret=0 tx[06 f9 9a 05 01 fb] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36157.149289] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=1018 count=11
+[36157.149291] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=1018
+[36157.149294] focal-trace: XLAT: BulkRead 0x1A05 -> 1018 bytes at offset 2036 (stage 0)
+[36157.149296] focal-trace: RD tx=6 rx=1018 ret=0 tx[06 f9 9a 05 01 fb] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36157.149299] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=1018 count=11
+[36157.149300] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=1018
+[36157.149302] focal-trace: XLAT: BulkRead 0x1A05 -> 1018 bytes at offset 3054 (stage 0)
+[36157.149303] focal-trace: RD tx=6 rx=1018 ret=0 tx[06 f9 9a 05 01 fb] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36157.149306] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=1018 count=11
+[36157.149307] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=1018
+[36157.149308] focal-trace: XLAT: BulkRead 0x1A05 -> 1018 bytes at offset 4072 (stage 0)
+[36157.149310] focal-trace: RD tx=6 rx=1018 ret=0 tx[06 f9 9a 05 01 fb] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36157.149312] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=1018 count=11
+[36157.149314] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=1018
+[36157.149315] focal-trace: XLAT: BulkRead 0x1A05 -> 1018 bytes at offset 5090 (stage 0)
+[36157.149316] focal-trace: RD tx=6 rx=1018 ret=0 tx[06 f9 9a 05 01 fb] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36157.149319] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=1018 count=11
+[36157.149320] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=1018
+[36157.149321] focal-trace: XLAT: BulkRead 0x1A05 -> 1018 bytes at offset 6108 (stage 0)
+[36157.149322] focal-trace: RD tx=6 rx=1018 ret=0 tx[06 f9 9a 05 01 fb] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36157.149325] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=1018 count=11
+[36157.149326] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=1018
+[36157.149327] focal-trace: XLAT: BulkRead 0x1A05 -> 1018 bytes at offset 7126 (stage 0)
+[36157.149329] focal-trace: RD tx=6 rx=1018 ret=0 tx[06 f9 9a 05 01 fb] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36157.149331] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=1018 count=11
+[36157.149332] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=1018
+[36157.149334] focal-trace: XLAT: BulkRead 0x1A05 -> 1018 bytes at offset 8144 (stage 0)
+[36157.149335] focal-trace: RD tx=6 rx=1018 ret=0 tx[06 f9 9a 05 01 fb] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36157.149337] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=1018 count=11
+[36157.149339] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=1018
+[36157.149340] focal-trace: XLAT: BulkRead 0x1A05 -> 1018 bytes at offset 9162 (stage 0)
+[36157.149341] focal-trace: RD tx=6 rx=1018 ret=0 tx[06 f9 9a 05 01 fb] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36157.149343] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=1018 count=11
+[36157.149345] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=1018
+[36157.149346] focal-trace: XLAT: BulkRead 0x1A05 -> 1018 bytes at offset 10180 (stage 0)
+[36157.149347] focal-trace: RD tx=6 rx=1018 ret=0 tx[06 f9 9a 05 01 fb] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36157.149350] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=82 count=11
+[36157.149351] focal-trace: XLAT: BulkRead addr=0x1a05 (alt=0x059a) rx=82
+[36157.149353] focal-trace: XLAT: BulkRead 0x1A05 -> 60 bytes at offset 10240 (stage 0)
+[36157.149354] focal-trace: RD tx=6 rx=82 ret=0 tx[06 f9 9a 05 00 27] rx[00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+[36157.149359] focal-trace: WR len=8 data[05 fa 9a 84 00 00 00 20]
+[36157.149361] focal-trace: XLAT: Clear IntStatus 0x1A84 clr=0x0020 (current state=0, fdt_scan=0)
+[36157.149566] focal-trace: WR ret=0
+[36157.149648] focal-trace: WR len=3 data[5a a5 00]
+[36157.149782] focal-trace: WR ret=0
+[36157.150857] focal-trace: __spidev_read: type=165 tx_len=4 rx_len=1 count=9
+[36157.150861] focal-trace: XLAT: Read8 reg=0x80 rx=1
+[36157.150863] focal-trace: XLAT: Read8 reg=0x80 -> status=0x50
+[36157.150865] focal-trace: RD tx=4 rx=1 ret=0 tx[08 f7 80 00] rx[50]
+[36157.150869] focal-trace: WR len=3 data[a5 5a 00]
+[36157.151167] focal-trace: WR ret=0
+[36157.151179] focal-trace: WR len=8 data[05 fa 98 01 00 00 3a 44]
+[36157.151371] focal-trace: WR ret=0
+[36157.151375] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36157.151378] focal-trace: XLAT: Read16 addr=0x1807 (alt=0x0798) rx=4
+[36157.151380] focal-trace: XLAT: UNHANDLED Read16 addr=0x1807 (alt=0x0798) rx=4 tx=[04 fb 98 07 00 00] -> zeros
+[36157.151383] focal-trace: RD tx=6 rx=4 ret=0 tx[04 fb 98 07 00 00] rx[00 00 00 00]
+[36157.151387] focal-trace: WR len=8 data[05 fa 98 07 00 00 00 01]
+[36157.151568] focal-trace: WR ret=0
+[36157.151570] focal-trace: WR len=8 data[05 fa 98 06 00 00 04 bb]
+[36157.151727] focal-trace: WR ret=0
+[36157.151729] focal-trace: WR len=8 data[05 fa 98 0a 00 00 04 82]
+[36157.151939] focal-trace: WR ret=0
+[36157.151942] focal-trace: WR len=8 data[05 fa 98 0b 00 00 02 07]
+[36157.152149] focal-trace: WR ret=0
+[36157.152153] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36157.152156] focal-trace: XLAT: Read16 addr=0x1812 (alt=0x1298) rx=4
+[36157.152159] focal-trace: XLAT: UNHANDLED Read16 addr=0x1812 (alt=0x1298) rx=4 tx=[04 fb 98 12 00 00] -> zeros
+[36157.152162] focal-trace: RD tx=6 rx=4 ret=0 tx[04 fb 98 12 00 00] rx[00 00 00 00]
+[36157.152167] focal-trace: WR len=8 data[05 fa 98 12 00 00 42 09]
+[36157.152362] focal-trace: WR ret=0
+[36157.152365] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36157.152369] focal-trace: XLAT: Read16 addr=0x1810 (alt=0x1098) rx=4
+[36157.152371] focal-trace: XLAT: UNHANDLED Read16 addr=0x1810 (alt=0x1098) rx=4 tx=[04 fb 98 10 00 00] -> zeros
+[36157.152374] focal-trace: RD tx=6 rx=4 ret=0 tx[04 fb 98 10 00 00] rx[00 00 00 00]
+[36157.152378] focal-trace: WR len=8 data[05 fa 98 10 00 00 03 80]
+[36157.152564] focal-trace: WR ret=0
+[36157.152567] focal-trace: WR len=8 data[05 fa 98 81 00 00 0f ce]
+[36157.152758] focal-trace: WR ret=0
+[36157.152761] focal-trace: WR len=8 data[05 fa 98 00 00 00 00 02]
+[36157.152955] focal-trace: WR ret=0
+[36157.152957] focal-trace: WR len=8 data[05 fa 98 04 00 00 07 c0]
+[36157.153171] focal-trace: WR ret=0
+[36157.153173] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36157.153175] focal-trace: XLAT: Read16 addr=0x1817 (alt=0x1798) rx=4
+[36157.153176] focal-trace: XLAT: UNHANDLED Read16 addr=0x1817 (alt=0x1798) rx=4 tx=[04 fb 98 17 00 00] -> zeros
+[36157.153178] focal-trace: RD tx=6 rx=4 ret=0 tx[04 fb 98 17 00 00] rx[00 00 00 00]
+[36157.153181] focal-trace: WR len=8 data[05 fa 98 17 00 00 00 00]
+[36157.153370] focal-trace: WR ret=0
+[36157.153371] focal-trace: WR len=8 data[05 fa 98 89 00 00 00 04]
+[36157.153569] focal-trace: WR ret=0
+[36157.153571] focal-trace: WR len=8 data[05 fa 9a 84 00 00 00 2f]
+[36157.153573] focal-trace: XLAT: Clear IntStatus 0x1A84 clr=0x002f (current state=0, fdt_scan=0)
+[36157.153754] focal-trace: WR ret=0
+[36157.153756] focal-trace: WR len=4 data[09 f6 9a 5a]
+[36157.153757] focal-trace: XLAT: Shadow Write8 reg=0x9a val=0x5a
+[36157.153954] focal-trace: WR ret=0
+[36157.153958] focal-trace: WR len=22 data[05 fa 80 b0 00 07 ff a6 ff a6 ff a6 ff a6 00 00 00 00 00 00 00 00]
+[36157.153962] focal-trace: XLAT: Saved FDT UpBase: [ff a6 ff a6 ff a6 ff a6 00 00 00 00 00 00 00 00]
+[36157.154306] focal-trace: WR ret=0
+[36157.154310] focal-trace: WR len=4 data[09 f6 9a 00]
+[36157.154313] focal-trace: XLAT: Shadow Write8 reg=0x9a val=0x00
+[36157.154460] focal-trace: WR ret=0
+[36157.154463] focal-trace: __spidev_read: type=165 tx_len=6 rx_len=4 count=11
+[36157.154467] focal-trace: XLAT: Read16 addr=0x1881 (alt=0x0198) rx=4
+[36157.154470] focal-trace: XLAT: UNHANDLED Read16 addr=0x1881 (alt=0x0198) rx=4 tx=[04 fb 98 81 00 00] -> zeros
+[36157.154474] focal-trace: RD tx=6 rx=4 ret=0 tx[04 fb 98 81 00 00] rx[00 00 00 00]
+[36157.154478] focal-trace: WR len=8 data[05 fa 98 81 00 00 00 81]
+[36157.154685] focal-trace: WR ret=0
+[36157.154688] focal-trace: WR len=3 data[c2 3d 00]
+[36157.154826] focal-trace: WR ret=0

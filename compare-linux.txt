@@ -1,0 +1,667 @@
+=== LOCAL DRIVER FIRMWARE/FT9368 REFERENCES ===
+/home/archer/projects/zerobook-focaltech-driver/upstream/alt/focal_spi.c:540:/* Get reset/power GPIOs (respects ACTIVE_LOW from firmware) */
+/home/archer/projects/zerobook-focaltech-driver/upstream/focal_spi.c:492:	/*if spi transfer err,change here spi->mode = SPI_MODE_0*/
+/home/archer/projects/zerobook-focaltech-driver/src-focal_spi.c:492:	/*if spi transfer err,change here spi->mode = SPI_MODE_0*/
+/home/archer/projects/zerobook-focaltech-driver/aur-focaltech-spi-dkms/src/FTEXX00-Ubuntu/alt/focal_spi.c:540:/* Get reset/power GPIOs (respects ACTIVE_LOW from firmware) */
+/home/archer/projects/zerobook-focaltech-driver/aur-focaltech-spi-dkms/src/FTEXX00-Ubuntu/focal_spi.c:492:	/*if spi transfer err,change here spi->mode = SPI_MODE_0*/
+/home/archer/projects/zerobook-focaltech-driver/aur-focaltech-spi-dkms/pkg/focaltech-spi-dkms/usr/src/focaltech-spi-dkms-1.0.3/focal_spi.c:492:	/*if spi transfer err,change here spi->mode = SPI_MODE_0*/
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes1610.c:137:  FpiUsbTransfer *transfer = fpi_usb_transfer_new (dev);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes1610.c:139:  fpi_usb_transfer_fill_bulk (transfer, EP_IN, bytes);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes1610.c:140:  transfer->ssm = ssm;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes1610.c:141:  transfer->short_is_error = TRUE;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes1610.c:142:  fpi_usb_transfer_submit (transfer, BULK_TIMEOUT, NULL,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes1610.c:143:                           fpi_ssm_usb_transfer_cb, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes1610.c:177:finger_det_data_cb (FpiUsbTransfer *transfer, FpDevice *device,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes1610.c:181:  unsigned char *data = transfer->buffer;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes1610.c:213:  FpiUsbTransfer *transfer;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes1610.c:221:  transfer = fpi_usb_transfer_new (FP_DEVICE (dev));
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes1610.c:222:  fpi_usb_transfer_fill_bulk (transfer, EP_IN, FINGER_DETECTION_LEN);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes1610.c:223:  transfer->short_is_error = TRUE;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes1610.c:224:  fpi_usb_transfer_submit (transfer, BULK_TIMEOUT, NULL,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes1610.c:552:capture_read_strip_cb (FpiUsbTransfer *transfer, FpDevice *device,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes1610.c:558:  unsigned char *data = transfer->buffer;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes1610.c:563:      fpi_ssm_mark_failed (transfer->ssm, error);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes1610.c:624:      fpi_ssm_mark_completed (transfer->ssm);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes1610.c:631:      fpi_ssm_jump_to_state (transfer->ssm, CAPTURE_REQUEST_STRIP);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes1610.c:664:      FpiUsbTransfer *transfer = fpi_usb_transfer_new (_dev);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes1610.c:666:      fpi_usb_transfer_fill_bulk (transfer, EP_IN, STRIP_CAPTURE_LEN);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes1610.c:667:      transfer->ssm = ssm;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes1610.c:668:      transfer->short_is_error = TRUE;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes1610.c:669:      fpi_usb_transfer_submit (transfer, BULK_TIMEOUT, NULL,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2501.c:101:read_regs_data_cb (FpiUsbTransfer *transfer, FpDevice *dev,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2501.c:106:  rdata->callback (rdata->dev, error, transfer->buffer, rdata->user_data);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2501.c:114:  FpiUsbTransfer *transfer;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2501.c:124:  transfer = fpi_usb_transfer_new (FP_DEVICE (dev));
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2501.c:125:  transfer->short_is_error = TRUE;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2501.c:126:  fpi_usb_transfer_fill_bulk (transfer, EP_IN, READ_REGS_LEN);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2501.c:127:  fpi_usb_transfer_submit (transfer, BULK_TIMEOUT, NULL,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2501.c:191:  FpiUsbTransfer *transfer;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2501.c:193:  transfer = fpi_usb_transfer_new (dev);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2501.c:194:  transfer->ssm = ssm;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2501.c:195:  transfer->short_is_error = TRUE;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2501.c:196:  fpi_usb_transfer_fill_bulk (transfer, EP_IN, bytes);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2501.c:197:  fpi_usb_transfer_submit (transfer, BULK_TIMEOUT, NULL,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2501.c:198:                           fpi_ssm_usb_transfer_cb, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2501.c:255:finger_det_data_cb (FpiUsbTransfer *transfer, FpDevice *_dev,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2501.c:259:  unsigned char *data = transfer->buffer;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2501.c:289:  FpiUsbTransfer *transfer;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2501.c:297:  transfer = fpi_usb_transfer_new (FP_DEVICE (dev));
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2501.c:298:  transfer->short_is_error = TRUE;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2501.c:299:  fpi_usb_transfer_fill_bulk (transfer, EP_IN, FINGER_DETECTION_LEN);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2501.c:300:  fpi_usb_transfer_submit (transfer, BULK_TIMEOUT, NULL,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2501.c:397:capture_read_strip_cb (FpiUsbTransfer *transfer, FpDevice *_dev,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2501.c:400:  FpiSsm *ssm = transfer->ssm;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2501.c:404:  unsigned char *data = transfer->buffer;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2501.c:526:        FpiUsbTransfer *transfer;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2501.c:528:        transfer = fpi_usb_transfer_new (device);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2501.c:529:        transfer->ssm = ssm;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2501.c:530:        transfer->short_is_error = TRUE;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2501.c:531:        fpi_usb_transfer_fill_bulk (transfer, EP_IN, STRIP_CAPTURE_LEN);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2501.c:532:        fpi_usb_transfer_submit (transfer, BULK_TIMEOUT, NULL,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:91:finger_det_data_cb (FpiUsbTransfer *transfer, FpDevice *device,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:96:  unsigned char *data = transfer->buffer;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:113:  fp_dbg ("transfer completed, len: %.4x, data: %.2x %.2x",
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:114:          (gint) transfer->actual_length, (int) data[0], (int) data[1]);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:117:  if ((transfer->actual_length >= 2) && (data[0] == 0x83) && (data[1] & AES2550_REG83_FINGER_PRESENT))
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:131:finger_det_reqs_cb (FpiUsbTransfer *t, FpDevice *device,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:134:  FpiUsbTransfer *transfer;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:153:  transfer = fpi_usb_transfer_new (device);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:155:  fpi_usb_transfer_fill_bulk (transfer, EP_IN, AES2550_EP_IN_BUF_SIZE);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:156:  fpi_usb_transfer_submit (transfer, BULK_TIMEOUT, NULL,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:164:  FpiUsbTransfer *transfer;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:174:  transfer = fpi_usb_transfer_new (FP_DEVICE (dev));
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:175:  transfer->short_is_error = TRUE;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:176:  fpi_usb_transfer_fill_bulk_full (transfer, EP_OUT, finger_det_reqs,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:178:  fpi_usb_transfer_submit (transfer, BULK_TIMEOUT, NULL,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:241:capture_set_idle_reqs_cb (FpiUsbTransfer *transfer,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:261:      fpi_ssm_mark_completed (transfer->ssm);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:271:      fpi_ssm_mark_completed (transfer->ssm);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:275:      fpi_ssm_mark_failed (transfer->ssm, error);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:280:capture_read_data_cb (FpiUsbTransfer *transfer, FpDevice *device,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:285:  unsigned char *data = transfer->buffer;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:289:      fpi_ssm_mark_failed (transfer->ssm, error);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:293:  fp_dbg ("request completed, len: %.4x", (gint) transfer->actual_length);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:294:  if (transfer->actual_length >= 2)
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:297:  switch (transfer->actual_length)
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:300:      if (!process_strip_data (transfer->ssm, dev, data))
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:303:          fpi_ssm_mark_failed (transfer->ssm,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:308:      fpi_ssm_jump_to_state (transfer->ssm, CAPTURE_READ_DATA);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:321:              fpi_ssm_next_state (transfer->ssm);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:325:              fpi_ssm_jump_to_state (transfer->ssm,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:333:              (gint) transfer->actual_length);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:334:      fpi_ssm_jump_to_state (transfer->ssm, CAPTURE_READ_DATA);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:346:        FpiUsbTransfer *transfer = fpi_usb_transfer_new (dev);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:348:        fpi_usb_transfer_fill_bulk_full (transfer, EP_OUT, capture_reqs,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:350:        transfer->ssm = ssm;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:351:        transfer->short_is_error = TRUE;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:352:        fpi_usb_transfer_submit (transfer, BULK_TIMEOUT, NULL,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:353:                                 fpi_ssm_usb_transfer_cb, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:359:        FpiUsbTransfer *transfer = fpi_usb_transfer_new (dev);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:361:        fpi_usb_transfer_fill_bulk (transfer, EP_IN, AES2550_EP_IN_BUF_SIZE);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:362:        transfer->ssm = ssm;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:363:        fpi_usb_transfer_submit (transfer, BULK_TIMEOUT, NULL,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:370:        FpiUsbTransfer *transfer = fpi_usb_transfer_new (dev);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:372:        fpi_usb_transfer_fill_bulk_full (transfer, EP_OUT,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:376:        transfer->ssm = ssm;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:377:        transfer->short_is_error = TRUE;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:378:        fpi_usb_transfer_submit (transfer, BULK_TIMEOUT, NULL,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:459:calibrate_read_data_cb (FpiUsbTransfer *transfer, FpDevice *device,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:462:  fpi_ssm_usb_transfer_cb (transfer, device, user_data, error);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:472:        FpiUsbTransfer *transfer = fpi_usb_transfer_new (dev);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:474:        fpi_usb_transfer_fill_bulk_full (transfer, EP_OUT, init_reqs,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:476:        transfer->ssm = ssm;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:477:        transfer->short_is_error = TRUE;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:478:        fpi_usb_transfer_submit (transfer, BULK_TIMEOUT, NULL,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:479:                                 fpi_ssm_usb_transfer_cb, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:485:        FpiUsbTransfer *transfer = fpi_usb_transfer_new (dev);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:487:        fpi_usb_transfer_fill_bulk (transfer, EP_IN, AES2550_EP_IN_BUF_SIZE);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:488:        transfer->ssm = ssm;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:489:        fpi_usb_transfer_submit (transfer, BULK_TIMEOUT, NULL,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:490:                                 fpi_ssm_usb_transfer_cb, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:496:        FpiUsbTransfer *transfer = fpi_usb_transfer_new (dev);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:498:        fpi_usb_transfer_fill_bulk_full (transfer, EP_OUT,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:501:        transfer->ssm = ssm;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:502:        transfer->short_is_error = TRUE;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:503:        fpi_usb_transfer_submit (transfer, BULK_TIMEOUT, NULL,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:504:                                 fpi_ssm_usb_transfer_cb, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:510:        FpiUsbTransfer *transfer = fpi_usb_transfer_new (dev);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:512:        fpi_usb_transfer_fill_bulk (transfer, EP_IN, AES2550_EP_IN_BUF_SIZE);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:513:        transfer->ssm = ssm;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c:514:        fpi_usb_transfer_submit (transfer, BULK_TIMEOUT, NULL,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes3k.c:7: * transferred and captured, from which a final image could be
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes3k.c:77:img_cb (FpiUsbTransfer *transfer, FpDevice *device,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes3k.c:84:  unsigned char *ptr = transfer->buffer;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes3k.c:132:  /* Note: The transfer is re-started when we switch to the AWAIT_FINGER_ON state. */
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes3k.c:138:  g_autoptr(FpiUsbTransfer) img_trf = NULL;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes3k.c:143:  img_trf = fpi_usb_transfer_new (FP_DEVICE (dev));
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes3k.c:144:  fpi_usb_transfer_fill_bulk (img_trf, EP_IN, cls->data_buflen);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes3k.c:146:  fpi_usb_transfer_submit (g_steal_pointer (&img_trf), 0,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes3k.h:7: * transferred and captured, from which a final image could be
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes3k.h:57:  gsize                data_buflen;    /* buffer length of usb bulk transfer */
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aeslib.c:47:/* libusb bulk callback for regv write completion transfer. continues the
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aeslib.c:50:write_regv_trf_complete (FpiUsbTransfer *transfer, FpDevice *device,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aeslib.c:75:  FpiUsbTransfer *transfer = fpi_usb_transfer_new (FP_DEVICE (dev));
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aeslib.c:77:  fpi_usb_transfer_fill_bulk (transfer, EP_OUT, alloc_size);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aeslib.c:82:      transfer->buffer[data_offset++] = regwrite->reg;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aeslib.c:83:      transfer->buffer[data_offset++] = regwrite->value;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aeslib.c:86:  transfer->short_is_error = TRUE;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aeslib.c:87:  fpi_usb_transfer_submit (transfer, BULK_TIMEOUT, NULL,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:63:                          FpiUsbTransferCallback callback,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:66:  FpiUsbTransfer *transfer = fpi_usb_transfer_new (_dev);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:68:  fpi_usb_transfer_fill_bulk_full (transfer, EP_OUT, (unsigned char *) cmd,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:70:  transfer->ssm = ssm;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:71:  fpi_usb_transfer_submit (transfer, timeout, NULL, callback, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:80:                  FpiUsbTransferCallback callback)
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:91:                       FpiUsbTransferCallback callback)
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:93:  FpiUsbTransfer *transfer = fpi_usb_transfer_new (_dev);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:99:  fpi_usb_transfer_fill_bulk (transfer, EP_IN, buf_len);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:100:  transfer->ssm = ssm;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:101:  transfer->short_is_error = short_is_error;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:102:  fpi_usb_transfer_submit (transfer, BULK_TIMEOUT, cancel, callback, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:106:aesX660_read_calibrate_data_cb (FpiUsbTransfer *transfer,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:110:  unsigned char *data = transfer->buffer;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:114:      fpi_ssm_mark_failed (transfer->ssm, error);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:121:      fpi_ssm_mark_failed (transfer->ssm,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:129:  fpi_ssm_next_state (transfer->ssm);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:143:finger_det_read_fd_data_cb (FpiUsbTransfer *transfer,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:149:  unsigned char *data = transfer->buffer;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:153:      fpi_ssm_next_state (transfer->ssm);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:160:      fpi_ssm_mark_failed (transfer->ssm, error);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:167:      fpi_ssm_mark_failed (transfer->ssm,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:177:      fpi_ssm_next_state (transfer->ssm);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:183:      fpi_ssm_jump_to_state (transfer->ssm, FINGER_DET_SEND_FD_CMD);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:188:finger_det_set_idle_cmd_cb (FpiUsbTransfer *transfer,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:193:    fpi_ssm_mark_completed (transfer->ssm);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:195:    fpi_ssm_mark_failed (transfer->ssm, error);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:232:                        fpi_ssm_usb_transfer_cb);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:237:                                fpi_ssm_usb_transfer_cb, 0);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:321:capture_set_idle_cmd_cb (FpiUsbTransfer *transfer, FpDevice *device,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:342:      fpi_ssm_mark_completed (transfer->ssm);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:346:      fpi_ssm_mark_failed (transfer->ssm, error);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:351:capture_read_stripe_data_cb (FpiUsbTransfer *transfer,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:357:  unsigned char *data = transfer->buffer;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:359:  size_t actual_length = transfer->actual_length;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:364:      fpi_ssm_mark_failed (transfer->ssm, error);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:388:      if (payload_length > AESX660_BULK_TRANSFER_SIZE)
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:410:      finger_missing |= process_stripe_data (transfer->ssm,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:421:    fpi_ssm_next_state (transfer->ssm);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:423:    fpi_ssm_jump_to_state (transfer->ssm, CAPTURE_READ_STRIPE_DATA);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:437:                        fpi_ssm_usb_transfer_cb);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:444:                        fpi_ssm_usb_transfer_cb);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:448:      aesX660_read_response (ssm, _dev, FALSE, FALSE, AESX660_BULK_TRANSFER_SIZE,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:516:activate_read_id_cb (FpiUsbTransfer *transfer, FpDevice *device,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:522:  unsigned char *data = transfer->buffer;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:527:      fpi_ssm_mark_failed (transfer->ssm, error);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:539:      fpi_ssm_mark_failed (transfer->ssm,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:554:      fpi_ssm_jump_to_state (transfer->ssm, ACTIVATE_SEND_INIT_CMD);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:562:      fpi_ssm_next_state (transfer->ssm);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:567:      fpi_ssm_mark_failed (transfer->ssm,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:576:activate_read_init_cb (FpiUsbTransfer *transfer, FpDevice *device,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:581:  unsigned char *data = transfer->buffer;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:587:      fp_dbg ("read_init transfer status: %s, actual_len: %d", error->message,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:588:              (gint) transfer->actual_length);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:589:      fpi_ssm_mark_failed (transfer->ssm, error);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:597:      fpi_ssm_mark_failed (transfer->ssm,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:607:        fpi_ssm_jump_to_state (transfer->ssm,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:610:        fpi_ssm_mark_completed (transfer->ssm);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:614:  fpi_ssm_jump_to_state (transfer->ssm, ACTIVATE_SEND_INIT_CMD);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:629:                        fpi_ssm_usb_transfer_cb);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:635:                        fpi_ssm_usb_transfer_cb);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:649:                        fpi_ssm_usb_transfer_cb);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c:659:                        fpi_ssm_usb_transfer_cb);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.h:41:#define AESX660_BULK_TRANSFER_SIZE 4096
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.h:104:  0x44, 0x02, 0x00, 0x08, 0x00,       /* Max transfer size is 8 */
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egis0570.c:140:data_resp_cb (FpiUsbTransfer *transfer, FpDevice *dev, gpointer user_data, GError *error)
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egis0570.c:149:      fpi_ssm_mark_failed (transfer->ssm, error);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egis0570.c:153:  int where_finger_is = postprocess_frames (self, transfer->buffer);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egis0570.c:172:                  memcpy (stripdata, (transfer->buffer) + (((k) * EGIS0570_IMGSIZE) + EGIS0570_IMGWIDTH * EGIS0570_RFMDIS), EGIS0570_IMGWIDTH * EGIS0570_RFMGHEIGHT);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egis0570.c:208:  fpi_ssm_next_state (transfer->ssm);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egis0570.c:214:  FpiUsbTransfer *transfer = fpi_usb_transfer_new (dev);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egis0570.c:216:  fpi_usb_transfer_fill_bulk (transfer, EGIS0570_EPIN, EGIS0570_INPSIZE);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egis0570.c:218:  transfer->ssm = ssm;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egis0570.c:219:  transfer->short_is_error = TRUE;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egis0570.c:221:  fpi_usb_transfer_submit (transfer, EGIS0570_TIMEOUT, NULL, data_resp_cb, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egis0570.c:225:cmd_resp_cb (FpiUsbTransfer *transfer, FpDevice *dev, gpointer user_data, GError *error)
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egis0570.c:228:    fpi_ssm_mark_failed (transfer->ssm, error);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egis0570.c:234:  FpiUsbTransfer *transfer = fpi_usb_transfer_new (dev);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egis0570.c:236:  fpi_usb_transfer_fill_bulk (transfer, EGIS0570_EPIN, EGIS0570_PKTSIZE);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egis0570.c:238:  transfer->ssm = ssm;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egis0570.c:240:  fpi_usb_transfer_submit (transfer, EGIS0570_TIMEOUT, NULL, cmd_resp_cb, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egis0570.c:246:  FpiUsbTransfer *transfer = fpi_usb_transfer_new (dev);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egis0570.c:248:  fpi_usb_transfer_fill_bulk_full (transfer, EGIS0570_EPOUT, pkt, EGIS0570_PKTSIZE, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egis0570.c:250:  transfer->ssm = ssm;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egis0570.c:251:  transfer->short_is_error = TRUE;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egis0570.c:253:  fpi_usb_transfer_submit (transfer, EGIS0570_TIMEOUT, NULL, fpi_ssm_usb_transfer_cb, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egis_etu905.c:56:  FpiUsbTransfer   *cmd_transfer;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egis_etu905.c:65:  g_clear_pointer (&data->cmd_transfer, fpi_usb_transfer_unref);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egis_etu905.c:91:egis_etu905_finger_on_sensor_cb (FpiUsbTransfer *transfer,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egis_etu905.c:99:  fpi_ssm_usb_transfer_cb (transfer, device, userdata, error);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egis_etu905.c:107:  g_autoptr(FpiUsbTransfer) transfer = fpi_usb_transfer_new (device);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egis_etu905.c:109:  fpi_usb_transfer_fill_interrupt (transfer, EGIS_ETU905_EP_CMD_INTERRUPT_IN,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egis_etu905.c:111:  transfer->ssm = ssm;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egis_etu905.c:113:  fpi_usb_transfer_set_short_error (transfer, FALSE);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egis_etu905.c:117:  fpi_usb_transfer_submit (g_steal_pointer (&transfer),
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egis_etu905.c:264:egis_etu905_cmd_receive_cb (FpiUsbTransfer *transfer,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egis_etu905.c:275:      fpi_ssm_mark_failed (transfer->ssm, error);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egis_etu905.c:279:  if (transfer->actual_length < G_N_ELEMENTS (egis_etu905_read_prefix))
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egis_etu905.c:281:      fpi_ssm_mark_failed (transfer->ssm,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egis_etu905.c:289:  data->buffer_in = g_steal_pointer (&transfer->buffer);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egis_etu905.c:290:  data->length_in = transfer->actual_length;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egis_etu905.c:292:  fpi_ssm_mark_completed (transfer->ssm);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egis_etu905.c:299:  g_autoptr(FpiUsbTransfer) transfer = NULL;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egis_etu905.c:305:      if (data->cmd_transfer)
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egis_etu905.c:307:          transfer = g_steal_pointer (&data->cmd_transfer);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egis_etu905.c:308:          transfer->ssm = ssm;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egis_etu905.c:309:          fpi_usb_transfer_submit (g_steal_pointer (&transfer),
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egis_etu905.c:312:                                   fpi_ssm_usb_transfer_cb,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egis_etu905.c:321:      transfer = fpi_usb_transfer_new (device);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egis_etu905.c:322:      transfer->ssm = ssm;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egis_etu905.c:323:      fpi_usb_transfer_fill_bulk (transfer, EGIS_ETU905_EP_CMD_IN,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egis_etu905.c:325:      fpi_usb_transfer_submit (g_steal_pointer (&transfer),
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egis_etu905.c:383:  g_autoptr(FpiUsbTransfer) transfer = NULL;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egis_etu905.c:425:   * outgoing transfer and the response buffer) via the SSM data. Nothing is
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egis_etu905.c:434:      transfer = fpi_usb_transfer_new (device);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egis_etu905.c:435:      fpi_usb_transfer_set_short_error (transfer, TRUE);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egis_etu905.c:437:      fpi_usb_transfer_fill_bulk_full (transfer,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egis_etu905.c:443:      data->cmd_transfer = g_steal_pointer (&transfer);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egis_etu905.c:1416:      /* Send cmd_identify_cancel to trigger firmware template update.
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egis_etu905.c:1557:  fp_dbg ("Firmware version callback");
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egis_etu905.c:1573:                                                     "Device firmware response "
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egis_etu905.c:1590:                                                     "Device firmware response "
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egis_etu905.c:1601:                                                     "Device firmware response "
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egis_etu905.c:1608:  fp_info ("Device firmware version is %s", fw_version);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egis_etu905.c:1814:   * already cancelled (it aborted the in-flight operation transfer), so we
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egis_etu905.c:1820:   * need to execute the cancel commands to trigger firmware template update
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c:44:  FpiUsbTransfer *cmd_transfer;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c:80:egismoc_finger_on_sensor_cb (FpiUsbTransfer *transfer,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c:88:  g_return_if_fail (transfer->ssm);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c:90:    fpi_ssm_mark_failed (transfer->ssm, error);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c:92:    fpi_ssm_next_state (transfer->ssm);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c:102:  g_autoptr(FpiUsbTransfer) transfer = fpi_usb_transfer_new (device);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c:104:  fpi_usb_transfer_fill_interrupt (transfer, EGISMOC_EP_CMD_INTERRUPT_IN,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c:106:  transfer->ssm = ssm;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c:108:  transfer->short_is_error = FALSE;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c:112:  fpi_usb_transfer_submit (g_steal_pointer (&transfer),
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c:189:egismoc_cmd_receive_cb (FpiUsbTransfer *transfer,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c:203:      fpi_ssm_mark_failed (transfer->ssm, error);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c:206:  if (data == NULL || transfer->actual_length < G_N_ELEMENTS (egismoc_read_prefix))
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c:208:      fpi_ssm_mark_failed (transfer->ssm,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c:214:   * we are sure that we won't start a transfer or a new command while there is
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c:218:  buffer = g_steal_pointer (&transfer->buffer);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c:219:  actual_length = transfer->actual_length;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c:221:  fpi_ssm_mark_completed (transfer->ssm);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c:233:  g_autoptr(FpiUsbTransfer) transfer = NULL;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c:238:      if (self->cmd_transfer)
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c:240:          self->cmd_transfer->ssm = ssm;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c:241:          fpi_usb_transfer_submit (g_steal_pointer (&self->cmd_transfer),
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c:244:                                   fpi_ssm_usb_transfer_cb,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c:253:      transfer = fpi_usb_transfer_new (device);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c:254:      transfer->ssm = ssm;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c:255:      fpi_usb_transfer_fill_bulk (transfer, EGISMOC_EP_CMD_IN,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c:257:      fpi_usb_transfer_submit (g_steal_pointer (&transfer),
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c:276:  g_assert (!self->cmd_transfer || self->cmd_transfer->ssm == ssm);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c:279:  self->cmd_transfer = NULL;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c:313:  g_autoptr(FpiUsbTransfer) transfer = NULL;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c:375:  transfer = fpi_usb_transfer_new (device);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c:376:  transfer->short_is_error = TRUE;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c:377:  transfer->ssm = self->cmd_ssm;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c:379:  fpi_usb_transfer_fill_bulk_full (transfer,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c:385:  g_assert (self->cmd_transfer == NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c:386:  self->cmd_transfer = g_steal_pointer (&transfer);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c:1337:  fp_dbg ("Firmware version callback");
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c:1358:                                                     "Device firmware response "
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c:1375:                                                     "Firmware version response too short"));
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c:1383:  fp_info ("Device firmware version is %s", fw_version);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c:1409:  g_autoptr(FpiUsbTransfer) transfer = fpi_usb_transfer_new (device);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c:1414:      fpi_usb_transfer_fill_control (transfer,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c:1422:      fpi_usb_transfer_fill_control (transfer,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c:1430:      fpi_usb_transfer_fill_control (transfer,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c:1438:      fpi_usb_transfer_fill_control (transfer,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c:1446:      fpi_usb_transfer_fill_control (transfer,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c:1462:  transfer->ssm = ssm;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c:1463:  transfer->short_is_error = TRUE;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c:1464:  fpi_usb_transfer_submit (g_steal_pointer (&transfer),
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c:1467:                           fpi_ssm_usb_transfer_cb,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elan.c:350:elan_cmd_cb (FpiUsbTransfer *transfer, FpDevice *dev,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elan.c:353:  FpiSsm *ssm = transfer->ssm;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elan.c:362:      fpi_ssm_mark_failed (transfer->ssm, error);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elan.c:367:  if (transfer->endpoint & FPI_USB_ENDPOINT_IN)
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elan.c:370:      self->last_read = g_memdup2 (transfer->buffer, transfer->actual_length);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elan.c:385:  FpiUsbTransfer *transfer;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elan.c:412:  transfer = fpi_usb_transfer_new (dev);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elan.c:413:  transfer->ssm = ssm;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elan.c:414:  transfer->short_is_error = TRUE;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elan.c:416:  fpi_usb_transfer_fill_bulk (transfer,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elan.c:423:  fpi_usb_transfer_submit (transfer, self->cmd_timeout, cancellable, elan_cmd_cb, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elan.c:433:  FpiUsbTransfer *transfer;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elan.c:448:  transfer = fpi_usb_transfer_new (dev);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elan.c:449:  transfer->ssm = ssm;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elan.c:450:  transfer->short_is_error = TRUE;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elan.c:452:  fpi_usb_transfer_fill_bulk_full (transfer,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elan.c:461:  fpi_usb_transfer_submit (transfer,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanmoc/elanmoc.c:105:fp_cmd_receive_cb (FpiUsbTransfer *transfer,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanmoc/elanmoc.c:116:      fpi_ssm_mark_failed (transfer->ssm, error);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanmoc/elanmoc.c:121:      fpi_ssm_mark_failed (transfer->ssm,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanmoc/elanmoc.c:125:  ssm_state = fpi_ssm_get_cur_state (transfer->ssm);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanmoc/elanmoc.c:128:  if (transfer->actual_length == 0)
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanmoc/elanmoc.c:130:      fpi_ssm_jump_to_state (transfer->ssm, ssm_state);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanmoc/elanmoc.c:135:    data->callback (self, transfer->buffer, transfer->actual_length, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanmoc/elanmoc.c:137:  fpi_ssm_mark_completed (transfer->ssm);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanmoc/elanmoc.c:150:  FpiUsbTransfer *transfer;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanmoc/elanmoc.c:156:      if (self->cmd_transfer)
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanmoc/elanmoc.c:158:          self->cmd_transfer->ssm = ssm;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanmoc/elanmoc.c:159:          fpi_usb_transfer_submit (g_steal_pointer (&self->cmd_transfer),
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanmoc/elanmoc.c:162:                                   fpi_ssm_usb_transfer_cb,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanmoc/elanmoc.c:180:      transfer = fpi_usb_transfer_new (dev);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanmoc/elanmoc.c:181:      transfer->ssm = ssm;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanmoc/elanmoc.c:182:      fpi_usb_transfer_fill_bulk (transfer, self->cmd_cancelable ? ELAN_EP_MOC_CMD_IN : ELAN_EP_CMD_IN, self->cmd_len_in);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanmoc/elanmoc.c:183:      fpi_usb_transfer_submit (transfer,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanmoc/elanmoc.c:223:  g_autoptr(FpiUsbTransfer) transfer = NULL;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanmoc/elanmoc.c:226:  transfer = fpi_usb_transfer_new (device);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanmoc/elanmoc.c:227:  transfer->short_is_error = TRUE;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanmoc/elanmoc.c:228:  fpi_usb_transfer_fill_bulk_full (transfer, ELAN_EP_CMD_OUT, buffer_out,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanmoc/elanmoc.c:232:  self->cmd_transfer = g_steal_pointer (&transfer);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanmoc/elanmoc.h:183:  FpiUsbTransfer *cmd_transfer;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:239:static FpiSpiTransfer *
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:242:  FpiSpiTransfer * xfer = fpi_spi_transfer_new (FP_DEVICE (self), self->spi_fd);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:244:  fpi_spi_transfer_write (xfer, 1);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:248:static FpiSpiTransfer *
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:251:  FpiSpiTransfer * xfer = fpi_spi_transfer_new (FP_DEVICE (self), self->spi_fd);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:253:  fpi_spi_transfer_write (xfer, 1);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:257:static FpiSpiTransfer *
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:260:  FpiSpiTransfer * xfer = fpi_spi_transfer_new (FP_DEVICE (self), self->spi_fd);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:262:  fpi_spi_transfer_write (xfer, 1);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:266:static FpiSpiTransfer *
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:269:  FpiSpiTransfer * xfer = fpi_spi_transfer_new (FP_DEVICE (self), self->spi_fd);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:271:  fpi_spi_transfer_write (xfer, 2);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:277:static FpiSpiTransfer *
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:280:  FpiSpiTransfer * xfer = fpi_spi_transfer_new (FP_DEVICE (self), self->spi_fd);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:282:  fpi_spi_transfer_write (xfer, 2);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:285:  fpi_spi_transfer_read_full (xfer, data_out, 1, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:289:static FpiSpiTransfer *
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:294:static FpiSpiTransfer *
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:299:static FpiSpiTransfer *
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:304:static FpiSpiTransfer *
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:310:static FpiSpiTransfer *
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:313:  FpiSpiTransfer * xfer = fpi_spi_transfer_new (FP_DEVICE (self), self->spi_fd);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:315:  fpi_spi_transfer_write (xfer, 1);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:317:  fpi_spi_transfer_read_full (xfer, data_out, 1, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:321:static FpiSpiTransfer *
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:324:  FpiSpiTransfer * xfer = fpi_spi_transfer_new (FP_DEVICE (self), self->spi_fd);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:326:  fpi_spi_transfer_write (xfer, 2);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:414:elanspi_capture_old_line_handler (FpiSpiTransfer *transfer, FpDevice *dev, gpointer unused_data, GError *error)
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:420:      fpi_ssm_mark_failed (transfer->ssm, error);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:427:      guint8 low =  transfer->buffer_rd[col * 2 + 1];
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:428:      guint8 high = transfer->buffer_rd[col * 2];
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:438:      fpi_ssm_jump_to_state (transfer->ssm, ELANSPI_CAPTOLD_CHECK_LINEREADY);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:445:          fpi_ssm_mark_completed (transfer->ssm);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:452:          fpi_ssm_mark_failed (transfer->ssm, error);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:456:      fpi_ssm_mark_completed (transfer->ssm);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:464:  FpiSpiTransfer *xfer = NULL;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:474:      fpi_spi_transfer_submit (xfer, NULL, fpi_ssm_spi_transfer_cb, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:480:      fpi_spi_transfer_submit (xfer, NULL, fpi_ssm_spi_transfer_cb, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:500:      xfer = fpi_spi_transfer_new (dev, self->spi_fd);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:502:      fpi_spi_transfer_write (xfer, 2);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:504:      fpi_spi_transfer_read (xfer, self->sensor_width * 2);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:505:      fpi_spi_transfer_submit (xfer, NULL, elanspi_capture_old_line_handler, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:514:  FpiSpiTransfer *xfer  = NULL;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:522:      fpi_spi_transfer_submit (xfer, fpi_device_get_cancellable (dev), fpi_ssm_spi_transfer_cb, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:578:  FpiSpiTransfer *xfer = NULL;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:588:      fpi_spi_transfer_submit (xfer, fpi_device_get_cancellable (dev), fpi_ssm_spi_transfer_cb, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:594:      fpi_spi_transfer_submit (xfer, fpi_device_get_cancellable (dev), fpi_ssm_spi_transfer_cb, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:629:      fpi_spi_transfer_submit (xfer, fpi_device_get_cancellable (dev), fpi_ssm_spi_transfer_cb, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:643:      fpi_spi_transfer_submit (xfer, fpi_device_get_cancellable (dev), fpi_ssm_spi_transfer_cb, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:665:      fpi_spi_transfer_submit (xfer, fpi_device_get_cancellable (dev), fpi_ssm_spi_transfer_cb, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:687:      fpi_spi_transfer_submit (xfer, fpi_device_get_cancellable (dev), fpi_ssm_spi_transfer_cb, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:693:elanspi_capture_hv_image_handler (FpiSpiTransfer *transfer, FpDevice *dev, gpointer unused_data, GError *error)
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:699:      fpi_ssm_mark_failed (transfer->ssm, error);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:706:  for (i = 0, outptr = 0; i < transfer->length_rd && outptr < (self->sensor_height * self->sensor_width * 2); i += 1)
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:708:      if (transfer->buffer_rd[i] != 0xff)
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:713:              value |= transfer->buffer_rd[i];
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:718:              value = transfer->buffer_rd[i];
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:729:      fpi_ssm_mark_failed (transfer->ssm, error);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:733:  fpi_ssm_mark_completed (transfer->ssm);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:741:  FpiSpiTransfer *xfer = NULL;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:753:      fpi_spi_transfer_submit (xfer, fpi_device_get_cancellable (dev), fpi_ssm_spi_transfer_cb, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:759:      fpi_spi_transfer_submit (xfer, fpi_device_get_cancellable (dev), fpi_ssm_spi_transfer_cb, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:779:      xfer = fpi_spi_transfer_new (dev, self->spi_fd);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:781:      fpi_spi_transfer_write (xfer, 2);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:783:      fpi_spi_transfer_read (xfer, self->sensor_height * (self->sensor_width * 2 + 48));
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:784:      fpi_spi_transfer_submit (xfer, fpi_device_get_cancellable (dev), elanspi_capture_hv_image_handler, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:793:  FpiSpiTransfer *xfer = NULL;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:810:      fpi_spi_transfer_submit (xfer, fpi_device_get_cancellable (dev), fpi_ssm_spi_transfer_cb, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:816:      fpi_spi_transfer_submit (xfer, fpi_device_get_cancellable (dev), fpi_ssm_spi_transfer_cb, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:822:      fpi_spi_transfer_submit (xfer, fpi_device_get_cancellable (dev), fpi_ssm_spi_transfer_cb, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:839:      fpi_spi_transfer_submit (xfer, fpi_device_get_cancellable (dev), fpi_ssm_spi_transfer_cb, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:859:      fpi_spi_transfer_submit (xfer, fpi_device_get_cancellable (dev), fpi_ssm_spi_transfer_cb, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:866:      fpi_spi_transfer_submit (xfer, fpi_device_get_cancellable (dev), fpi_ssm_spi_transfer_cb, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:912:      fpi_spi_transfer_submit (xfer, fpi_device_get_cancellable (dev), fpi_ssm_spi_transfer_cb, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:922:  FpiSpiTransfer *xfer = NULL;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:931:      fpi_spi_transfer_submit (xfer, fpi_device_get_cancellable (dev), fpi_ssm_spi_transfer_cb, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:947:      fpi_spi_transfer_submit (xfer, fpi_device_get_cancellable (dev), fpi_ssm_spi_transfer_cb, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:959:      fpi_spi_transfer_submit (xfer, fpi_device_get_cancellable (dev), fpi_ssm_spi_transfer_cb, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:967:      fpi_spi_transfer_submit (xfer, fpi_device_get_cancellable (dev), fpi_ssm_spi_transfer_cb, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:975:      fpi_spi_transfer_submit (xfer, fpi_device_get_cancellable (dev), fpi_ssm_spi_transfer_cb, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:982:      fpi_spi_transfer_submit (xfer, fpi_device_get_cancellable (dev), fpi_ssm_spi_transfer_cb, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:1016:      fpi_spi_transfer_submit (xfer, fpi_device_get_cancellable (dev), fpi_ssm_spi_transfer_cb, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:1024:      fpi_spi_transfer_submit (xfer, fpi_device_get_cancellable (dev), fpi_ssm_spi_transfer_cb, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:1030:      fpi_spi_transfer_submit (xfer, fpi_device_get_cancellable (dev), fpi_ssm_spi_transfer_cb, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:1038:      fpi_spi_transfer_submit (xfer, fpi_device_get_cancellable (dev), fpi_ssm_spi_transfer_cb, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:1052:      fpi_spi_transfer_submit (xfer, fpi_device_get_cancellable (dev), fpi_ssm_spi_transfer_cb, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:1083:      fpi_spi_transfer_submit (xfer, fpi_device_get_cancellable (dev), fpi_ssm_spi_transfer_cb, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:1091:      fpi_spi_transfer_submit (xfer, fpi_device_get_cancellable (dev), fpi_ssm_spi_transfer_cb, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:1097:      fpi_spi_transfer_submit (xfer, fpi_device_get_cancellable (dev), fpi_ssm_spi_transfer_cb, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:1111:      fpi_spi_transfer_submit (xfer, fpi_device_get_cancellable (dev), fpi_ssm_spi_transfer_cb, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c:1117:      fpi_spi_transfer_submit (xfer, fpi_device_get_cancellable (dev), fpi_ssm_spi_transfer_cb, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/etes603.c:416:          "REG_FIRMWARE:%02X REG_VERSION:%02X)",
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/etes603.c:710:  FpiUsbTransfer *transfer = fpi_usb_transfer_new (dev);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/etes603.c:728:  transfer->ssm = ssm;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/etes603.c:729:  fpi_usb_transfer_fill_bulk_full (transfer, ep, buffer, length, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/etes603.c:730:  fpi_usb_transfer_submit (transfer, BULK_TIMEOUT, NULL, cb, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/etes603.c:735:async_tx_cb (FpiUsbTransfer *transfer, FpDevice *device,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/etes603.c:743:      fp_warn ("transfer is not completed (result: %s)",
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/etes603.c:745:      fpi_ssm_mark_failed (transfer->ssm, error);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/etes603.c:749:      unsigned char endpoint = transfer->endpoint;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/etes603.c:750:      int actual_length = transfer->actual_length;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/etes603.c:751:      int length = transfer->length;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/etes603.c:760:          async_tx (device, EP_IN, async_tx_cb, transfer->ssm);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/etes603.c:765:          fpi_ssm_next_state (transfer->ssm);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/focaltech_moc/focaltech_moc.c:219:fp_cmd_receive_cb (FpiUsbTransfer *transfer,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/focaltech_moc/focaltech_moc.c:230:      fpi_ssm_mark_failed (transfer->ssm, g_steal_pointer (&error));
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/focaltech_moc/focaltech_moc.c:236:      fpi_ssm_mark_failed (transfer->ssm,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/focaltech_moc/focaltech_moc.c:241:  ssm_state = fpi_ssm_get_cur_state (transfer->ssm);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/focaltech_moc/focaltech_moc.c:244:  if (transfer->actual_length == 0)
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/focaltech_moc/focaltech_moc.c:246:      fpi_ssm_jump_to_state (transfer->ssm, ssm_state);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/focaltech_moc/focaltech_moc.c:250:  if (focaltech_moc_check_cmd (transfer->buffer, transfer->actual_length) != 0)
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/focaltech_moc/focaltech_moc.c:252:      fpi_ssm_mark_failed (transfer->ssm,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/focaltech_moc/focaltech_moc.c:258:    data->callback (self, transfer->buffer, transfer->actual_length, NULL);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/focaltech_moc/focaltech_moc.c:260:  fpi_ssm_mark_completed (transfer->ssm);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/focaltech_moc/focaltech_moc.c:273:  FpiUsbTransfer *transfer;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/focaltech_moc/focaltech_moc.c:279:      if (self->cmd_transfer)
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/focaltech_moc/focaltech_moc.c:281:          self->cmd_transfer->ssm = ssm;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/focaltech_moc/focaltech_moc.c:282:          fpi_usb_transfer_submit (g_steal_pointer (&self->cmd_transfer),
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/focaltech_moc/focaltech_moc.c:285:                                   fpi_ssm_usb_transfer_cb,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/focaltech_moc/focaltech_moc.c:307:      transfer = fpi_usb_transfer_new (device);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/focaltech_moc/focaltech_moc.c:308:      transfer->ssm = ssm;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/focaltech_moc/focaltech_moc.c:309:      fpi_usb_transfer_fill_bulk (transfer, self->bulk_in_ep, self->cmd_len_in);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/focaltech_moc/focaltech_moc.c:310:      fpi_usb_transfer_submit (transfer,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/focaltech_moc/focaltech_moc.c:348:  g_autoptr(FpiUsbTransfer) transfer = NULL;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/focaltech_moc/focaltech_moc.c:351:  transfer = fpi_usb_transfer_new (device);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/focaltech_moc/focaltech_moc.c:352:  transfer->short_is_error = TRUE;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/focaltech_moc/focaltech_moc.c:353:  fpi_usb_transfer_fill_bulk_full (transfer, self->bulk_out_ep, buffer_out,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/focaltech_moc/focaltech_moc.c:357:  self->cmd_transfer = g_steal_pointer (&transfer);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/focaltech_moc/focaltech_moc.h:45:  FpiUsbTransfer *cmd_transfer;
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/fpcmoc/fpc.c:83:fpc_suspend_resume_cb (FpiUsbTransfer *transfer,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/fpcmoc/fpc.c:88:  int ssm_state = fpi_ssm_get_cur_state (transfer->ssm);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/fpcmoc/fpc.c:95:        fpi_ssm_mark_failed (transfer->ssm, g_error_copy (error));
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/fpcmoc/fpc.c:103:        fpi_ssm_mark_failed (transfer->ssm, g_error_copy (error));
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/fpcmoc/fpc.c:105:        fpi_ssm_jump_to_state (transfer->ssm, FPC_CMD_GET_DATA);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/fpcmoc/fpc.c:112:fpc_cmd_receive_cb (FpiUsbTransfer *transfer,
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/fpcmoc/fpc.c:124:      fpi_ssm_jump_to_state (transfer->ssm, FPC_CMD_SUSPENDED);
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/fpcmoc/fpc.c:130:      fpi_ssm_mark_failed (transfer->ssm, error);
+
+=== UPSTREAM SOURCE FILES ===
+/home/archer/projects/zerobook-focaltech-driver/upstream/alt/focal_spi.c
+/home/archer/projects/zerobook-focaltech-driver/upstream/focal_spi.c
+
+=== FTE3600 SOURCE FILES ===
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/demo/gtk-libfprint-test.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/examples/clear-storage.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/examples/enroll.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/examples/identify.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/examples/img-capture.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/examples/manage-prints.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/examples/storage.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/examples/storage.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/examples/utilities.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/examples/utilities.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/examples/verify.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes1610.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes1660.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes1660.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2501.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2501.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2550.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2660.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes2660.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes3500.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes3k.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes3k.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aes4000.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aeslib.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aeslib.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/aesx660.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers_api.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egis0570.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egis0570.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egis_etu905.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egis_etu905.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/egismoc/egismoc.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elan.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elan.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanmoc/elanmoc.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanmoc/elanmoc.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/elanspi.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/etes603.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/focaltech_moc/focaltech_moc.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/focaltech_moc/focaltech_moc.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/fpcmoc/fpc.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/fpcmoc/fpc.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/fte3600-brisk.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/fte3600-brisk.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/fte3600.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/fte3600.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/fte3600-template.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/fte3600-template.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/goodixmoc/goodix.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/goodixmoc/goodix.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/goodixmoc/goodix_proto.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/goodixmoc/goodix_proto.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/mafpmoc/mafpmoc.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/mafpmoc/mafpmoc.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/nb1010.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/realtek/realtek.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/realtek/realtek.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/secugen.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/synaptics/bmkt.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/synaptics/bmkt_message.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/synaptics/bmkt_message.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/synaptics/bmkt_response.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/synaptics/sensor.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/synaptics/synaptics.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/synaptics/synaptics.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/upek_proto.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/upek_proto.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/upeksonly.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/upeksonly.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/upektc.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/upektc.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/upektc_img.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/upektc_img.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/upekts.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/uru4000.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/vcom5s.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/vfs0050.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/vfs0050.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/vfs101.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/vfs301.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/vfs301.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/vfs301_proto.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/vfs301_proto_fragments.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/vfs5011.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/vfs5011_proto.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/vfs7552.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/vfs7552_proto.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/virtual-device.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/virtual-device-listener.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/virtual-device-private.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/virtual-device-storage.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/drivers/virtual-image.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/fp-context.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/fp-context.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/fp-device.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/fp-device.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/fp-device-private.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/fpi-assembling.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/fpi-assembling.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/fpi-byte-reader.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/fpi-byte-reader.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/fpi-byte-utils.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/fpi-byte-writer.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/fpi-byte-writer.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/fpi-compat.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/fpi-context.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/fpi-device.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/fpi-device.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/fpi-image.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/fpi-image-device.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/fpi-image-device.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/fpi-image.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/fpi-log.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/fpi-log.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/fp-image.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/fp-image-device.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/fp-image-device.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/fp-image-device-private.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/fp-image.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/fpi-minutiae.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/fpi-print.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/fpi-print.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/fpi-spi-transfer.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/fpi-spi-transfer.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/fpi-ssm.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/fpi-ssm.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/fpi-usb-transfer.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/fpi-usb-transfer.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/fp-print.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/fp-print.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/fp-print-private.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/fprint.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/fprint-list-metainfo.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/fprint-list-supported-devices.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/fprint-list-udev-hwdb.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/fprint-list-udev-rules.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/nbis/bozorth3/bozorth3.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/nbis/bozorth3/bz_alloc.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/nbis/bozorth3/bz_drvrs.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/nbis/bozorth3/bz_gbls.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/nbis/bozorth3/bz_io.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/nbis/bozorth3/bz_sort.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/nbis/include/bozorth.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/nbis/include/bz_array.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/nbis/include/defs.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/nbis/include/lfs.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/nbis/include/log.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/nbis/include/morph.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/nbis/include/mytime.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/nbis/include/sunrast.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/nbis/libfprint-include/nbis.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/nbis/libfprint-include/nbis-helpers.h
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/nbis/mindtct/binar.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/nbis/mindtct/block.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/nbis/mindtct/chaincod.c
+/home/archer/projects/zerobook-focaltech-driver/libfprint-fte3600/libfprint/nbis/mindtct/contour.c

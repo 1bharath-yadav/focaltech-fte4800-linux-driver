@@ -1,0 +1,15 @@
+=== XREFS TO EMBEDDED FT9368 DATA ===
+fcn.18002a934 0x18002a95a [DATA:r--] lea[38;5;251m rax[0m,[38;5;178m[38;5;178m [0m[[38;5;34m0x18006d8b0[0m][38;5;251m[0m
+fcn.18002a934 0x18002a98f [DATA:r--] lea[38;5;251m rax[0m,[38;5;178m[38;5;178m [0m[[38;5;34m0x180074300[0m][38;5;251m[0m
+
+=== XREFS TO FIRMWARE LOAD STRINGS ===
+fcn.180021b68 0x180021bb8 [STRN:r--] lea[38;5;251m r8[0m,[38;5;178m[38;5;178m str.ft_feature_loadfirmware_LoadFW[0m
+fcn.180021b68 0x180021c91 [STRN:r--] lea[38;5;251m r8[0m,[38;5;178m[38;5;178m str.ft_feature_loadfirmware_LoadFW[0m
+fcn.18002179c 0x18002180e [STRN:r--] lea[38;5;251m r8[0m,[38;5;178m[38;5;178m str.ft_feature_FT9368_loadfirmware_LoadFW[0m
+fcn.18002179c 0x180021881 [STRN:r--] lea[38;5;251m r8[0m,[38;5;178m[38;5;178m str.ft_feature_FT9368_loadfirmware_LoadFW[0m
+fcn.18002179c 0x1800218c6 [STRN:r--] lea[38;5;251m r8[0m,[38;5;178m[38;5;178m str.ft_feature_FT9368_loadfirmware_LoadFW[0m
+fcn.180021a04 0x180021b2c [STRN:r--] lea[38;5;251m rdx[0m,[38;5;178m[38;5;178m str._Driver__I__s__d_:_There_is_a_newer_FT9368_FW_to_update_[38;5;178m0x_x___[38;5;178m0x_x[0m
+
+=== FW LOAD FUNCTION DISCOVERY ===
+
+=== SPI FUNCTION DISCOVERY ===

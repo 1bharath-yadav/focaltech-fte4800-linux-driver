@@ -1,0 +1,27 @@
+#!/bin/bash
+d=/home/archer/projects/zerobook-focaltech-driver
+src=$(sudo -n find /tmp -maxdepth 1 -name "systemd-private-*-fprintd.service-*" | head -1)/tmp
+mkdir -p $d/bmps
+sudo -n find "$src" -name '*.bmp' -exec cp {} $d/bmps/ \; && sudo -n chown -R "$USER:$USER" $d/bmps
+ls $d/bmps | head -30 > /dev/null
+python3 - <<'EOF'
+import glob, sys
+try:
+    from PIL import Image
+except Exception as e:
+    print("NO_PIL", e); sys.exit(0)
+d='/home/archer/projects/zerobook-focaltech-driver'
+files = sorted(glob.glob(d+'/bmps/*.bmp'))
+pick = [files[1], files[2], files[5], files[-1]]
+imgs=[]
+for f in pick:
+    im = Image.open(f)
+    print(f.split('/')[-1], im.size, im.mode, 'extrema', im.getextrema())
+    im = im.convert('L'); lo,hi = im.getextrema()
+    if hi>lo: im = im.point(lambda v:int((v-lo)*255/(hi-lo)))
+    imgs.append(im.resize((im.width*5, im.height*5), Image.NEAREST))
+W=sum(i.width for i in imgs)+10*(len(imgs)-1); H=max(i.height for i in imgs)
+out=Image.new('L',(W,H),128); x=0
+for i in imgs: out.paste(i,(x,0)); x+=i.width+10
+out.save(d+'/bmp_view.png'); print('saved', out.size)
+EOF

@@ -1,0 +1,393 @@
+=== DLL INFO ===
+arch     x86
+baddr    0x180000000
+binsz    1445904
+bintype  pe
+bits     64
+canary   false
+injprot  false
+retguard false
+class    PE32+
+cmp.csum 0x0016da5e
+compiled Tue Aug 16 17:05:16 2022
+crypto   false
+dbg_file D:\work\Sensor\FT9368\x64\Release\ftWbioUmdfDriverV2.pdb
+endian   little
+havecode true
+hdr.csum 0x0016da5e
+guid     5EAF2A49D156454CB5A8E3D9C75729BD1
+laddr    0x0
+lang     c
+linenum  false
+lsyms    false
+machine  AMD 64
+nx       true
+os       windows
+overlay  true
+cc       ms
+pic      true
+relocs   false
+signed   true
+sanitize false
+static   false
+stripped false
+uncaps   false
+subsys   Windows GUI
+va       true
+
+=== DLL STRINGS: FT9368/FW ===
+3078  0x00030e08 0x180032808 57  58   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\chips\ff_spi.cpp
+3084  0x00030ee0 0x1800328e0 16  17   .rdata  ascii   focaltech:fw9369
+3090  0x00030f50 0x180032950 24  25   .rdata  ascii   fw9369_config_power_mode
+3098  0x00031040 0x180032a40 25  26   .rdata  ascii   fw9369_config_device_mode
+3107  0x00031160 0x180032b60 64  65   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\chips\fw9369\fw9369.cpp
+3110  0x00031200 0x180032c00 25  26   .rdata  ascii   fw9369_query_event_status
+3118  0x00031370 0x180032d70 33  34   .rdata  ascii   [%4d]:%s call fw9369_GestureStart
+3124  0x00031480 0x180032e80 49  50   .rdata  ascii   [%4d]:%s call fw9369_img_base_updata_with_check()
+3128  0x00031510 0x180032f10 35  36   .rdata  ascii   [%4d]:%s go fw9369_wrong_base_check
+3135  0x000316b0 0x1800330b0 16  17   .rdata  ascii   fw9369_init_chip
+3136  0x000316d0 0x1800330d0 81  82   .rdata  ascii   [%4d]:'fw9369_config_power_mode(FF_POWER_MODE_WAKEUP)' failed, try again (%d/%d).
+3138  0x00031748 0x180033148 22  23   .rdata  ascii   fw9369_config_spi_mode
+3140  0x000317a8 0x1800331a8 15  16   .rdata  ascii   fw9369_probe_id
+3144  0x00031828 0x180033228 31  32   .rdata  ascii   [%4d]:got device id fw9369 !!!.
+3145  0x00031860 0x180033260 68  69   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\chips\fw9369\fw9369_afe.cpp
+3146  0x000318a8 0x1800332a8 12  13   .rdata  ascii   focaltech:fw
+3148  0x000318c8 0x1800332c8 15  16   .rdata  ascii   fw9369_cfg_init
+3149  0x000318d8 0x1800332d8 41  42   .rdata  ascii   [%4d]:%s: Fw9369_cfg.IMG_Inte_Times = %d.
+3150  0x00031908 0x180033308 26  27   .rdata  ascii   fw9369_check_communication
+3152  0x00031950 0x180033350 23  24   .rdata  ascii   fw9369_get_SMIC_IC_flag
+3157  0x00031a60 0x180033460 19  20   .rdata  ascii   fw9369_Get_OTP_Info
+3162  0x00031b10 0x180033510 28  29   .rdata  ascii   fw9369_Set_Scan_Rate_Default
+3164  0x00031b48 0x180033548 20  21   .rdata  ascii   fw9369_fdt_mode_init
+3165  0x00031b60 0x180033560 68  69   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\chips\fw9369\fw9369_fdt.cpp
+3177  0x00031cf8 0x1800336f8 21  22   .rdata  ascii   fw9369_fdt_auto_start
+3180  0x00031da8 0x1800337a8 23  24   .rdata  ascii   fw9369_fdt_manual_start
+3181  0x00031dc0 0x1800337c0 25  26   .rdata  ascii   fw9369_fdt_AutoSDacUpdate
+3188  0x00031ef8 0x1800338f8 23  24   .rdata  ascii   fw9369_fdt_manual_check
+3190  0x00031f40 0x180033940 78  80   .rdata  ascii   [%4d]:fw9369_fdt_base: FW9369_FDT_DELT_DOWN_LO = %d; FW9369_FDT_DELT_UP_LO= %d
+3200  0x00032110 0x180033b10 23  24   .rdata  ascii   fw9369_fdt_manual_store
+3201  0x00032128 0x180033b28 23  24   .rdata  ascii   fw9369_wrong_base_check
+3213  0x00032458 0x180033e58 26  27   .rdata  ascii   fw9369_fdt_base_Min_Updata
+3216  0x000324d0 0x180033ed0 64  66   .rdata  ascii   [%4d]:%s FW9369_FDT_DELT_DOWN_LO = %d; FW9369_FDT_DELT_UP_LO= %d
+3218  0x00032538 0x180033f38 29  30   .rdata  ascii   fw9369_fdt_base_Stable_Update
+3225  0x00032660 0x180034060 22  23   .rdata  ascii   fw9369_fdt_base_Update
+3227  0x000326a0 0x1800340a0 37  38   .rdata  ascii   [%4d]:'%s fw9369_FDT_Max: %d %d %d %d
+3228  0x000326c8 0x1800340c8 25  26   .rdata  ascii   fw9369_fdt_up_check_again
+3230  0x00032720 0x180034120 23  24   .rdata  ascii   fw9369_Set_Scan_Rate_2M
+3231  0x00032738 0x180034138 20  21   .rdata  ascii   fw9369_img_mode_init
+3232  0x00032750 0x180034150 70  71   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\chips\fw9369\fw9369_image.cpp
+3236  0x00032820 0x180034220 21  22   .rdata  ascii   fw9369_img_scan_start
+3237  0x00032838 0x180034238 19  20   .rdata  ascii   fw9369_img_scan_end
+3238  0x00032850 0x180034250 25  26   .rdata  ascii   fw9369_Img_Get_Better_DAC
+3251  0x00032a60 0x180034460 21  22   .rdata  ascii   fw9369_AutoSDacUpdate
+3257  0x00032b80 0x180034580 93  94   .rdata  ascii   error at %s[%s:%d]: fw9369_AutoSDacUpdate find DAC fail loop:%d dac:%d last:%d MiddleTemp:%d\n
+3258  0x00032be0 0x1800345e0 47  48   .rdata  ascii   [%4d]:fw9369_AutoSDacUpdate final dac:%d ......
+3259  0x00032c10 0x180034610 22  23   .rdata  ascii   fw9369_img_base_Update
+3260  0x00032c28 0x180034628 36  37   .rdata  ascii   [%4d]:'%s call fw9369_AutoSDacUpdate
+3267  0x00032d88 0x180034788 25  26   .rdata  ascii   fw9369_white_Point_Handle
+3269  0x00032de8 0x1800347e8 18  19   .rdata  ascii   fw9369_Update_Base
+3274  0x00032e90 0x180034890 20  21   .rdata  ascii   fw9369_capture_image
+3286  0x000330a0 0x180034aa0 25  26   .rdata  ascii   fw9369_GestureDetectFirst
+3289  0x00033118 0x180034b18 20  21   .rdata  ascii   fw9369_GestureDetect
+3292  0x000331c0 0x180034bc0 19  20   .rdata  ascii   fw9369_GestureStart
+3294  0x00033230 0x180034c30 71  72   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\chips\fw9369\fw9369_spidrv.cpp
+3295  0x00033278 0x180034c78 22  23   .rdata  ascii   fw9369_sram_write_bulk
+3296  0x00033290 0x180034c90 29  30   .rdata  ascii   fw9369_sram_read_bulk_withecc
+3297  0x000332b0 0x180034cb0 16  17   .rdata  ascii   fw9369_fifo_read
+3298  0x000332c8 0x180034cc8 13  14   .rdata  ascii   c:\focaltech\
+3300  0x00033300 0x180034d00 55  56   .rdata  ascii   [Driver] W %s[%d]: Directory c:\focaltech creat failed.
+3303  0x00033350 0x180034d50 66  67   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\common\src\ft_binfile.cpp
+3309  0x00033460 0x180034e60 67  68   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\common\src\ft_protocal.cpp
+3314  0x00033530 0x180034f30 63  64   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\common\src\ft_util.cpp
+3318  0x000335e0 0x180034fe0 67  68   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\common\src\ft_WaitLock.cpp
+3324  0x000336ff 0x1800350ff 52  53   .rdata  ascii   7D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\Device.cpp
+3337  0x000339b0 0x1800353b0 55  56   .rdata  ascii   [Driver] E error at %s[%s:%d]: FT9368 update fail 0x%p!
+3371  0x00033fa0 0x1800359a0 70  71   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\feature\src\FT9368_Updata.cpp
+3390  0x00034190 0x180035b90 67  68   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\feature\src\ft_devinit.cpp
+3454  0x00034cd0 0x1800366d0 49  50   .rdata  ascii   [Driver] I %s[%d]: FT9368 POA detect finger press
+3461  0x00034e30 0x180036830 111 112  .rdata  ascii   [Driver] I %s[%d]: Sensor type: %d(1=FT9338W, 2=FT9348W, 3=FT9361W, 4=FT9368W, 5=FT9371W, 6=FT9536W, 7=FT9362W)
+3467  0x00034f8f 0x18003698f 69  70   .rdata  ascii   @D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\feature\src\ft_esdcheck.cpp
+3469  0x00035000 0x180036a00 69  70   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\feature\src\ft_iocontrol.cpp
+3479  0x00035238 0x180036c38 29  60   .rdata  utf16le FocalTech Electronics Co.,Ltd
+3531  0x00035dd0 0x1800377d0 33  34   .rdata  ascii   ft_feature_iocontrol_OnDownloadFw
+3559  0x00036390 0x180037d90 72  73   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\feature\src\ft_loadfirmware.cpp
+3564  0x00036500 0x180037f00 45  46   .rdata  ascii   ft_feature_loadfirmware_FT9368isUpdateVersion
+3565  0x00036530 0x180037f30 68  69   .rdata  ascii   [Driver] I %s[%d]: There is a newer FT9368 FW to update 0x%x => 0x%x
+3567  0x000365b0 0x180037fb0 30  31   .rdata  ascii   ft_feature_loadfirmware_LoadFW
+3569  0x000365e0 0x180037fe0 37  38   .rdata  ascii   ft_feature_FT9368_loadfirmware_LoadFW
+3571  0x00036638 0x180038038 43  44   .rdata  ascii   [Driver] I %s[%d]: FT9368 update fw success
+3577  0x00036740 0x180038140 77  78   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\feature\src\ft_powernotification.cpp
+3587  0x00036ba0 0x1800385a0 76  77   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\interface\src\ft_fpdevinterface.cpp
+3611  0x000371d0 0x180038bd0 65  66   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\interface\src\ft_spi.cpp
+3687  0x000383a0 0x180039da0 65  66   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\interface\src\ft_usb.cpp
+3767  0x00039470 0x18003ae70 50  51   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\Queue.cpp
+3804  0x00039cd8 0x18003b6d8 40  41   .rdata  ascii   [Driver] I %s[%d]: 9338 bin code size %d
+3808  0x00039df8 0x18003b7f8 40  41   .rdata  ascii   [Driver] I %s[%d]: 9348 bin code size %d
+3812  0x00039f18 0x18003b918 40  41   .rdata  ascii   [Driver] I %s[%d]: 9361 bin code size %d
+3814  0x0003a008 0x18003ba08 30  31   .rdata  ascii   [Driver] V clsFT9368 construct
+3815  0x0003a028 0x18003ba28 9   10   .rdata  ascii   clsFT9368
+3816  0x0003a038 0x18003ba38 40  41   .rdata  ascii   [Driver] I %s[%d]: 9368 bin code size %d
+3817  0x0003a068 0x18003ba68 49  50   .rdata  ascii   [Driver] I %s[%d]: 9368 pramboot bin code size %d
+3818  0x0003a0a0 0x18003baa0 29  30   .rdata  ascii   [Driver] V clsFT9368 destruct
+3819  0x0003a160 0x18003bb60 30  31   .rdata  ascii   [Driver] V clsFT9369 construct
+3820  0x0003a180 0x18003bb80 29  30   .rdata  ascii   [Driver] V clsFT9369 destruct
+3823  0x0003a270 0x18003bc70 40  41   .rdata  ascii   [Driver] I %s[%d]: 9536 bin code size %d
+3827  0x0003a450 0x18003be50 73  74   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\sensor\src\ft_sensor9338base.cpp
+3847  0x0003a8a0 0x18003c2a0 48  49   .rdata  ascii   [Driver] E error at %s[%s:%d]: No bin code file.
+3870  0x0003ae18 0x18003c818 34  35   .rdata  ascii   [Driver] V clsFT9368Base construct
+3871  0x0003ae40 0x18003c840 33  34   .rdata  ascii   [Driver] V clsFT9368Base destruct
+3872  0x0003ae70 0x18003c870 73  74   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\sensor\src\ft_sensor9368base.cpp
+3873  0x0003aec0 0x18003c8c0 44  45   .rdata  ascii   clsFT9368Base::ft_sensor_sensorbase_ReadInfo
+3876  0x0003af48 0x18003c948 46  47   .rdata  ascii   clsFT9368Base::ft_sensor_sensorbase_WakeDevice
+3886  0x0003b118 0x18003cb18 47  48   .rdata  ascii   clsFT9368Base::ft_sensor_sensorbase_CaptureData
+3887  0x0003b1e8 0x18003cbe8 34  35   .rdata  ascii   [Driver] V clsFT9369Base construct
+3888  0x0003b210 0x18003cc10 33  34   .rdata  ascii   [Driver] V clsFT9369Base destruct
+3889  0x0003b240 0x18003cc40 73  74   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\sensor\src\ft_sensor9369base.cpp
+3890  0x0003b290 0x18003cc90 46  47   .rdata  ascii   clsFT9369Base::ft_sensor_sensorbase_DevD0Entry
+3892  0x0003b2e0 0x18003cce0 47  48   .rdata  ascii   clsFT9369Base::ft_sensor_sensorbase_CaptureData
+3895  0x0003b400 0x18003ce00 73  74   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\sensor\src\ft_sensor95A8base.cpp
+3986  0x0003c908 0x18003e308 56  57   .rdata  ascii   focaltech-lib:focal_CreateFocalConfigInfoInstance FAIL!\n
+3988  0x0003c970 0x18003e370 60  61   .rdata  ascii   focaltech-lib:%s  create g_fp_image_buf->g_fpImageBuf FAIL!\n
+3989  0x0003c9b0 0x18003e3b0 69  70   .rdata  ascii   focaltech-lib:%s  create g_fp_image_buf->g_fpImageBufBeforeSpa FAIL!\n
+3990  0x0003ca00 0x18003e400 68  69   .rdata  ascii   focaltech-lib:%s  create g_fp_image_buf->g_fpImageBufAfterSpa FAIL!\n
+3991  0x0003ca50 0x18003e450 63  64   .rdata  ascii   focaltech-lib:%s  create g_fp_image_buf->g_fpImageBufAlg FAIL!\n
+3992  0x0003ca90 0x18003e490 62  63   .rdata  ascii   focaltech-lib:%s  create g_fp_image_buf->g_lastImageBuf FAIL!\n
+3993  0x0003cad0 0x18003e4d0 64  65   .rdata  ascii   focaltech-lib:%s  create g_fp_image_buf->g_forceEnrollBuf FAIL!\n
+3994  0x0003cb20 0x18003e520 68  69   .rdata  ascii   focaltech-lib:%s  create g_fp_image_buf->g_fpImageBufReserve1 FAIL!\n
+3995  0x0003cb70 0x18003e570 68  69   .rdata  ascii   focaltech-lib:%s  create g_fp_image_buf->g_fpImageBufReserve2 FAIL!\n
+3996  0x0003cbb8 0x18003e5b8 23  24   .rdata  ascii   focaltech-lib:%s FAIL!\n
+3998  0x0003cbf0 0x18003e5f0 55  56   .rdata  ascii   focaltech-lib:%s...g_imageRescan is empty, do nothing!\n
+3999  0x0003cc30 0x18003e630 65  66   .rdata  ascii   focaltech-lib:%s...g_imageRescan = %p, pPreNode = %p, pNode = %p\n
+4000  0x0003cc80 0x18003e680 121 122  .rdata  ascii   focaltech-lib:%s...2...g_imageRescan = %p, pPreNode = %p, pNode = %p, pNode->imageRescanBuf = %p, pNode->currentCnt = %d\n
+4001  0x0003cd00 0x18003e700 121 122  .rdata  ascii   focaltech-lib:%s...3...g_imageRescan = %p, pPreNode = %p, pNode = %p, pNode->imageRescanBuf = %p, pNode->currentCnt = %d\n
+4002  0x0003cd80 0x18003e780 69  70   .rdata  ascii   focaltech-lib:%s...4...g_imageRescan = %p, pPreNode = %p, pNode = %p\n
+4004  0x0003cde8 0x18003e7e8 55  56   .rdata  ascii   focaltech-lib:%s...g_enrollImage is empty, do nothing!\n
+4005  0x0003ce20 0x18003e820 65  66   .rdata  ascii   focaltech-lib:%s...g_enrollImage = %p, pPreNode = %p, pNode = %p\n
+4006  0x0003ce70 0x18003e870 93  94   .rdata  ascii   focaltech-lib:%s...2...g_enrollImage = %p, pPreNode = %p, pNode = %p, pNode->currentCnt = %d\n
+4007  0x0003ced0 0x18003e8d0 93  94   .rdata  ascii   focaltech-lib:%s...3...g_enrollImage = %p, pPreNode = %p, pNode = %p, pNode->currentCnt = %d\n
+4008  0x0003cf30 0x18003e930 93  94   .rdata  ascii   focaltech-lib:%s...4...g_enrollImage = %p, pPreNode = %p, pNode = %p, pNode->currentCnt = %d\n
+4010  0x0003cfa8 0x18003e9a8 53  54   .rdata  ascii   focaltech-lib:%s...tplNodeList is empty, do nothing!\n
+4011  0x0003cfe0 0x18003e9e0 63  64   .rdata  ascii   focaltech-lib:%s...tplNodeList = %p, pPreNode = %p, pNode = %p\n
+4012  0x0003d020 0x18003ea20 91  92   .rdata  ascii   focaltech-lib:%s...2...tplNodeList = %p, pPreNode = %p, pNode = %p, pNode->currentCnt = %d\n
+4013  0x0003d080 0x18003ea80 91  92   .rdata  ascii   focaltech-lib:%s...3...tplNodeList = %p, pPreNode = %p, pNode = %p, pNode->currentCnt = %d\n
+4014  0x0003d0e0 0x18003eae0 91  92   .rdata  ascii   focaltech-lib:%s...4...tplNodeList = %p, pPreNode = %p, pNode = %p, pNode->currentCnt = %d\n
+4015  0x0003d140 0x18003eb40 48  49   .rdata  ascii   focaltech-lib:focal_SensorResourceCreate enter.\n
+4016  0x0003d178 0x18003eb78 43  44   .rdata  ascii   focaltech-lib:focal_get_spi_instance FAIL!\n
+4017  0x0003d1a8 0x18003eba8 52  53   .rdata  ascii   focaltech-lib:focal_get_slide_enroll_instance FAIL!\n
+4018  0x0003d1e0 0x18003ebe0 47  48   .rdata  ascii   focaltech-lib:focal_CreateSensorInstance FAIL!\n
+4019  0x0003d210 0x18003ec10 48  49   .rdata  ascii   focaltech-lib:focal_SensorResourceCreate leave.\n
+4020  0x0003d248 0x18003ec48 49  50   .rdata  ascii   focaltech-lib:focal_SensorResourceDestroy enter.\n
+4021  0x0003d280 0x18003ec80 49  50   .rdata  ascii   focaltech-lib:focal_SensorResourceDestroy leave.\n
+4022  0x0003d2b8 0x18003ecb8 53  54   .rdata  ascii   focaltech-lib:focal_CreateFocalImgeBufInstance FAIL!\n
+4024  0x0003d300 0x18003ed00 41  42   .rdata  ascii   focaltech-lib:%s...FtInitAlgorithm FAIL!\n
+4025  0x0003d330 0x18003ed30 44  45   .rdata  ascii   focaltech-lib:%s...init net FAIL!, ret = %d\n
+4026  0x0003d360 0x18003ed60 36  37   .rdata  ascii   focaltech-lib:focal_SetImageBit: %d\n
+4027  0x0003d388 0x18003ed88 45  46   .rdata  ascii   focaltech-lib:focal_SetTransferBytesMax : %d\n
+4028  0x0003d3b8 0x18003edb8 35  36   .rdata  ascii   focaltech-lib:Image size: %d x %d\n\n
+4029  0x0003d3e0 0x18003ede0 45  46   .rdata  ascii   focaltech-lib:%s...err: ver > 1, set ver = 1\n
+4031  0x0003d430 0x18003ee30 47  48   .rdata  ascii   focaltech-lib:%s...err: mode > 1, set mode = 1\n
+4033  0x0003d480 0x18003ee80 31  32   .rdata  ascii   focaltech-lib:%s...input error\n
+4035  0x0003d4c8 0x18003eec8 54  55   .rdata  ascii   focaltech-lib:%s...quality = %d, area = %d, cond = %d\n
+4036  0x0003d500 0x18003ef00 35  36   .rdata  ascii   focaltech-lib:%s...leave, ret = %d\n
+4038  0x0003d540 0x18003ef40 26  27   .rdata  ascii   focaltech-lib:%s...enter.\n
+4039  0x0003d560 0x18003ef60 30  31   .rdata  ascii   focaltech-lib:%s...input err.\n
+4040  0x0003d580 0x18003ef80 31  32   .rdata  ascii   focaltech-lib:%s...malloc err.\n
+4041  0x0003d5a0 0x18003efa0 34  35   .rdata  ascii   focaltech-lib:%s...leave, ret = 0\n
+4043  0x0003d5e0 0x18003efe0 67  68   .rdata  ascii   focaltech-lib:FtInitAlgorithm...create gEnrolledTemplate[%d] FAIL!\n
+4045  0x0003d640 0x18003f040 59  60   .rdata  ascii   focaltech-lib:FtInitAlgorithm...create gUpdateScores FAIL!\n
+4047  0x0003d690 0x18003f090 44  45   .rdata  ascii   focaltech-lib:%s...FtInitSubTemplate() err.\n
+4048  0x0003d6c0 0x18003f0c0 46  47   .rdata  ascii   focaltech-lib:%s...FtInitErollTemplate() err.\n
+4049  0x0003d6f0 0x18003f0f0 65  66   .rdata  ascii   focaltech-lib:FtInitAlgorithm...create gFocalMatchPriority FAIL!\n
+4050  0x0003d738 0x18003f138 44  45   .rdata  ascii   focaltech-lib:%s...FtInitTempalteBuf() err.\n
+4051  0x0003d768 0x18003f168 41  42   .rdata  ascii   focaltech-lib:%s...input error, ret = -1\n
+6585  0x0005f1c8 0x180060bc8 56  57   .rdata  ascii   focaltech-lib:%s......g_imageSave is empty, do nothing!\n
+6586  0x0005f210 0x180060c10 66  67   .rdata  ascii   focaltech-lib:%s......g_imageSave = %p, pPreNode = %p, pNode = %p\n
+6587  0x0005f260 0x180060c60 101 102  .rdata  ascii   focaltech-lib:%s...2...g_imageSave = %p, pPreNode = %p, pNode = %p, pNode->Buf = %p, pNode->Cnt = %d\n
+6588  0x0005f2d0 0x180060cd0 101 102  .rdata  ascii   focaltech-lib:%s...3...g_imageSave = %p, pPreNode = %p, pNode = %p, pNode->Buf = %p, pNode->Cnt = %d\n
+6589  0x0005f340 0x180060d40 71  72   .rdata  ascii   focaltech-lib:%s...leave...g_imageSave = %p, pPreNode = %p, pNode = %p\n
+6590  0x0005f388 0x180060d88 47  48   .rdata  ascii   focaltech-lib:focal_create_spi_instance enter.\n
+6591  0x0005f3b8 0x180060db8 44  45   .rdata  ascii   focaltech-lib:focal_create_spi_instance OK!\n
+6592  0x0005f3e8 0x180060de8 46  47   .rdata  ascii   focaltech-lib:focal_create_spi_instance FAIL!\n
+6593  0x0005f418 0x180060e18 47  48   .rdata  ascii   focaltech-lib:focal_create_spi_instance leave.\n
+6595  0x0005f470 0x180060e70 25  26   .rdata  ascii   focaltech-lib:%s  enter.\n
+6596  0x0005f490 0x180060e90 24  25   .rdata  ascii   focaltech-lib:%s  FAIL!\n
+6597  0x0005f4b0 0x180060eb0 24  25   .rdata  ascii   focaltech-lib:%s leave.\n
+6598  0x0005f4d0 0x180060ed0 35  36   .rdata  ascii   focaltech-lib:focal_set_icinfo %d\n\n
+6599  0x0005f4f8 0x180060ef8 41  42   .rdata  ascii   focaltech-lib:CreateSensorInstance FAIL!\n
+6600  0x0005f528 0x180060f28 52  53   .rdata  ascii   focaltech-lib:SetImageBit bit = %d, imagebit = %d:\n\n
+6602  0x0005f570 0x180060f70 40  41   .rdata  ascii   focaltech-lib:%s...get mcu status Fail!\n
+6603  0x0005f5a0 0x180060fa0 51  52   .rdata  ascii   focaltech-lib:focal set mcu state check mode  %d:\n\n
+6604  0x0005f5d8 0x180060fd8 55  56   .rdata  ascii   focaltech-lib:focal set mcu state check mode  failed:\n\n
+6605  0x0005f610 0x180061010 39  40   .rdata  ascii   focaltech-lib:alignPtr64...ptr == NULL\n
+6606  0x0005f638 0x180061038 53  54   .rdata  ascii   focaltech-lib:FtSafeAlloc...udata == NULL, size = %d\n
+6608  0x0005f688 0x180061088 42  43   .rdata  ascii   focaltech-lib:%s...malloc error, ret = -1\n
+6609  0x0005f6b8 0x1800610b8 51  52   .rdata  ascii   focaltech-lib:%s...FtMirrorFill_u8 error, ret = %d\n
+6610  0x0005f6f0 0x1800610f0 42  43   .rdata  ascii   focaltech-lib:%s...malloc error, ret = %d\n
+6611  0x0005f720 0x180061120 38  39   .rdata  ascii   focaltech-lib:There is no such chip!!\n
+6612  0x0005f750 0x180061150 63  64   .rdata  ascii   focaltech-lib:The maximum feature num of setting is too large!\n
+6615  0x0005ffd0 0x1800619d0 56  57   .rdata  ascii   D:\work\Sensor\FT9368\x64\Release\ftWbioUmdfDriverV2.pdb
+28041 0x00159d18 0x1805cf118 39  80   .rsrc   utf16le FocalTech Electronics(ShenZhen) Co.,Ltd
+28043 0x00159d90 0x1805cf190 35  72   .rsrc   utf16le FocalTech Fingerprint Reader Driver
+28053 0x00159f24 0x1805cf324 34  70   .rsrc   utf16le FocalTech Fingerprint Driver Model
+28327 0x0015e05c 0x1805d345c 32  33           ascii   \eFocaltech Systems Co., Ltd.1$0"
+28328 0x0015e082 0x1805d3482 29  30           ascii   \eFocaltech Systems Co., Ltd.0
+28446 0x0015f794 0x1805d4b94 27  55           utf16le 6Focaltech Systems Co., Ltd
+
+=== RADARE2 XREFS ===
+22    0x00030e08 0x180032808 57  58   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\chips\ff_spi.cpp
+51    0x00031160 0x180032b60 64  65   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\chips\fw9369\fw9369.cpp
+89    0x00031860 0x180033260 68  69   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\chips\fw9369\fw9369_afe.cpp
+109   0x00031b60 0x180033560 68  69   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\chips\fw9369\fw9369_fdt.cpp
+176   0x00032750 0x180034150 70  71   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\chips\fw9369\fw9369_image.cpp
+238   0x00033230 0x180034c30 71  72   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\chips\fw9369\fw9369_spidrv.cpp
+247   0x00033350 0x180034d50 66  67   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\common\src\ft_binfile.cpp
+253   0x00033460 0x180034e60 67  68   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\common\src\ft_protocal.cpp
+258   0x00033530 0x180034f30 63  64   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\common\src\ft_util.cpp
+262   0x000335e0 0x180034fe0 67  68   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\common\src\ft_WaitLock.cpp
+268   0x000336ff 0x1800350ff 52  53   .rdata  ascii   7D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\Device.cpp
+281   0x000339b0 0x1800353b0 55  56   .rdata  ascii   [Driver] E error at %s[%s:%d]: FT9368 update fail 0x%p!
+315   0x00033fa0 0x1800359a0 70  71   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\feature\src\FT9368_Updata.cpp
+334   0x00034190 0x180035b90 67  68   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\feature\src\ft_devinit.cpp
+398   0x00034cd0 0x1800366d0 49  50   .rdata  ascii   [Driver] I %s[%d]: FT9368 POA detect finger press
+405   0x00034e30 0x180036830 111 112  .rdata  ascii   [Driver] I %s[%d]: Sensor type: %d(1=FT9338W, 2=FT9348W, 3=FT9361W, 4=FT9368W, 5=FT9371W, 6=FT9536W, 7=FT9362W)
+411   0x00034f8f 0x18003698f 69  70   .rdata  ascii   @D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\feature\src\ft_esdcheck.cpp
+413   0x00035000 0x180036a00 69  70   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\feature\src\ft_iocontrol.cpp
+503   0x00036390 0x180037d90 72  73   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\feature\src\ft_loadfirmware.cpp
+508   0x00036500 0x180037f00 45  46   .rdata  ascii   ft_feature_loadfirmware_FT9368isUpdateVersion
+509   0x00036530 0x180037f30 68  69   .rdata  ascii   [Driver] I %s[%d]: There is a newer FT9368 FW to update 0x%x => 0x%x
+513   0x000365e0 0x180037fe0 37  38   .rdata  ascii   ft_feature_FT9368_loadfirmware_LoadFW
+515   0x00036638 0x180038038 43  44   .rdata  ascii   [Driver] I %s[%d]: FT9368 update fw success
+521   0x00036740 0x180038140 77  78   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\feature\src\ft_powernotification.cpp
+531   0x00036ba0 0x1800385a0 76  77   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\interface\src\ft_fpdevinterface.cpp
+555   0x000371d0 0x180038bd0 65  66   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\interface\src\ft_spi.cpp
+631   0x000383a0 0x180039da0 65  66   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\interface\src\ft_usb.cpp
+711   0x00039470 0x18003ae70 50  51   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\Queue.cpp
+758   0x0003a008 0x18003ba08 30  31   .rdata  ascii   [Driver] V clsFT9368 construct
+759   0x0003a028 0x18003ba28 9   10   .rdata  ascii   clsFT9368
+762   0x0003a0a0 0x18003baa0 29  30   .rdata  ascii   [Driver] V clsFT9368 destruct
+771   0x0003a450 0x18003be50 73  74   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\sensor\src\ft_sensor9338base.cpp
+814   0x0003ae18 0x18003c818 34  35   .rdata  ascii   [Driver] V clsFT9368Base construct
+815   0x0003ae40 0x18003c840 33  34   .rdata  ascii   [Driver] V clsFT9368Base destruct
+816   0x0003ae70 0x18003c870 73  74   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\sensor\src\ft_sensor9368base.cpp
+817   0x0003aec0 0x18003c8c0 44  45   .rdata  ascii   clsFT9368Base::ft_sensor_sensorbase_ReadInfo
+820   0x0003af48 0x18003c948 46  47   .rdata  ascii   clsFT9368Base::ft_sensor_sensorbase_WakeDevice
+830   0x0003b118 0x18003cb18 47  48   .rdata  ascii   clsFT9368Base::ft_sensor_sensorbase_CaptureData
+833   0x0003b240 0x18003cc40 73  74   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\sensor\src\ft_sensor9369base.cpp
+839   0x0003b400 0x18003ce00 73  74   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\sensor\src\ft_sensor95A8base.cpp
+3559  0x0005ffd0 0x1800619d0 56  57   .rdata  ascii   D:\work\Sensor\FT9368\x64\Release\ftWbioUmdfDriverV2.pdb
+28    0x00030ee0 0x1800328e0 16  17   .rdata  ascii   focaltech:fw9369
+34    0x00030f50 0x180032950 24  25   .rdata  ascii   fw9369_config_power_mode
+42    0x00031040 0x180032a40 25  26   .rdata  ascii   fw9369_config_device_mode
+51    0x00031160 0x180032b60 64  65   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\chips\fw9369\fw9369.cpp
+54    0x00031200 0x180032c00 25  26   .rdata  ascii   fw9369_query_event_status
+62    0x00031370 0x180032d70 33  34   .rdata  ascii   [%4d]:%s call fw9369_GestureStart
+68    0x00031480 0x180032e80 49  50   .rdata  ascii   [%4d]:%s call fw9369_img_base_updata_with_check()
+72    0x00031510 0x180032f10 35  36   .rdata  ascii   [%4d]:%s go fw9369_wrong_base_check
+79    0x000316b0 0x1800330b0 16  17   .rdata  ascii   fw9369_init_chip
+80    0x000316d0 0x1800330d0 81  82   .rdata  ascii   [%4d]:'fw9369_config_power_mode(FF_POWER_MODE_WAKEUP)' failed, try again (%d/%d).
+82    0x00031748 0x180033148 22  23   .rdata  ascii   fw9369_config_spi_mode
+84    0x000317a8 0x1800331a8 15  16   .rdata  ascii   fw9369_probe_id
+88    0x00031828 0x180033228 31  32   .rdata  ascii   [%4d]:got device id fw9369 !!!.
+89    0x00031860 0x180033260 68  69   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\chips\fw9369\fw9369_afe.cpp
+92    0x000318c8 0x1800332c8 15  16   .rdata  ascii   fw9369_cfg_init
+94    0x00031908 0x180033308 26  27   .rdata  ascii   fw9369_check_communication
+96    0x00031950 0x180033350 23  24   .rdata  ascii   fw9369_get_SMIC_IC_flag
+101   0x00031a60 0x180033460 19  20   .rdata  ascii   fw9369_Get_OTP_Info
+106   0x00031b10 0x180033510 28  29   .rdata  ascii   fw9369_Set_Scan_Rate_Default
+108   0x00031b48 0x180033548 20  21   .rdata  ascii   fw9369_fdt_mode_init
+109   0x00031b60 0x180033560 68  69   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\chips\fw9369\fw9369_fdt.cpp
+121   0x00031cf8 0x1800336f8 21  22   .rdata  ascii   fw9369_fdt_auto_start
+124   0x00031da8 0x1800337a8 23  24   .rdata  ascii   fw9369_fdt_manual_start
+125   0x00031dc0 0x1800337c0 25  26   .rdata  ascii   fw9369_fdt_AutoSDacUpdate
+132   0x00031ef8 0x1800338f8 23  24   .rdata  ascii   fw9369_fdt_manual_check
+134   0x00031f40 0x180033940 78  80   .rdata  ascii   [%4d]:fw9369_fdt_base: FW9369_FDT_DELT_DOWN_LO = %d; FW9369_FDT_DELT_UP_LO= %d
+144   0x00032110 0x180033b10 23  24   .rdata  ascii   fw9369_fdt_manual_store
+145   0x00032128 0x180033b28 23  24   .rdata  ascii   fw9369_wrong_base_check
+157   0x00032458 0x180033e58 26  27   .rdata  ascii   fw9369_fdt_base_Min_Updata
+162   0x00032538 0x180033f38 29  30   .rdata  ascii   fw9369_fdt_base_Stable_Update
+169   0x00032660 0x180034060 22  23   .rdata  ascii   fw9369_fdt_base_Update
+171   0x000326a0 0x1800340a0 37  38   .rdata  ascii   [%4d]:'%s fw9369_FDT_Max: %d %d %d %d
+172   0x000326c8 0x1800340c8 25  26   .rdata  ascii   fw9369_fdt_up_check_again
+174   0x00032720 0x180034120 23  24   .rdata  ascii   fw9369_Set_Scan_Rate_2M
+175   0x00032738 0x180034138 20  21   .rdata  ascii   fw9369_img_mode_init
+176   0x00032750 0x180034150 70  71   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\chips\fw9369\fw9369_image.cpp
+180   0x00032820 0x180034220 21  22   .rdata  ascii   fw9369_img_scan_start
+181   0x00032838 0x180034238 19  20   .rdata  ascii   fw9369_img_scan_end
+182   0x00032850 0x180034250 25  26   .rdata  ascii   fw9369_Img_Get_Better_DAC
+195   0x00032a60 0x180034460 21  22   .rdata  ascii   fw9369_AutoSDacUpdate
+201   0x00032b80 0x180034580 93  94   .rdata  ascii   error at %s[%s:%d]: fw9369_AutoSDacUpdate find DAC fail loop:%d dac:%d last:%d MiddleTemp:%d\n
+202   0x00032be0 0x1800345e0 47  48   .rdata  ascii   [%4d]:fw9369_AutoSDacUpdate final dac:%d ......
+203   0x00032c10 0x180034610 22  23   .rdata  ascii   fw9369_img_base_Update
+204   0x00032c28 0x180034628 36  37   .rdata  ascii   [%4d]:'%s call fw9369_AutoSDacUpdate
+211   0x00032d88 0x180034788 25  26   .rdata  ascii   fw9369_white_Point_Handle
+213   0x00032de8 0x1800347e8 18  19   .rdata  ascii   fw9369_Update_Base
+218   0x00032e90 0x180034890 20  21   .rdata  ascii   fw9369_capture_image
+230   0x000330a0 0x180034aa0 25  26   .rdata  ascii   fw9369_GestureDetectFirst
+233   0x00033118 0x180034b18 20  21   .rdata  ascii   fw9369_GestureDetect
+236   0x000331c0 0x180034bc0 19  20   .rdata  ascii   fw9369_GestureStart
+238   0x00033230 0x180034c30 71  72   .rdata  ascii   D:\work\Sensor\FT9368\ftWbioUmdfDriverV2\chips\fw9369\fw9369_spidrv.cpp
+239   0x00033278 0x180034c78 22  23   .rdata  ascii   fw9369_sram_write_bulk
+240   0x00033290 0x180034c90 29  30   .rdata  ascii   fw9369_sram_read_bulk_withecc
+241   0x000332b0 0x180034cb0 16  17   .rdata  ascii   fw9369_fifo_read
+511   0x000365b0 0x180037fb0 30  31   .rdata  ascii   ft_feature_loadfirmware_LoadFW
+513   0x000365e0 0x180037fe0 37  38   .rdata  ascii   ft_feature_FT9368_loadfirmware_LoadFW
+364   0x00034700 0x180036100 4   10   .rdata  utf16le 9348
+405   0x00034e30 0x180036830 111 112  .rdata  ascii   [Driver] I %s[%d]: Sensor type: %d(1=FT9338W, 2=FT9348W, 3=FT9361W, 4=FT9368W, 5=FT9371W, 6=FT9536W, 7=FT9362W)
+750   0x00039dc8 0x18003b7c8 30  31   .rdata  ascii   [Driver] V clsFT9348 construct
+751   0x00039de8 0x18003b7e8 9   10   .rdata  ascii   clsFT9348
+752   0x00039df8 0x18003b7f8 40  41   .rdata  ascii   [Driver] I %s[%d]: 9348 bin code size %d
+753   0x00039e28 0x18003b828 29  30   .rdata  ascii   [Driver] V clsFT9348 destruct
+7569  0x0009348d 0x180095c8d 5   6    .data   ascii   8P;k\t
+8124  0x00099348 0x18009bb48 4   5    .data   ascii   \e,|?
+9348  0x000a70da 0x1800a98da 6   7    .data   ascii   R=\f\n\n>
+19348 0x0011807c 0x18011a87c 5   6    .data   ascii   w'l?T
+761   0x0003a068 0x18003ba68 49  50   .rdata  ascii   [Driver] I %s[%d]: 9368 pramboot bin code size %d
+
+=== LINUX LIB INFO ===
+arch     x86
+baddr    0x0
+binsz    2152432
+bintype  elf
+bits     64
+canary   true
+dbglink  libfprint-2.so.2.0.0.debug
+injprot  false
+class    ELF64
+compiler GCC: (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0 GCC: (Ubuntu 5.4.0-6ubuntu1~16.04.12) 5.4.0 20160609
+crypto   false
+endian   little
+havecode true
+laddr    0x0
+lang     c++
+linenum  false
+lsyms    false
+machine  AMD x86-64 architecture
+nx       true
+os       linux
+pic      true
+relocs   false
+relro    partial
+rpath    NONE
+sanitize false
+static   false
+stripped true
+uncaps   false
+subsys   linux
+va       true
+
+=== CURRENT DEVICE LOG ===
+Oct 01 19:49:47 zerobook kernel: focal focal_fp_driver_init is called,driver version is v1.0.3
+Oct 01 19:49:47 zerobook kernel: focal focal_spi_probe enter
+Oct 01 19:49:47 zerobook kernel: input: focal SPI fingerint as /devices/pci0000:00/0000:00:12.6/pxa2xx-spi.0/spi_master/spi1/spi-FTE4800:00/input/input24
+Oct 01 20:02:12 zerobook kernel: focal focal_fp_driver_init is called,driver version is v1.0.3
+Oct 01 20:02:12 zerobook kernel: focal focal_spi_probe enter
+Oct 01 20:02:12 zerobook kernel: input: focal SPI fingerint as /devices/pci0000:00/0000:00:12.6/pxa2xx-spi.0/spi_master/spi1/spi-FTE4800:00/input/input25
+Oct 01 20:17:26 zerobook kernel: focal focal_fp_driver_init is called,driver version is v1.0.3
+Oct 01 20:17:26 zerobook kernel: focal focal_spi_probe enter
+Oct 01 20:17:26 zerobook kernel: input: focal SPI fingerint as /devices/pci0000:00/0000:00:12.6/pxa2xx-spi.0/spi_master/spi1/spi-FTE4800:00/input/input26
+Oct 01 20:24:58 zerobook kernel: focal irq [164] enter 
+Oct 01 20:24:58 zerobook kernel: focal focal_fp_driver_init is called,driver version is v1.0.3
+Oct 01 20:24:58 zerobook kernel: focal focal_spi_probe enter
+Oct 01 20:24:58 zerobook kernel: input: focal SPI fingerint as /devices/pci0000:00/0000:00:12.6/pxa2xx-spi.0/spi_master/spi1/spi-FTE4800:00/input/input27
+Oct 01 20:24:58 zerobook kernel: focal irq [164] enter 
+Oct 01 20:33:42 zerobook kernel: focal irq [164] enter 

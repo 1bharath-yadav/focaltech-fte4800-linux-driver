@@ -1,0 +1,126 @@
+mode=0 hz=1000000 gap=    0us n= 2 cmd55=1 -> 0000
+mode=0 hz=1000000 gap=    0us n= 2 cmd55=0 -> 0000
+mode=0 hz=1000000 gap=    0us n= 4 cmd55=1 -> 00000000
+mode=0 hz=1000000 gap=    0us n= 4 cmd55=0 -> 00000000
+mode=0 hz=1000000 gap=    0us n=10 cmd55=1 -> 00000000000000000000
+mode=0 hz=1000000 gap=    0us n=10 cmd55=0 -> 00000000000000000000
+mode=0 hz=1000000 gap=   20us n= 2 cmd55=1 -> 0000
+mode=0 hz=1000000 gap=   20us n= 2 cmd55=0 -> 0000
+mode=0 hz=1000000 gap=   20us n= 4 cmd55=1 -> 00000000
+mode=0 hz=1000000 gap=   20us n= 4 cmd55=0 -> 00000000
+mode=0 hz=1000000 gap=   20us n=10 cmd55=1 -> 00000000000000000000
+mode=0 hz=1000000 gap=   20us n=10 cmd55=0 -> 00000000000000000000
+mode=0 hz=1000000 gap=  100us n= 2 cmd55=1 -> 0000
+mode=0 hz=1000000 gap=  100us n= 2 cmd55=0 -> 0000
+mode=0 hz=1000000 gap=  100us n= 4 cmd55=1 -> 00000000
+mode=0 hz=1000000 gap=  100us n= 4 cmd55=0 -> 00000000
+mode=0 hz=1000000 gap=  100us n=10 cmd55=1 -> 00000000000000000000
+mode=0 hz=1000000 gap=  100us n=10 cmd55=0 -> 00000000000000000000
+mode=0 hz=1000000 gap=  500us n= 2 cmd55=1 -> 0000
+mode=0 hz=1000000 gap=  500us n= 2 cmd55=0 -> 0000
+mode=0 hz=1000000 gap=  500us n= 4 cmd55=1 -> 00000000
+mode=0 hz=1000000 gap=  500us n= 4 cmd55=0 -> 00000000
+mode=0 hz=1000000 gap=  500us n=10 cmd55=1 -> 00000000000000000000
+mode=0 hz=1000000 gap=  500us n=10 cmd55=0 -> 00000000000000000000
+mode=0 hz=1000000 gap= 2000us n= 2 cmd55=1 -> 0000
+mode=0 hz=1000000 gap= 2000us n= 2 cmd55=0 -> 0000
+mode=0 hz=1000000 gap= 2000us n= 4 cmd55=1 -> 00000000
+mode=0 hz=1000000 gap= 2000us n= 4 cmd55=0 -> 00000000
+mode=0 hz=1000000 gap= 2000us n=10 cmd55=1 -> 00000000000000000000
+mode=0 hz=1000000 gap= 2000us n=10 cmd55=0 -> 00000000000000000000
+mode=0 hz=1000000 gap=10000us n= 2 cmd55=1 -> 0000
+mode=0 hz=1000000 gap=10000us n= 2 cmd55=0 -> 0000
+mode=0 hz=1000000 gap=10000us n= 4 cmd55=1 -> 00000000
+mode=0 hz=1000000 gap=10000us n= 4 cmd55=0 -> 00000000
+mode=0 hz=1000000 gap=10000us n=10 cmd55=1 -> 00000000000000000000
+mode=0 hz=1000000 gap=10000us n=10 cmd55=0 -> 00000000000000000000
+mode=0 hz=1000000 gap=50000us n= 2 cmd55=1 -> 0000
+mode=0 hz=1000000 gap=50000us n= 2 cmd55=0 -> 0000
+mode=0 hz=1000000 gap=50000us n= 4 cmd55=1 -> 00000000
+mode=0 hz=1000000 gap=50000us n= 4 cmd55=0 -> 00000000
+mode=0 hz=1000000 gap=50000us n=10 cmd55=1 -> 00000000000000000000
+mode=0 hz=1000000 gap=50000us n=10 cmd55=0 -> 00000000000000000000
+mode=3 hz=1000000 gap=    0us n= 2 cmd55=1 -> 0000
+mode=3 hz=1000000 gap=    0us n= 2 cmd55=0 -> 0000
+mode=3 hz=1000000 gap=    0us n= 4 cmd55=1 -> 00000000
+mode=3 hz=1000000 gap=    0us n= 4 cmd55=0 -> 00000000
+mode=3 hz=1000000 gap=    0us n=10 cmd55=1 -> 00000000000000000000
+mode=3 hz=1000000 gap=    0us n=10 cmd55=0 -> 00000000000000000000
+mode=3 hz=1000000 gap=   20us n= 2 cmd55=1 -> 0000
+mode=3 hz=1000000 gap=   20us n= 2 cmd55=0 -> 0000
+mode=3 hz=1000000 gap=   20us n= 4 cmd55=1 -> 00000000
+mode=3 hz=1000000 gap=   20us n= 4 cmd55=0 -> 00000000
+mode=3 hz=1000000 gap=   20us n=10 cmd55=1 -> 00000000000000000000
+mode=3 hz=1000000 gap=   20us n=10 cmd55=0 -> 00000000000000000000
+mode=3 hz=1000000 gap=  100us n= 2 cmd55=1 -> 0000
+mode=3 hz=1000000 gap=  100us n= 2 cmd55=0 -> 0000
+mode=3 hz=1000000 gap=  100us n= 4 cmd55=1 -> 00000000
+mode=3 hz=1000000 gap=  100us n= 4 cmd55=0 -> 00000000
+mode=3 hz=1000000 gap=  100us n=10 cmd55=1 -> 00000000000000000000
+mode=3 hz=1000000 gap=  100us n=10 cmd55=0 -> 00000000000000000000
+mode=3 hz=1000000 gap=  500us n= 2 cmd55=1 -> 0000
+mode=3 hz=1000000 gap=  500us n= 2 cmd55=0 -> 0000
+mode=3 hz=1000000 gap=  500us n= 4 cmd55=1 -> 00000000
+mode=3 hz=1000000 gap=  500us n= 4 cmd55=0 -> 00000000
+mode=3 hz=1000000 gap=  500us n=10 cmd55=1 -> 00000000000000000000
+mode=3 hz=1000000 gap=  500us n=10 cmd55=0 -> 00000000000000000000
+mode=3 hz=1000000 gap= 2000us n= 2 cmd55=1 -> 0000
+mode=3 hz=1000000 gap= 2000us n= 2 cmd55=0 -> 0000
+mode=3 hz=1000000 gap= 2000us n= 4 cmd55=1 -> 00000000
+mode=3 hz=1000000 gap= 2000us n= 4 cmd55=0 -> 00000000
+mode=3 hz=1000000 gap= 2000us n=10 cmd55=1 -> 00000000000000000000
+mode=3 hz=1000000 gap= 2000us n=10 cmd55=0 -> 00000000000000000000
+mode=3 hz=1000000 gap=10000us n= 2 cmd55=1 -> 0000
+mode=3 hz=1000000 gap=10000us n= 2 cmd55=0 -> 0000
+mode=3 hz=1000000 gap=10000us n= 4 cmd55=1 -> 00000000
+mode=3 hz=1000000 gap=10000us n= 4 cmd55=0 -> 00000000
+mode=3 hz=1000000 gap=10000us n=10 cmd55=1 -> 00000000000000000000
+mode=3 hz=1000000 gap=10000us n=10 cmd55=0 -> 00000000000000000000
+mode=3 hz=1000000 gap=50000us n= 2 cmd55=1 -> 0000
+mode=3 hz=1000000 gap=50000us n= 2 cmd55=0 -> 0000
+mode=3 hz=1000000 gap=50000us n= 4 cmd55=1 -> 00000000
+mode=3 hz=1000000 gap=50000us n= 4 cmd55=0 -> 00000000
+mode=3 hz=1000000 gap=50000us n=10 cmd55=1 -> 00000000000000000000
+mode=3 hz=1000000 gap=50000us n=10 cmd55=0 -> 00000000000000000000
+mode=0 hz= 500000 gap=    0us n= 2 cmd55=1 -> 0000
+mode=0 hz= 500000 gap=    0us n= 2 cmd55=0 -> 0000
+mode=0 hz= 500000 gap=    0us n= 4 cmd55=1 -> 00000000
+mode=0 hz= 500000 gap=    0us n= 4 cmd55=0 -> 00000000
+mode=0 hz= 500000 gap=    0us n=10 cmd55=1 -> 00000000000000000000
+mode=0 hz= 500000 gap=    0us n=10 cmd55=0 -> 00000000000000000000
+mode=0 hz= 500000 gap=   20us n= 2 cmd55=1 -> 0000
+mode=0 hz= 500000 gap=   20us n= 2 cmd55=0 -> 0000
+mode=0 hz= 500000 gap=   20us n= 4 cmd55=1 -> 00000000
+mode=0 hz= 500000 gap=   20us n= 4 cmd55=0 -> 00000000
+mode=0 hz= 500000 gap=   20us n=10 cmd55=1 -> 00000000000000000000
+mode=0 hz= 500000 gap=   20us n=10 cmd55=0 -> 00000000000000000000
+mode=0 hz= 500000 gap=  100us n= 2 cmd55=1 -> 0000
+mode=0 hz= 500000 gap=  100us n= 2 cmd55=0 -> 0000
+mode=0 hz= 500000 gap=  100us n= 4 cmd55=1 -> 00000000
+mode=0 hz= 500000 gap=  100us n= 4 cmd55=0 -> 00000000
+mode=0 hz= 500000 gap=  100us n=10 cmd55=1 -> 00000000000000000000
+mode=0 hz= 500000 gap=  100us n=10 cmd55=0 -> 00000000000000000000
+mode=0 hz= 500000 gap=  500us n= 2 cmd55=1 -> 0000
+mode=0 hz= 500000 gap=  500us n= 2 cmd55=0 -> 0000
+mode=0 hz= 500000 gap=  500us n= 4 cmd55=1 -> 00000000
+mode=0 hz= 500000 gap=  500us n= 4 cmd55=0 -> 00000000
+mode=0 hz= 500000 gap=  500us n=10 cmd55=1 -> 00000000000000000000
+mode=0 hz= 500000 gap=  500us n=10 cmd55=0 -> 00000000000000000000
+mode=0 hz= 500000 gap= 2000us n= 2 cmd55=1 -> 0000
+mode=0 hz= 500000 gap= 2000us n= 2 cmd55=0 -> 0000
+mode=0 hz= 500000 gap= 2000us n= 4 cmd55=1 -> 00000000
+mode=0 hz= 500000 gap= 2000us n= 4 cmd55=0 -> 00000000
+mode=0 hz= 500000 gap= 2000us n=10 cmd55=1 -> 00000000000000000000
+mode=0 hz= 500000 gap= 2000us n=10 cmd55=0 -> 00000000000000000000
+mode=0 hz= 500000 gap=10000us n= 2 cmd55=1 -> 0000
+mode=0 hz= 500000 gap=10000us n= 2 cmd55=0 -> 0000
+mode=0 hz= 500000 gap=10000us n= 4 cmd55=1 -> 00000000
+mode=0 hz= 500000 gap=10000us n= 4 cmd55=0 -> 00000000
+mode=0 hz= 500000 gap=10000us n=10 cmd55=1 -> 00000000000000000000
+mode=0 hz= 500000 gap=10000us n=10 cmd55=0 -> 00000000000000000000
+mode=0 hz= 500000 gap=50000us n= 2 cmd55=1 -> 0000
+mode=0 hz= 500000 gap=50000us n= 2 cmd55=0 -> 0000
+mode=0 hz= 500000 gap=50000us n= 4 cmd55=1 -> 00000000
+mode=0 hz= 500000 gap=50000us n= 4 cmd55=0 -> 00000000
+mode=0 hz= 500000 gap=50000us n=10 cmd55=1 -> 00000000000000000000
+mode=0 hz= 500000 gap=50000us n=10 cmd55=0 -> 00000000000000000000

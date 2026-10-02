@@ -1,0 +1,186 @@
+# AGENTS.md — FocalTech FTE4800 Linux Driver Reverse Engineering
+
+## Goal
+Get the FocalTech FTE4800/FT9368/FT9369 fingerprint sensor working on the Infinix ZERO BOOK 13 (ZL513) under Arch/Omarchy. End goal: working Linux driver with libfprint/fprintd enrollment and capture. Do not stop at diagnostics.
+
+## Machine
+- Host: zerobook
+- User: archer
+- Kernel: 7.2.5-3-omarchy
+- Hardware: Infinix ZERO BOOK 13 / EM_IDL822_V2.0
+- BIOS: ZL513_BIOS_ZEROBOOK13_EM_IDL822_V2.0_IN_0.04 06/10/2023
+- ACPI fingerprint device: FTE4800:00, path \\_SB_.PC00.SPI2.FPNT
+- SPI controller: PCI 0000:00:12.6, pxa2xx-spi.0, spi1
+- SPI device: spi-FTE4800:00
+- spidev node: /dev/spidev1.0
+- OEM misc node: /dev/focal_moh_spi
+- Dotfiles: ~/.dotfiles
+- Main project: ~/projects/zerobook-focaltech-driver
+
+## Current modules
+Loaded during testing: fte4800_pwr, spidev, focal_spi.
+Stock DKMS source: /usr/src/focaltech-spi-dkms-1.0.3/focal_spi.c
+
+## ACPI / power findings
+- INT3472:01 is present at \\_SB_.PC00.DSC0 and has a bound driver.
+- FTE4800:00 has a bound driver.
+- /sys/class/regulator/regulator.1 is INT3472:01-avdd; observed state=disabled.
+- /sys/kernel/debug/clk/INT3472:01-clk exists at 19.2 MHz.
+- Observed clock enable_count=0 and prepare_count=0.
+- Therefore the 19.2 MHz clock is registered but not requested/enabled.
+- Custom fte4800_avdd testing has forced GPIO 535 HIGH.
+- Reset testing logged active_low=0 and successful logical/actual 0 -> 1 pulse.
+## Critical crash
+The stock focal_spi reset ioctl FF_IOC_RESET_DEV=0x8086 is broken on this setup. Calling it from /dev/focal_moh_spi causes a kernel general-protection fault in gpiod_set_value(), from ff_ctl_ioctl+0x7d in focal_spi. Do NOT invoke this ioctl until the module is fixed/rebuilt.
+
+Relevant stock source:
+- focal_spi_reset(): gpiod_set_value(data->gpiod_rst,0); msleep(10); gpiod_set_value(...,1)
+- Probe gets reset GPIO using devm_gpiod_get_index(dev,NULL,0,GPIOD_OUT_LOW)
+- focal_spi_read() uses spi_write_then_read() for TX and spi_read() for RX.
+- Misc ioctl 0x8086 invokes focal_spi_reset().
+
+## fprintd
+fprintd-list "$USER" detects one FocalTech device and no enrolled fingers.
+fprintd-enroll fails with:
+GDBus.Error:net.reactivated.Fprint.Error.Internal: Open failed with error: init sensor error!
+
+## Reference repository
+Path: ~/projects/zerobook-focaltech-driver/reference/fte4800-project
+Commit: 5ed8ca4fbe0bf704e5cc379258e0a587846fc256
+Important files:
+- focal_spi.c
+- spi_trigger.py
+- RESEARCH.md
+- spi-direct-test/oem_pramboot.py
+- spi-direct-test/oem_transport_probe.py
+- Windows DLL ftWbioUmdfDriverV2.dll
+- extracted-windows-fw/FT9368_PRAMBOOT.bin (6096 bytes)
+- extracted-windows-fw/FT9368_FW_APP.bin (27204 bytes)
+PRAMBOOT SHA256: c93a807eaaa34d9e79fbab77b86e910a419fd633ea98b628b72c64b285ffd191
+PRAMBOOT embedded in DLL at offset 0x71b00.
+APP embedded around 0x6b0b0. Do NOT program APP casually.
+
+## Windows DLL protocol facts
+- INF: DriverVer 08/16/2022, version 2.2.3.79
+- Supports ACPI FTE4800 and USB VID_2808&PID_9348.
+- Strings reference fw9369.cpp, fw9369_afe.cpp, fw9369_fdt.cpp, fw9369_image.cpp, fw9369_spidrv.cpp, ft_loadfirmware.cpp, ft_spi.cpp, ff_spi.cpp, ft_sensor9368base.cpp, ft_sensor9369base.cpp.
+- SPI0_Read8 VA 0x180018024 builds [08 f7 reg 00 00].
+- SPI0_Write8 VA 0x180018080 builds [09 f6 reg val].
+- SPI0_CMD_Set at 0x18001b684.
+- SPI0_Read_SPI dispatcher at 0x18001b74c.
+- Bus type 1 -> 0x18001b9ec; bus type 2 -> 0x18001b808.
+- 0x18001b9ec constructs [reg,80,len_hi,len_lo,00,00,00]. For reg 0x90 len 2: 90 80 00 02 00 00 00.
+- Sequence: Windows wakeup 0x18001bc48; backend sleep pointer de0? exact pointer meanings below; backend state; write 7 bytes; read requested bytes; restore state.
+## Windows backend pointers
+Initialized at 0x18001c098:
+- 0x180163de0 = 0x18001c170: transport state control
+- 0x180163de8 = 0x18001c1e0: write
+- 0x180163df0 = 0x18001c1b0: read
+- 0x180163df8 = 0x18001c210: sleep
+- 0x180163e10 = 0x18001c2a0: bus-type getter
+
+Implementations:
+- 0x18001c170: if bus type 1, invokes object 0x180168c88 vtable+0x30 with DL=0x79, R8=1+arg, R9=1. Likely transport/CS state.
+- 0x18001c1b0: invokes object 0x180168c88 vtable+0x58 with DX=0x7bb7, R8=buffer, R9=len. Windows read backend.
+- 0x18001c1e0: invokes object vtable+0x50 with DX=0x7bb7, R8=buffer, R9=len. Windows write backend.
+- 0x18001c210: high resolution sleep.
+- 0x18001c2a0: returns bus type from 0x180163e30.
+
+Boot flow at 0x18001be1c:
+1. SPI0_CMD_Set(0x55)
+2. sleep 10ms
+3. SPI0_Read_SPI(0x90,2), expected 0x56A2
+4. write 0x09=0x0A, 0x10=0x0C, 0x61=0
+5. sleep 1ms
+6. poll 0x6A via 0x18001bb10; accepts F055/F0AA/F02D/2000/1000; final path expects F0AA
+7. PRAMBOOT download/verify
+## PRAMBOOT protocol
+Write helper 0x18001b324:
+[70 05 FA addr_hi addr_lo count_hi count_lo] + payload
+128-byte chunks, starting at 0x2000.
+
+Verify helper 0x18001af74:
+[70 04 FB addr_hi addr_lo count_hi count_lo], then read phase begins with 0x71.
+
+## Experimental results
+- Generic trigger sequence on raw spidev can produce status 0x02.
+- Exact Windows-style raw command after wake/CMDSET produced 0x5f5f instead of expected 0x56A2.
+- Transport matrix from one state-reused run:
+  A command+read CS held: 5f 5f
+  B separate command/read: 0a 0a
+  C command + two dummy bytes: tail 5f 5f
+  D explicit 0x71: tail 5f 5f
+- Mode probe at 4MHz:
+  mode 0x00: A 5f5f, B 0202
+  mode 0x04 CS_HIGH: A ffff, B 0000
+  mode 0x01: A 0a0a, B 0a0a
+  mode 0x05: A ffff, B 0000
+These matrix runs reused device state, so do not treat cross-mode values as definitive.
+- Generic read of address 0x90 has returned 0x0AEF rather than 0x56A2.
+- PRAMBOOT verification has returned repeating 0x0A bytes instead of firmware data. This proves previous transport/boot attempts have not successfully entered the expected boot state.
+- Current strongest transport hypothesis: Windows backend is not equivalent to plain Linux spi_write_then_read(); it likely relies on Windows SPB/UMDF transport state semantics.
+
+## ACPI extraction
+acpidump -b -o /tmp/acpi.dat produced a zero-byte file even though kernel exports DSDT (~583KiB) and SSDT tables.
+Use kernel exports directly:
+- /sys/firmware/acpi/tables/DSDT
+- /sys/firmware/acpi/tables/SSDT*
+Then copy and run iasl -d.
+## Power-module observations
+Kernel logs showed:
+- fte4800_avdd: forcing GPIO 535 HIGH (raw)
+- fte4800_avdd: AVDD forced HIGH
+- FTE4800: Found AVDD descriptor (GPIO 535). Forcing HIGH...
+- reset pulse complete
+The workaround is experimental, not final.
+
+## Important interpretation
+The evidence currently indicates:
+- SPI controller responds to the sensor.
+- Reset GPIO can be toggled.
+- FTE4800 ACPI device exists and is bound.
+- INT3472:01 exists and has a driver.
+- INT3472:01-avdd has been observed disabled.
+- INT3472:01-clk is 19.2MHz but has observed enable_count=0 and prepare_count=0.
+Therefore the next priority is proving the exact ACPI/power dependency between FPNT and DSC0, and making the fingerprint client acquire/enable required resources before SPI initialization.
+Do not continue PRAMBOOT programming while power/clock sequencing is unresolved.
+## Agent workflow
+1. Read this file first and preserve all discoveries.
+2. Use Remote Desktop Commander for machine inspection/execution when available.
+3. User has passwordless sudo for this machine.
+4. When making shell changes, user prefers ONE unified execution block:
+   cat > ... <<'EOF'
+   ...
+   EOF
+   chmod ...
+   then build/install/test in the same block.
+5. Dotfiles are under ~/.dotfiles.
+6. Prefer read-only inspection before hardware writes.
+7. Each hardware experiment must state a hypothesis and expected result.
+8. Do not repeat disproven sequences unless a clearly new variable is being tested.
+9. Keep backups of modified DKMS sources and record build/install commands.
+10. Never program FT9368_FW_APP.bin until boot protocol is proven.
+11. Never invoke the broken stock reset ioctl 0x8086 until fixed.
+12. Do not claim success until power resources, sensor initialization, fprintd enrollment, and capture all work.
+
+## Immediate task
+Decode DSDT/SSDT and inspect FPNT and DSC0. Identify exact _CRS/_PR0/_PS0 resources, GPIOs, regulator and clock dependencies. Determine why INT3472:01-avdd is disabled and INT3472:01-clk has zero enable/prepare counts. Then modify the driver architecture to request/enable those resources safely before reset/SPI init. After power sequencing works, resume Windows transport reverse engineering and implement the correct SPI backend.
+
+## Session 2026-10-02 findings (ACPI decode; supersedes earlier avdd/clk theory)
+- Decoded real tables are already in project dir: DSDT.dsl + SSDT1-15.dsl (acpidump empty; sudo needs a password in the DC context -- passwordless sudo is NOT active there).
+- \_SB.PC00.SPI2.FPNT (_HID FTE4800 when FPTT==2) _CRS has ONLY: SpiSerialBusV2 (mode0 CPOL low/CPHA first, 8-bit, CS active-low, **1 MHz** for FTE4800, 4 MHz default), GpioIo output PullUp pin GFPS (reset; _INI does SHPO(GFPS,1) = idle HIGH), GpioInt Edge ActiveHigh pin GFPI (IRQ).
+- FPNT has NO _PR0/_PR3/_PS0/_PS3/_DEP and no regulator/clock resource. There is no ACPI dependency on DSC0.
+- DSC0 = INT3472 _DDN "PMIC-CRDG" = CAMERA sensor PMIC (C0TP/CLDB camera link data, referenced from camera _DEP lists with I2C0). INT3472:01-avdd disabled and -clk enable_count=0 are NORMAL (no camera streaming) and irrelevant to the fingerprint sensor.
+- The fte4800_avdd hack (GPIO 535 forced HIGH) most likely drove a camera-PMIC pin. Do not use it. (GPIO 535 identity not yet confirmed; needs root to read /sys/kernel/debug/gpio.)
+- Probable previous bug: reset ended with line LOW and probe requested GPIOD_OUT_LOW; if reset is active-low the sensor was held in reset. Stock source ends HIGH; BIOS _INI leaves HIGH.
+- GPF root cause (hypothesis): global ff_ctl_context.fp_data dangling after unbind/rebind (no .remove, devm-freed). Fixed in patched focal_spi.c: mutex, .remove clears pointer, ENODEV/IS_ERR guards, reset pulses low 10ms and ends HIGH, GPIO requested OUT_HIGH, printk format fix. Backup: focal_spi.c.bak-pre-safe-reset. Patch script: patch-safe-reset.py. Built OK (srcversion F852B12AAE1677486887E96).
+- Next: run install-safe.sh as root; check dmesg reset: line, that nothing is bound to spidev1.0 conflicts, then re-test chip-ID read (0x90 -> expect 0x56A2) at **1 MHz mode 0** (earlier matrices used 4 MHz).
+
+## Session 2026-10-02 (cont.) -- patched driver loaded, first readback
+- sudo: NOPASSWD rule added by user at /etc/sudoers.d/archer-nopasswd for this session. REMOVE when done: sudo rm /etc/sudoers.d/archer-nopasswd
+- install-safe.sh did not bind: spi-FTE4800:00 had driver_override="spidev", blocking focalfp-spi. Fix: unbind spidev, write "\n" to driver_override, then bind focalfp-spi. /dev/spidev1.0 no longer exists once spidev is unbound (use /dev/focal_moh_spi).
+- Old-module GPF confirmed in dmesg: RDI=e022d914fe4f76a5 (garbage pointer) in ff_ctl_ioctl+0x7d with RBX=0x8086 -> stale/freed gpiod_rst. Patched driver has guards; reset ioctl still NOT retested.
+- Patched driver probe OK: mode0 1MHz 8-bit cs=0; reset pulsed low 10ms, idle HIGH (active_low=0). gpio-4 = spi-FTE4800:00 reset out hi. gpio-3 = "FPNT GpioInt(0)" in lo. gpio-357 "reset" ACTIVE LOW belongs to another device, ignore. /proc/interrupts shows focal-irq count 1 (possible sign of life, unproven).
+- FPNT has no hidden power GPIO: SHPO() just sets GPIO host-software pad ownership (GPIO_HOSTSW_OWN). No other FP names in tables besides FPTT, GFPS, GFPI.
+- Readback with the idle-HIGH reset (via /dev/focal_moh_spi, spi_write_then_read): win7 [90 80 00 02 00 00 00]->2 gave 8080,0000,0000; r8 [08 f7 90 00 00]->2 gave 0202,0e0e,0e0e; read-only 4 gave 0e0e0e0e x3. NOT 0x56A2. Every 2-byte read has two IDENTICAL bytes and the first read after changing command returns remnants of the prior command (0x80, 0x02): slave shifter appears alive but stale, i.e. likely wrong framing/mode/wake sequence, not an unpowered or in-reset chip.
+- Next ideas: (1) log INT line level timeline after reset to see ROM-ready signal; (2) test SPI modes 0-3 at 1MHz with the new idle-HIGH reset (old matrices used buggy reset); (3) find what Windows wakeup 0x18001bc48 and CMDSET(0x55) put on the wire; (4) check pxa2xx gap between TX and RX phases (use single full-duplex transfer instead of write_then_read).

@@ -1,0 +1,15 @@
+1) Install the AUR kernel driver package permanently:
+sudo pacman -U --needed ~/projects/zerobook-focaltech-driver/aur-focaltech-spi-dkms/focaltech-spi-dkms-1.0.3-3-x86_64.pkg.tar.zst
+
+2) Install the FTE userspace libfprint package:
+sudo pacman -U --needed ~/projects/zerobook-focaltech-driver/aur-libfprint-ftexx00/libfprint-ftexx00-1.94.4_20250112-3-x86_64.pkg.tar.zst
+
+3) Reload udev:
+sudo udevadm control --reload-rules
+sudo udevadm trigger
+
+4) Restart fprintd:
+sudo systemctl restart fprintd
+
+5) Test:
+fprintd-list $USER

@@ -1,0 +1,948 @@
+
+/usr/lib/libfprint-2.so.2.0.0:     file format elf64-x86-64
+
+
+Disassembly of section .text:
+
+00000000000fc470 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe29f0>:
+   fc470:	41 57                	push   %r15
+   fc472:	41 56                	push   %r14
+   fc474:	41 55                	push   %r13
+   fc476:	41 54                	push   %r12
+   fc478:	55                   	push   %rbp
+   fc479:	53                   	push   %rbx
+   fc47a:	48 81 ec e8 00 00 00 	sub    $0xe8,%rsp
+   fc481:	48 85 ff             	test   %rdi,%rdi
+   fc484:	48 89 7c 24 08       	mov    %rdi,0x8(%rsp)
+   fc489:	48 89 4c 24 20       	mov    %rcx,0x20(%rsp)
+   fc48e:	4c 89 44 24 28       	mov    %r8,0x28(%rsp)
+   fc493:	4c 89 4c 24 30       	mov    %r9,0x30(%rsp)
+   fc498:	66 89 74 24 10       	mov    %si,0x10(%rsp)
+   fc49d:	66 89 54 24 1c       	mov    %dx,0x1c(%rsp)
+   fc4a2:	0f 84 08 01 00 00    	je     fc5b0 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe2b30>
+   fc4a8:	48 85 c9             	test   %rcx,%rcx
+   fc4ab:	0f 84 ff 00 00 00    	je     fc5b0 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe2b30>
+   fc4b1:	4d 85 c0             	test   %r8,%r8
+   fc4b4:	0f 84 f6 00 00 00    	je     fc5b0 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe2b30>
+   fc4ba:	4d 85 c9             	test   %r9,%r9
+   fc4bd:	0f 84 ed 00 00 00    	je     fc5b0 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe2b30>
+   fc4c3:	89 d0                	mov    %edx,%eax
+   fc4c5:	41 89 f5             	mov    %esi,%r13d
+   fc4c8:	89 d5                	mov    %edx,%ebp
+   fc4ca:	0f af c6             	imul   %esi,%eax
+   fc4cd:	48 83 bc 24 20 01 00 	cmpq   $0x0,0x120(%rsp)
+   fc4d4:	00 00 
+   fc4d6:	c6 44 24 67 01       	movb   $0x1,0x67(%rsp)
+   fc4db:	66 89 84 24 ba 00 00 	mov    %ax,0xba(%rsp)
+   fc4e2:	00 
+   fc4e3:	0f 84 31 01 00 00    	je     fc61a <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe2b9a>
+   fc4e9:	41 8d 55 04          	lea    0x4(%r13),%edx
+   fc4ed:	44 8d 7d 04          	lea    0x4(%rbp),%r15d
+   fc4f1:	83 e2 fc             	and    $0xfffffffc,%edx
+   fc4f4:	41 83 e7 fc          	and    $0xfffffffc,%r15d
+   fc4f8:	44 29 ea             	sub    %r13d,%edx
+   fc4fb:	41 29 ef             	sub    %ebp,%r15d
+   fc4fe:	41 89 d6             	mov    %edx,%r14d
+   fc501:	41 8d 5c 2f 08       	lea    0x8(%r15,%rbp,1),%ebx
+   fc506:	66 41 d1 ef          	shr    $1,%r15w
+   fc50a:	47 8d 64 2e 08       	lea    0x8(%r14,%r13,1),%r12d
+   fc50f:	41 0f af dc          	imul   %r12d,%ebx
+   fc513:	0f b7 c3             	movzwl %bx,%eax
+   fc516:	89 c7                	mov    %eax,%edi
+   fc518:	89 44 24 40          	mov    %eax,0x40(%rsp)
+   fc51c:	e8 3f ba fe ff       	call   e7f60 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xce4e0>
+   fc521:	44 89 f2             	mov    %r14d,%edx
+   fc524:	49 89 c1             	mov    %rax,%r9
+   fc527:	48 89 44 24 38       	mov    %rax,0x38(%rsp)
+   fc52c:	66 d1 ea             	shr    $1,%dx
+   fc52f:	48 8b 7c 24 08       	mov    0x8(%rsp),%rdi
+   fc534:	41 0f b7 cf          	movzwl %r15w,%ecx
+   fc538:	0f b7 c2             	movzwl %dx,%eax
+   fc53b:	83 c1 04             	add    $0x4,%ecx
+   fc53e:	41 0f b7 d5          	movzwl %r13w,%edx
+   fc542:	44 8d 40 04          	lea    0x4(%rax),%r8d
+   fc546:	0f b7 f5             	movzwl %bp,%esi
+   fc549:	e8 22 be ff ff       	call   f8370 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xde8f0>
+   fc54e:	85 c0                	test   %eax,%eax
+   fc550:	89 44 24 60          	mov    %eax,0x60(%rsp)
+   fc554:	0f 84 87 01 00 00    	je     fc6e1 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe2c61>
+   fc55a:	48 8d 05 78 0e fc 02 	lea    0x2fc0e78(%rip),%rax        # 30bd3d9 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x30a3959>
+   fc561:	0f b6 10             	movzbl (%rax),%edx
+   fc564:	80 fa 01             	cmp    $0x1,%dl
+   fc567:	0f 84 31 07 00 00    	je     fcc9e <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe321e>
+   fc56d:	0f b6 00             	movzbl (%rax),%eax
+   fc570:	3c 02                	cmp    $0x2,%al
+   fc572:	0f 84 e8 07 00 00    	je     fcd60 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe32e0>
+   fc578:	48 83 7c 24 38 00    	cmpq   $0x0,0x38(%rsp)
+   fc57e:	74 0a                	je     fc58a <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe2b0a>
+   fc580:	48 8b 7c 24 38       	mov    0x38(%rsp),%rdi
+   fc585:	e8 56 bb fe ff       	call   e80e0 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xce660>
+   fc58a:	80 7c 24 67 00       	cmpb   $0x0,0x67(%rsp)
+   fc58f:	8b 44 24 60          	mov    0x60(%rsp),%eax
+   fc593:	75 73                	jne    fc608 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe2b88>
+   fc595:	48 8b bc 24 20 01 00 	mov    0x120(%rsp),%rdi
+   fc59c:	00 
+   fc59d:	89 44 24 08          	mov    %eax,0x8(%rsp)
+   fc5a1:	e8 3a bb fe ff       	call   e80e0 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xce660>
+   fc5a6:	8b 44 24 08          	mov    0x8(%rsp),%eax
+   fc5aa:	eb 5c                	jmp    fc608 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe2b88>
+   fc5ac:	0f 1f 40 00          	nopl   0x0(%rax)
+   fc5b0:	48 8d 05 22 0e fc 02 	lea    0x2fc0e22(%rip),%rax        # 30bd3d9 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x30a3959>
+   fc5b7:	0f b6 10             	movzbl (%rax),%edx
+   fc5ba:	80 fa 01             	cmp    $0x1,%dl
+   fc5bd:	0f 84 d7 00 00 00    	je     fc69a <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe2c1a>
+   fc5c3:	0f b6 00             	movzbl (%rax),%eax
+   fc5c6:	3c 02                	cmp    $0x2,%al
+   fc5c8:	0f 85 c2 00 00 00    	jne    fc690 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe2c10>
+   fc5ce:	48 8d 05 c3 cd 10 00 	lea    0x10cdc3(%rip),%rax        # 209398 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x1ef918>
+   fc5d5:	83 38 05             	cmpl   $0x5,(%rax)
+   fc5d8:	0f 87 b2 00 00 00    	ja     fc690 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe2c10>
+   fc5de:	48 8d 05 eb 0d fc 02 	lea    0x2fc0deb(%rip),%rax        # 30bd3d0 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x30a3950>
+   fc5e5:	48 8b 10             	mov    (%rax),%rdx
+   fc5e8:	48 85 d2             	test   %rdx,%rdx
+   fc5eb:	0f 84 9f 00 00 00    	je     fc690 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe2c10>
+   fc5f1:	31 c0                	xor    %eax,%eax
+   fc5f3:	48 8d 35 26 d0 0a 00 	lea    0xad026(%rip),%rsi        # 1a9620 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x18fba0>
+   fc5fa:	48 8d 3d 37 bb 06 00 	lea    0x6bb37(%rip),%rdi        # 168138 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x14e6b8>
+   fc601:	ff d2                	call   *%rdx
+   fc603:	b8 ff ff ff ff       	mov    $0xffffffff,%eax
+   fc608:	48 81 c4 e8 00 00 00 	add    $0xe8,%rsp
+   fc60f:	5b                   	pop    %rbx
+   fc610:	5d                   	pop    %rbp
+   fc611:	41 5c                	pop    %r12
+   fc613:	41 5d                	pop    %r13
+   fc615:	41 5e                	pop    %r14
+   fc617:	41 5f                	pop    %r15
+   fc619:	c3                   	ret
+   fc61a:	89 c7                	mov    %eax,%edi
+   fc61c:	66 c1 ef 03          	shr    $0x3,%di
+   fc620:	0f b7 ff             	movzwl %di,%edi
+   fc623:	83 c7 01             	add    $0x1,%edi
+   fc626:	e8 35 b9 fe ff       	call   e7f60 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xce4e0>
+   fc62b:	48 85 c0             	test   %rax,%rax
+   fc62e:	48 89 84 24 20 01 00 	mov    %rax,0x120(%rsp)
+   fc635:	00 
+   fc636:	c6 44 24 67 00       	movb   $0x0,0x67(%rsp)
+   fc63b:	0f 85 a8 fe ff ff    	jne    fc4e9 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe2a69>
+   fc641:	48 8d 05 91 0d fc 02 	lea    0x2fc0d91(%rip),%rax        # 30bd3d9 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x30a3959>
+   fc648:	0f b6 10             	movzbl (%rax),%edx
+   fc64b:	80 fa 01             	cmp    $0x1,%dl
+   fc64e:	0f 84 d1 0d 00 00    	je     fd425 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe39a5>
+   fc654:	0f b6 00             	movzbl (%rax),%eax
+   fc657:	3c 02                	cmp    $0x2,%al
+   fc659:	75 35                	jne    fc690 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe2c10>
+   fc65b:	48 8d 05 36 cd 10 00 	lea    0x10cd36(%rip),%rax        # 209398 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x1ef918>
+   fc662:	83 38 05             	cmpl   $0x5,(%rax)
+   fc665:	77 29                	ja     fc690 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe2c10>
+   fc667:	48 8d 05 62 0d fc 02 	lea    0x2fc0d62(%rip),%rax        # 30bd3d0 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x30a3950>
+   fc66e:	48 8b 10             	mov    (%rax),%rdx
+   fc671:	48 85 d2             	test   %rdx,%rdx
+   fc674:	74 1a                	je     fc690 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe2c10>
+   fc676:	48 8d 35 a3 cf 0a 00 	lea    0xacfa3(%rip),%rsi        # 1a9620 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x18fba0>
+   fc67d:	48 8d 3d a4 c2 06 00 	lea    0x6c2a4(%rip),%rdi        # 168928 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x14eea8>
+   fc684:	31 c0                	xor    %eax,%eax
+   fc686:	ff d2                	call   *%rdx
+   fc688:	0f 1f 84 00 00 00 00 	nopl   0x0(%rax,%rax,1)
+   fc68f:	00 
+   fc690:	b8 ff ff ff ff       	mov    $0xffffffff,%eax
+   fc695:	e9 6e ff ff ff       	jmp    fc608 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe2b88>
+   fc69a:	48 8d 05 f7 cc 10 00 	lea    0x10ccf7(%rip),%rax        # 209398 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x1ef918>
+   fc6a1:	83 38 05             	cmpl   $0x5,(%rax)
+   fc6a4:	77 ea                	ja     fc690 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe2c10>
+   fc6a6:	48 8d 05 73 cf 0a 00 	lea    0xacf73(%rip),%rax        # 1a9620 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x18fba0>
+   fc6ad:	48 83 ec 08          	sub    $0x8,%rsp
+   fc6b1:	4c 8d 05 56 c2 06 00 	lea    0x6c256(%rip),%r8        # 16890e <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x14ee8e>
+   fc6b8:	48 8d 15 01 71 08 00 	lea    0x87101(%rip),%rdx        # 1837c0 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x169d40>
+   fc6bf:	41 b9 d2 01 00 00    	mov    $0x1d2,%r9d
+   fc6c5:	50                   	push   %rax
+   fc6c6:	48 89 c1             	mov    %rax,%rcx
+   fc6c9:	48 8d 35 13 a2 06 00 	lea    0x6a213(%rip),%rsi        # 1668e3 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x14ce63>
+   fc6d0:	bf 05 00 00 00       	mov    $0x5,%edi
+   fc6d5:	31 c0                	xor    %eax,%eax
+   fc6d7:	e8 54 42 f4 ff       	call   40930 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x26eb0>
+   fc6dc:	5d                   	pop    %rbp
+   fc6dd:	41 5c                	pop    %r12
+   fc6df:	eb af                	jmp    fc690 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe2c10>
+   fc6e1:	44 8b 74 24 40       	mov    0x40(%rsp),%r14d
+   fc6e6:	41 c1 e6 02          	shl    $0x2,%r14d
+   fc6ea:	44 89 f7             	mov    %r14d,%edi
+   fc6ed:	e8 6e b8 fe ff       	call   e7f60 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xce4e0>
+   fc6f2:	48 85 c0             	test   %rax,%rax
+   fc6f5:	48 89 84 24 98 00 00 	mov    %rax,0x98(%rsp)
+   fc6fc:	00 
+   fc6fd:	0f 84 05 07 00 00    	je     fce08 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe3388>
+   fc703:	44 89 f7             	mov    %r14d,%edi
+   fc706:	e8 55 b8 fe ff       	call   e7f60 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xce4e0>
+   fc70b:	48 85 c0             	test   %rax,%rax
+   fc70e:	48 89 44 24 58       	mov    %rax,0x58(%rsp)
+   fc713:	0f 84 d4 05 00 00    	je     fcced <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe326d>
+   fc719:	31 c9                	xor    %ecx,%ecx
+   fc71b:	66 85 db             	test   %bx,%bx
+   fc71e:	74 29                	je     fc749 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe2cc9>
+   fc720:	48 8b 74 24 38       	mov    0x38(%rsp),%rsi
+   fc725:	48 8b 7c 24 58       	mov    0x58(%rsp),%rdi
+   fc72a:	66 0f 1f 44 00 00    	nopw   0x0(%rax,%rax,1)
+   fc730:	0f b6 04 0e          	movzbl (%rsi,%rcx,1),%eax
+   fc734:	8d 14 c0             	lea    (%rax,%rax,8),%edx
+   fc737:	8d 14 d2             	lea    (%rdx,%rdx,8),%edx
+   fc73a:	0f af c2             	imul   %edx,%eax
+   fc73d:	89 04 8f             	mov    %eax,(%rdi,%rcx,4)
+   fc740:	48 83 c1 01          	add    $0x1,%rcx
+   fc744:	66 39 cb             	cmp    %cx,%bx
+   fc747:	77 e7                	ja     fc730 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe2cb0>
+   fc749:	42 8d 1c a5 00 00 00 	lea    0x0(,%r12,4),%ebx
+   fc750:	00 
+   fc751:	0f b7 db             	movzwl %bx,%ebx
+   fc754:	89 df                	mov    %ebx,%edi
+   fc756:	e8 05 b8 fe ff       	call   e7f60 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xce4e0>
+   fc75b:	89 df                	mov    %ebx,%edi
+   fc75d:	49 89 c7             	mov    %rax,%r15
+   fc760:	e8 fb b7 fe ff       	call   e7f60 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xce4e0>
+   fc765:	4d 85 ff             	test   %r15,%r15
+   fc768:	49 89 c6             	mov    %rax,%r14
+   fc76b:	0f 84 2d 06 00 00    	je     fcd9e <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe331e>
+   fc771:	48 85 c0             	test   %rax,%rax
+   fc774:	0f 84 24 06 00 00    	je     fcd9e <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe331e>
+   fc77a:	31 c0                	xor    %eax,%eax
+   fc77c:	66 45 85 e4          	test   %r12w,%r12w
+   fc780:	74 23                	je     fc7a5 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe2d25>
+   fc782:	48 8b 4c 24 38       	mov    0x38(%rsp),%rcx
+   fc787:	48 8b 74 24 58       	mov    0x58(%rsp),%rsi
+   fc78c:	0f b6 14 01          	movzbl (%rcx,%rax,1),%edx
+   fc790:	41 89 14 87          	mov    %edx,(%r15,%rax,4)
+   fc794:	8b 14 86             	mov    (%rsi,%rax,4),%edx
+   fc797:	41 89 14 86          	mov    %edx,(%r14,%rax,4)
+   fc79b:	48 83 c0 01          	add    $0x1,%rax
+   fc79f:	66 41 39 c4          	cmp    %ax,%r12w
+   fc7a3:	77 e7                	ja     fc78c <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe2d0c>
+   fc7a5:	41 0f b7 c4          	movzwl %r12w,%eax
+   fc7a9:	48 8b 74 24 58       	mov    0x58(%rsp),%rsi
+   fc7ae:	48 8b 4c 24 38       	mov    0x38(%rsp),%rcx
+   fc7b3:	48 8d 1c 85 00 00 00 	lea    0x0(,%rax,4),%rbx
+   fc7ba:	00 
+   fc7bb:	48 89 44 24 68       	mov    %rax,0x68(%rsp)
+   fc7c0:	bf 08 00 00 00       	mov    $0x8,%edi
+   fc7c5:	49 89 c0             	mov    %rax,%r8
+   fc7c8:	48 89 5c 24 70       	mov    %rbx,0x70(%rsp)
+   fc7cd:	49 89 d9             	mov    %rbx,%r9
+   fc7d0:	4c 01 c1             	add    %r8,%rcx
+   fc7d3:	4c 01 ce             	add    %r9,%rsi
+   fc7d6:	31 c0                	xor    %eax,%eax
+   fc7d8:	66 45 85 e4          	test   %r12w,%r12w
+   fc7dc:	74 1b                	je     fc7f9 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe2d79>
+   fc7de:	66 90                	xchg   %ax,%ax
+   fc7e0:	0f b6 14 01          	movzbl (%rcx,%rax,1),%edx
+   fc7e4:	41 01 14 87          	add    %edx,(%r15,%rax,4)
+   fc7e8:	8b 14 86             	mov    (%rsi,%rax,4),%edx
+   fc7eb:	41 01 14 86          	add    %edx,(%r14,%rax,4)
+   fc7ef:	48 83 c0 01          	add    $0x1,%rax
+   fc7f3:	66 41 39 c4          	cmp    %ax,%r12w
+   fc7f7:	77 e7                	ja     fc7e0 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe2d60>
+   fc7f9:	66 83 ef 01          	sub    $0x1,%di
+   fc7fd:	75 d1                	jne    fc7d0 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe2d50>
+   fc7ff:	48 8b 5c 24 68       	mov    0x68(%rsp),%rbx
+   fc804:	48 8b 44 24 38       	mov    0x38(%rsp),%rax
+   fc809:	31 c9                	xor    %ecx,%ecx
+   fc80b:	41 8b 16             	mov    (%r14),%edx
+   fc80e:	48 8d 04 d8          	lea    (%rax,%rbx,8),%rax
+   fc812:	48 8b 5c 24 70       	mov    0x70(%rsp),%rbx
+   fc817:	48 89 44 24 78       	mov    %rax,0x78(%rsp)
+   fc81c:	48 8b 44 24 58       	mov    0x58(%rsp),%rax
+   fc821:	4c 8d 1c d8          	lea    (%rax,%rbx,8),%r11
+   fc825:	41 8b 07             	mov    (%r15),%eax
+   fc828:	41 03 44 0f 04       	add    0x4(%r15,%rcx,1),%eax
+   fc82d:	41 03 54 0e 04       	add    0x4(%r14,%rcx,1),%edx
+   fc832:	48 83 c1 04          	add    $0x4,%rcx
+   fc836:	48 83 f9 20          	cmp    $0x20,%rcx
+   fc83a:	75 ec                	jne    fc828 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe2da8>
+   fc83c:	49 8d 5f 20          	lea    0x20(%r15),%rbx
+   fc840:	89 c1                	mov    %eax,%ecx
+   fc842:	0f af c8             	imul   %eax,%ecx
+   fc845:	48 89 9c 24 a8 00 00 	mov    %rbx,0xa8(%rsp)
+   fc84c:	00 
+   fc84d:	49 8d 5e 20          	lea    0x20(%r14),%rbx
+   fc851:	48 89 9c 24 a0 00 00 	mov    %rbx,0xa0(%rsp)
+   fc858:	00 
+   fc859:	89 d3                	mov    %edx,%ebx
+   fc85b:	29 cb                	sub    %ecx,%ebx
+   fc85d:	89 d9                	mov    %ebx,%ecx
+   fc85f:	48 8b 9c 24 98 00 00 	mov    0x98(%rsp),%rbx
+   fc866:	00 
+   fc867:	81 f9 40 e3 09 00    	cmp    $0x9e340,%ecx
+   fc86d:	89 0b                	mov    %ecx,(%rbx)
+   fc86f:	0f 86 05 06 00 00    	jbe    fce7a <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe33fa>
+   fc875:	48 8b b4 24 20 01 00 	mov    0x120(%rsp),%rsi
+   fc87c:	00 
+   fc87d:	66 0f ef c9          	pxor   %xmm1,%xmm1
+   fc881:	66 0f ef d2          	pxor   %xmm2,%xmm2
+   fc885:	80 0e 01             	orb    $0x1,(%rsi)
+   fc888:	be 01 00 00 00       	mov    $0x1,%esi
+   fc88d:	8b 0b                	mov    (%rbx),%ecx
+   fc88f:	66 89 74 24 40       	mov    %si,0x40(%rsp)
+   fc894:	f3 48 0f 2a c9       	cvtsi2ss %rcx,%xmm1
+   fc899:	f3 0f 59 0d 57 04 0a 	mulss  0xa0457(%rip),%xmm1        # 19ccf8 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x183278>
+   fc8a0:	00 
+   fc8a1:	0f 28 e9             	movaps %xmm1,%xmm5
+   fc8a4:	f3 0f 59 c9          	mulss  %xmm1,%xmm1
+   fc8a8:	f3 0f 58 ea          	addss  %xmm2,%xmm5
+   fc8ac:	f3 0f 58 ca          	addss  %xmm2,%xmm1
+   fc8b0:	66 41 83 fd 01       	cmp    $0x1,%r13w
+   fc8b5:	0f 86 bd 00 00 00    	jbe    fc978 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe2ef8>
+   fc8bb:	48 8b 9c 24 98 00 00 	mov    0x98(%rsp),%rbx
+   fc8c2:	00 
+   fc8c3:	49 8d 7e 20          	lea    0x20(%r14),%rdi
+   fc8c7:	4d 8d 47 20          	lea    0x20(%r15),%r8
+   fc8cb:	41 ba 01 00 00 00    	mov    $0x1,%r10d
+   fc8d1:	f3 0f 10 05 1f 04 0a 	movss  0xa041f(%rip),%xmm0        # 19ccf8 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x183278>
+   fc8d8:	00 
+   fc8d9:	4c 89 5c 24 48       	mov    %r11,0x48(%rsp)
+   fc8de:	4c 8d 4b 04          	lea    0x4(%rbx),%r9
+   fc8e2:	bb 01 00 00 00       	mov    $0x1,%ebx
+   fc8e7:	49 83 c0 04          	add    $0x4,%r8
+   fc8eb:	41 2b 40 dc          	sub    -0x24(%r8),%eax
+   fc8ef:	48 83 c7 04          	add    $0x4,%rdi
+   fc8f3:	41 03 00             	add    (%r8),%eax
+   fc8f6:	2b 57 dc             	sub    -0x24(%rdi),%edx
+   fc8f9:	03 17                	add    (%rdi),%edx
+   fc8fb:	89 c1                	mov    %eax,%ecx
+   fc8fd:	0f af c8             	imul   %eax,%ecx
+   fc900:	89 d6                	mov    %edx,%esi
+   fc902:	29 ce                	sub    %ecx,%esi
+   fc904:	81 fe 40 e3 09 00    	cmp    $0x9e340,%esi
+   fc90a:	41 89 31             	mov    %esi,(%r9)
+   fc90d:	76 50                	jbe    fc95f <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe2edf>
+   fc90f:	44 89 d1             	mov    %r10d,%ecx
+   fc912:	45 89 d3             	mov    %r10d,%r11d
+   fc915:	66 83 44 24 40 01    	addw   $0x1,0x40(%rsp)
+   fc91b:	66 c1 e9 03          	shr    $0x3,%cx
+   fc91f:	66 0f ef db          	pxor   %xmm3,%xmm3
+   fc923:	0f b7 f1             	movzwl %cx,%esi
+   fc926:	0f b7 c9             	movzwl %cx,%ecx
+   fc929:	c1 e1 03             	shl    $0x3,%ecx
+   fc92c:	41 29 cb             	sub    %ecx,%r11d
+   fc92f:	44 89 d9             	mov    %r11d,%ecx
+   fc932:	41 89 db             	mov    %ebx,%r11d
+   fc935:	41 d3 e3             	shl    %cl,%r11d
+   fc938:	44 89 d9             	mov    %r11d,%ecx
+   fc93b:	4c 8b 9c 24 20 01 00 	mov    0x120(%rsp),%r11
+   fc942:	00 
+   fc943:	41 08 0c 33          	or     %cl,(%r11,%rsi,1)
+   fc947:	41 8b 09             	mov    (%r9),%ecx
+   fc94a:	f3 48 0f 2a d9       	cvtsi2ss %rcx,%xmm3
+   fc94f:	f3 0f 59 d8          	mulss  %xmm0,%xmm3
+   fc953:	f3 0f 58 eb          	addss  %xmm3,%xmm5
+   fc957:	f3 0f 59 db          	mulss  %xmm3,%xmm3
+   fc95b:	f3 0f 58 cb          	addss  %xmm3,%xmm1
+   fc95f:	49 83 c1 04          	add    $0x4,%r9
+   fc963:	41 83 c2 01          	add    $0x1,%r10d
+   fc967:	66 44 39 54 24 10    	cmp    %r10w,0x10(%rsp)
+   fc96d:	0f 87 74 ff ff ff    	ja     fc8e7 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe2e67>
+   fc973:	4c 8b 5c 24 48       	mov    0x48(%rsp),%r11
+   fc978:	0f b7 74 24 10       	movzwl 0x10(%rsp),%esi
+   fc97d:	66 83 fd 01          	cmp    $0x1,%bp
+   fc981:	0f b7 c6             	movzwl %si,%eax
+   fc984:	0f 86 83 02 00 00    	jbe    fcc0d <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe318d>
+   fc98a:	48 8b 9c 24 98 00 00 	mov    0x98(%rsp),%rbx
+   fc991:	00 
+   fc992:	48 c1 e0 02          	shl    $0x2,%rax
+   fc996:	44 89 ef             	mov    %r13d,%edi
+   fc999:	48 89 84 24 b0 00 00 	mov    %rax,0xb0(%rsp)
+   fc9a0:	00 
+   fc9a1:	f3 0f 10 35 4f 03 0a 	movss  0xa034f(%rip),%xmm6        # 19ccf8 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x183278>
+   fc9a8:	00 
+   fc9a9:	44 89 ac 24 c8 00 00 	mov    %r13d,0xc8(%rsp)
+   fc9b0:	00 
+   fc9b1:	89 ac 24 c0 00 00 00 	mov    %ebp,0xc0(%rsp)
+   fc9b8:	48 8d 44 03 04       	lea    0x4(%rbx,%rax,1),%rax
+   fc9bd:	4c 8b 6c 24 78       	mov    0x78(%rsp),%r13
+   fc9c2:	48 8b 5c 24 38       	mov    0x38(%rsp),%rbx
+   fc9c7:	48 8b ac 24 20 01 00 	mov    0x120(%rsp),%rbp
+   fc9ce:	00 
+   fc9cf:	0f 28 de             	movaps %xmm6,%xmm3
+   fc9d2:	48 89 44 24 50       	mov    %rax,0x50(%rsp)
+   fc9d7:	48 8b 44 24 58       	mov    0x58(%rsp),%rax
+   fc9dc:	66 44 89 a4 24 b8 00 	mov    %r12w,0xb8(%rsp)
+   fc9e3:	00 00 
+   fc9e5:	48 89 c1             	mov    %rax,%rcx
+   fc9e8:	b8 01 00 00 00       	mov    $0x1,%eax
+   fc9ed:	66 89 44 24 48       	mov    %ax,0x48(%rsp)
+   fc9f2:	89 f0                	mov    %esi,%eax
+   fc9f4:	49 89 cc             	mov    %rcx,%r12
+   fc9f7:	83 e8 01             	sub    $0x1,%eax
+   fc9fa:	66 89 84 24 bc 00 00 	mov    %ax,0xbc(%rsp)
+   fca01:	00 
+   fca02:	4c 03 6c 24 68       	add    0x68(%rsp),%r13
+   fca07:	4c 03 5c 24 70       	add    0x70(%rsp),%r11
+   fca0c:	31 c0                	xor    %eax,%eax
+   fca0e:	66 83 bc 24 b8 00 00 	cmpw   $0x0,0xb8(%rsp)
+   fca15:	00 00 
+   fca17:	0f b7 8c 24 b8 00 00 	movzwl 0xb8(%rsp),%ecx
+   fca1e:	00 
+   fca1f:	74 30                	je     fca51 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe2fd1>
+   fca21:	0f 1f 80 00 00 00 00 	nopl   0x0(%rax)
+   fca28:	41 0f b6 54 05 00    	movzbl 0x0(%r13,%rax,1),%edx
+   fca2e:	0f b6 34 03          	movzbl (%rbx,%rax,1),%esi
+   fca32:	29 f2                	sub    %esi,%edx
+   fca34:	41 01 14 87          	add    %edx,(%r15,%rax,4)
+   fca38:	41 8b 14 83          	mov    (%r11,%rax,4),%edx
+   fca3c:	41 03 14 86          	add    (%r14,%rax,4),%edx
+   fca40:	41 2b 14 84          	sub    (%r12,%rax,4),%edx
+   fca44:	41 89 14 86          	mov    %edx,(%r14,%rax,4)
+   fca48:	48 83 c0 01          	add    $0x1,%rax
+   fca4c:	66 39 c1             	cmp    %ax,%cx
+   fca4f:	77 d7                	ja     fca28 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe2fa8>
+   fca51:	48 03 5c 24 68       	add    0x68(%rsp),%rbx
+   fca56:	4c 03 64 24 70       	add    0x70(%rsp),%r12
+   fca5b:	31 c9                	xor    %ecx,%ecx
+   fca5d:	41 8b 07             	mov    (%r15),%eax
+   fca60:	41 8b 16             	mov    (%r14),%edx
+   fca63:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
+   fca68:	41 03 44 0f 04       	add    0x4(%r15,%rcx,1),%eax
+   fca6d:	41 03 54 0e 04       	add    0x4(%r14,%rcx,1),%edx
+   fca72:	48 83 c1 04          	add    $0x4,%rcx
+   fca76:	48 83 f9 20          	cmp    $0x20,%rcx
+   fca7a:	75 ec                	jne    fca68 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe2fe8>
+   fca7c:	89 c1                	mov    %eax,%ecx
+   fca7e:	89 d6                	mov    %edx,%esi
+   fca80:	4c 8b 54 24 50       	mov    0x50(%rsp),%r10
+   fca85:	0f af c8             	imul   %eax,%ecx
+   fca88:	29 ce                	sub    %ecx,%esi
+   fca8a:	89 f1                	mov    %esi,%ecx
+   fca8c:	81 f9 40 e3 09 00    	cmp    $0x9e340,%ecx
+   fca92:	41 89 4a fc          	mov    %ecx,-0x4(%r10)
+   fca96:	76 46                	jbe    fcade <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe305e>
+   fca98:	89 f9                	mov    %edi,%ecx
+   fca9a:	41 89 f9             	mov    %edi,%r9d
+   fca9d:	66 83 44 24 40 01    	addw   $0x1,0x40(%rsp)
+   fcaa3:	66 c1 e9 03          	shr    $0x3,%cx
+   fcaa7:	66 0f ef e4          	pxor   %xmm4,%xmm4
+   fcaab:	0f b7 f1             	movzwl %cx,%esi
+   fcaae:	c1 e1 03             	shl    $0x3,%ecx
+   fcab1:	41 29 c9             	sub    %ecx,%r9d
+   fcab4:	44 89 c9             	mov    %r9d,%ecx
+   fcab7:	41 b9 01 00 00 00    	mov    $0x1,%r9d
+   fcabd:	41 d3 e1             	shl    %cl,%r9d
+   fcac0:	44 08 4c 35 00       	or     %r9b,0x0(%rbp,%rsi,1)
+   fcac5:	41 8b 4a fc          	mov    -0x4(%r10),%ecx
+   fcac9:	f3 48 0f 2a e1       	cvtsi2ss %rcx,%xmm4
+   fcace:	f3 0f 59 e6          	mulss  %xmm6,%xmm4
+   fcad2:	f3 0f 58 ec          	addss  %xmm4,%xmm5
+   fcad6:	f3 0f 59 e4          	mulss  %xmm4,%xmm4
+   fcada:	f3 0f 58 cc          	addss  %xmm4,%xmm1
+   fcade:	8d 77 01             	lea    0x1(%rdi),%esi
+   fcae1:	41 89 f0             	mov    %esi,%r8d
+   fcae4:	66 89 74 24 78       	mov    %si,0x78(%rsp)
+   fcae9:	0f b7 74 24 10       	movzwl 0x10(%rsp),%esi
+   fcaee:	66 83 fe 01          	cmp    $0x1,%si
+   fcaf2:	0f 86 78 03 00 00    	jbe    fce70 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe33f0>
+   fcaf8:	01 f7                	add    %esi,%edi
+   fcafa:	4c 89 a4 24 88 00 00 	mov    %r12,0x88(%rsp)
+   fcb01:	00 
+   fcb02:	44 0f b7 64 24 40    	movzwl 0x40(%rsp),%r12d
+   fcb08:	89 f9                	mov    %edi,%ecx
+   fcb0a:	4c 8b 4c 24 50       	mov    0x50(%rsp),%r9
+   fcb0f:	48 8b bc 24 a0 00 00 	mov    0xa0(%rsp),%rdi
+   fcb16:	00 
+   fcb17:	48 8b b4 24 a8 00 00 	mov    0xa8(%rsp),%rsi
+   fcb1e:	00 
+   fcb1f:	4c 89 9c 24 80 00 00 	mov    %r11,0x80(%rsp)
+   fcb26:	00 
+   fcb27:	41 89 cb             	mov    %ecx,%r11d
+   fcb2a:	48 89 9c 24 90 00 00 	mov    %rbx,0x90(%rsp)
+   fcb31:	00 
+   fcb32:	66 0f 1f 44 00 00    	nopw   0x0(%rax,%rax,1)
+   fcb38:	48 83 c6 04          	add    $0x4,%rsi
+   fcb3c:	2b 46 dc             	sub    -0x24(%rsi),%eax
+   fcb3f:	48 83 c7 04          	add    $0x4,%rdi
+   fcb43:	03 06                	add    (%rsi),%eax
+   fcb45:	2b 57 dc             	sub    -0x24(%rdi),%edx
+   fcb48:	03 17                	add    (%rdi),%edx
+   fcb4a:	89 c1                	mov    %eax,%ecx
+   fcb4c:	0f af c8             	imul   %eax,%ecx
+   fcb4f:	41 89 d2             	mov    %edx,%r10d
+   fcb52:	41 29 ca             	sub    %ecx,%r10d
+   fcb55:	41 81 fa 40 e3 09 00 	cmp    $0x9e340,%r10d
+   fcb5c:	45 89 11             	mov    %r10d,(%r9)
+   fcb5f:	76 41                	jbe    fcba2 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe3122>
+   fcb61:	44 89 c1             	mov    %r8d,%ecx
+   fcb64:	44 89 c3             	mov    %r8d,%ebx
+   fcb67:	41 83 c4 01          	add    $0x1,%r12d
+   fcb6b:	66 c1 e9 03          	shr    $0x3,%cx
+   fcb6f:	66 0f ef c0          	pxor   %xmm0,%xmm0
+   fcb73:	44 0f b7 d1          	movzwl %cx,%r10d
+   fcb77:	c1 e1 03             	shl    $0x3,%ecx
+   fcb7a:	29 cb                	sub    %ecx,%ebx
+   fcb7c:	89 d9                	mov    %ebx,%ecx
+   fcb7e:	bb 01 00 00 00       	mov    $0x1,%ebx
+   fcb83:	d3 e3                	shl    %cl,%ebx
+   fcb85:	42 08 5c 15 00       	or     %bl,0x0(%rbp,%r10,1)
+   fcb8a:	41 8b 09             	mov    (%r9),%ecx
+   fcb8d:	f3 48 0f 2a c1       	cvtsi2ss %rcx,%xmm0
+   fcb92:	f3 0f 59 c3          	mulss  %xmm3,%xmm0
+   fcb96:	f3 0f 58 e8          	addss  %xmm0,%xmm5
+   fcb9a:	f3 0f 59 c0          	mulss  %xmm0,%xmm0
+   fcb9e:	f3 0f 58 c8          	addss  %xmm0,%xmm1
+   fcba2:	41 83 c0 01          	add    $0x1,%r8d
+   fcba6:	49 83 c1 04          	add    $0x4,%r9
+   fcbaa:	66 45 39 d8          	cmp    %r11w,%r8w
+   fcbae:	75 88                	jne    fcb38 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe30b8>
+   fcbb0:	0f b7 7c 24 78       	movzwl 0x78(%rsp),%edi
+   fcbb5:	66 44 89 64 24 40    	mov    %r12w,0x40(%rsp)
+   fcbbb:	66 03 bc 24 bc 00 00 	add    0xbc(%rsp),%di
+   fcbc2:	00 
+   fcbc3:	4c 8b 9c 24 80 00 00 	mov    0x80(%rsp),%r11
+   fcbca:	00 
+   fcbcb:	4c 8b a4 24 88 00 00 	mov    0x88(%rsp),%r12
+   fcbd2:	00 
+   fcbd3:	48 8b 9c 24 90 00 00 	mov    0x90(%rsp),%rbx
+   fcbda:	00 
+   fcbdb:	66 83 44 24 48 01    	addw   $0x1,0x48(%rsp)
+   fcbe1:	48 8b 8c 24 b0 00 00 	mov    0xb0(%rsp),%rcx
+   fcbe8:	00 
+   fcbe9:	0f b7 44 24 48       	movzwl 0x48(%rsp),%eax
+   fcbee:	48 01 4c 24 50       	add    %rcx,0x50(%rsp)
+   fcbf3:	66 39 44 24 1c       	cmp    %ax,0x1c(%rsp)
+   fcbf8:	0f 85 04 fe ff ff    	jne    fca02 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe2f82>
+   fcbfe:	44 8b ac 24 c8 00 00 	mov    0xc8(%rsp),%r13d
+   fcc05:	00 
+   fcc06:	8b ac 24 c0 00 00 00 	mov    0xc0(%rsp),%ebp
+   fcc0d:	0f b7 5c 24 40       	movzwl 0x40(%rsp),%ebx
+   fcc12:	31 c0                	xor    %eax,%eax
+   fcc14:	66 85 db             	test   %bx,%bx
+   fcc17:	74 11                	je     fcc2a <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe31aa>
+   fcc19:	0f b7 c3             	movzwl %bx,%eax
+   fcc1c:	0f b7 8c 24 ba 00 00 	movzwl 0xba(%rsp),%ecx
+   fcc23:	00 
+   fcc24:	6b c0 64             	imul   $0x64,%eax,%eax
+   fcc27:	99                   	cltd
+   fcc28:	f7 f9                	idiv   %ecx
+   fcc2a:	48 8b 5c 24 20       	mov    0x20(%rsp),%rbx
+   fcc2f:	88 03                	mov    %al,(%rbx)
+   fcc31:	48 8b 44 24 30       	mov    0x30(%rsp),%rax
+   fcc36:	c6 00 00             	movb   $0x0,(%rax)
+   fcc39:	48 8b 44 24 28       	mov    0x28(%rsp),%rax
+   fcc3e:	c6 00 00             	movb   $0x0,(%rax)
+   fcc41:	80 3b 00             	cmpb   $0x0,(%rbx)
+   fcc44:	0f 85 46 02 00 00    	jne    fce90 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe3410>
+   fcc4a:	48 83 7c 24 38 00    	cmpq   $0x0,0x38(%rsp)
+   fcc50:	74 0a                	je     fcc5c <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe31dc>
+   fcc52:	48 8b 7c 24 38       	mov    0x38(%rsp),%rdi
+   fcc57:	e8 84 b4 fe ff       	call   e80e0 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xce660>
+   fcc5c:	48 8b bc 24 98 00 00 	mov    0x98(%rsp),%rdi
+   fcc63:	00 
+   fcc64:	e8 77 b4 fe ff       	call   e80e0 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xce660>
+   fcc69:	4d 85 ff             	test   %r15,%r15
+   fcc6c:	74 08                	je     fcc76 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe31f6>
+   fcc6e:	4c 89 ff             	mov    %r15,%rdi
+   fcc71:	e8 6a b4 fe ff       	call   e80e0 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xce660>
+   fcc76:	4d 85 f6             	test   %r14,%r14
+   fcc79:	74 08                	je     fcc83 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe3203>
+   fcc7b:	4c 89 f7             	mov    %r14,%rdi
+   fcc7e:	e8 5d b4 fe ff       	call   e80e0 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xce660>
+   fcc83:	48 8b 44 24 58       	mov    0x58(%rsp),%rax
+   fcc88:	48 85 c0             	test   %rax,%rax
+   fcc8b:	0f 84 f9 f8 ff ff    	je     fc58a <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe2b0a>
+   fcc91:	48 89 c7             	mov    %rax,%rdi
+   fcc94:	e8 47 b4 fe ff       	call   e80e0 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xce660>
+   fcc99:	e9 ec f8 ff ff       	jmp    fc58a <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe2b0a>
+   fcc9e:	48 8d 05 f3 c6 10 00 	lea    0x10c6f3(%rip),%rax        # 209398 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x1ef918>
+   fcca5:	83 38 05             	cmpl   $0x5,(%rax)
+   fcca8:	0f 87 ca f8 ff ff    	ja     fc578 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe2af8>
+   fccae:	8b 44 24 60          	mov    0x60(%rsp),%eax
+   fccb2:	4c 8d 05 55 bc 06 00 	lea    0x6bc55(%rip),%r8        # 16890e <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x14ee8e>
+   fccb9:	48 8d 15 88 fd 08 00 	lea    0x8fd88(%rip),%rdx        # 18ca48 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x172fc8>
+   fccc0:	41 b9 f9 01 00 00    	mov    $0x1f9,%r9d
+   fccc6:	50                   	push   %rax
+   fccc7:	48 8d 05 52 c9 0a 00 	lea    0xac952(%rip),%rax        # 1a9620 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x18fba0>
+   fccce:	50                   	push   %rax
+   fcccf:	48 89 c1             	mov    %rax,%rcx
+   fccd2:	48 8d 35 0a 9c 06 00 	lea    0x69c0a(%rip),%rsi        # 1668e3 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x14ce63>
+   fccd9:	bf 05 00 00 00       	mov    $0x5,%edi
+   fccde:	31 c0                	xor    %eax,%eax
+   fcce0:	e8 4b 3c f4 ff       	call   40930 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x26eb0>
+   fcce5:	41 5b                	pop    %r11
+   fcce7:	5b                   	pop    %rbx
+   fcce8:	e9 8b f8 ff ff       	jmp    fc578 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe2af8>
+   fcced:	48 8d 05 e5 06 fc 02 	lea    0x2fc06e5(%rip),%rax        # 30bd3d9 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x30a3959>
+   fccf4:	0f b6 10             	movzbl (%rax),%edx
+   fccf7:	80 fa 01             	cmp    $0x1,%dl
+   fccfa:	0f 84 be 06 00 00    	je     fd3be <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe393e>
+   fcd00:	0f b6 00             	movzbl (%rax),%eax
+   fcd03:	45 31 f6             	xor    %r14d,%r14d
+   fcd06:	45 31 ff             	xor    %r15d,%r15d
+   fcd09:	c7 44 24 60 fe ff ff 	movl   $0xfffffffe,0x60(%rsp)
+   fcd10:	ff 
+   fcd11:	3c 02                	cmp    $0x2,%al
+   fcd13:	0f 85 31 ff ff ff    	jne    fcc4a <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe31ca>
+   fcd19:	48 8d 05 78 c6 10 00 	lea    0x10c678(%rip),%rax        # 209398 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x1ef918>
+   fcd20:	83 38 05             	cmpl   $0x5,(%rax)
+   fcd23:	0f 87 88 06 00 00    	ja     fd3b1 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe3931>
+   fcd29:	48 8d 05 a0 06 fc 02 	lea    0x2fc06a0(%rip),%rax        # 30bd3d0 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x30a3950>
+   fcd30:	48 8b 08             	mov    (%rax),%rcx
+   fcd33:	48 85 c9             	test   %rcx,%rcx
+   fcd36:	0f 84 0e ff ff ff    	je     fcc4a <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe31ca>
+   fcd3c:	ba fe ff ff ff       	mov    $0xfffffffe,%edx
+   fcd41:	48 8d 35 d8 c8 0a 00 	lea    0xac8d8(%rip),%rsi        # 1a9620 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x18fba0>
+   fcd48:	48 8d 3d f5 bb 06 00 	lea    0x6bbf5(%rip),%rdi        # 168944 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x14eec4>
+   fcd4f:	31 c0                	xor    %eax,%eax
+   fcd51:	ff d1                	call   *%rcx
+   fcd53:	4c 8b 7c 24 58       	mov    0x58(%rsp),%r15
+   fcd58:	4d 89 fe             	mov    %r15,%r14
+   fcd5b:	e9 ea fe ff ff       	jmp    fcc4a <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe31ca>
+   fcd60:	48 8d 05 31 c6 10 00 	lea    0x10c631(%rip),%rax        # 209398 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x1ef918>
+   fcd67:	83 38 05             	cmpl   $0x5,(%rax)
+   fcd6a:	0f 87 08 f8 ff ff    	ja     fc578 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe2af8>
+   fcd70:	48 8d 05 59 06 fc 02 	lea    0x2fc0659(%rip),%rax        # 30bd3d0 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x30a3950>
+   fcd77:	48 8b 08             	mov    (%rax),%rcx
+   fcd7a:	48 85 c9             	test   %rcx,%rcx
+   fcd7d:	0f 84 f5 f7 ff ff    	je     fc578 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe2af8>
+   fcd83:	8b 54 24 60          	mov    0x60(%rsp),%edx
+   fcd87:	48 8d 35 92 c8 0a 00 	lea    0xac892(%rip),%rsi        # 1a9620 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x18fba0>
+   fcd8e:	48 8d 3d f3 fc 08 00 	lea    0x8fcf3(%rip),%rdi        # 18ca88 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x173008>
+   fcd95:	31 c0                	xor    %eax,%eax
+   fcd97:	ff d1                	call   *%rcx
+   fcd99:	e9 da f7 ff ff       	jmp    fc578 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe2af8>
+   fcd9e:	48 8d 05 34 06 fc 02 	lea    0x2fc0634(%rip),%rax        # 30bd3d9 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x30a3959>
+   fcda5:	0f b6 10             	movzbl (%rax),%edx
+   fcda8:	80 fa 01             	cmp    $0x1,%dl
+   fcdab:	0f 84 8f 05 00 00    	je     fd340 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe38c0>
+   fcdb1:	0f b6 00             	movzbl (%rax),%eax
+   fcdb4:	c7 44 24 60 fe ff ff 	movl   $0xfffffffe,0x60(%rsp)
+   fcdbb:	ff 
+   fcdbc:	3c 02                	cmp    $0x2,%al
+   fcdbe:	0f 85 86 fe ff ff    	jne    fcc4a <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe31ca>
+   fcdc4:	48 8d 05 cd c5 10 00 	lea    0x10c5cd(%rip),%rax        # 209398 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x1ef918>
+   fcdcb:	83 38 05             	cmpl   $0x5,(%rax)
+   fcdce:	0f 87 76 fe ff ff    	ja     fcc4a <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe31ca>
+   fcdd4:	48 8d 05 f5 05 fc 02 	lea    0x2fc05f5(%rip),%rax        # 30bd3d0 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x30a3950>
+   fcddb:	48 8b 08             	mov    (%rax),%rcx
+   fcdde:	48 85 c9             	test   %rcx,%rcx
+   fcde1:	0f 84 63 fe ff ff    	je     fcc4a <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe31ca>
+   fcde7:	ba fe ff ff ff       	mov    $0xfffffffe,%edx
+   fcdec:	48 8d 35 2d c8 0a 00 	lea    0xac82d(%rip),%rsi        # 1a9620 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x18fba0>
+   fcdf3:	48 8d 3d 4a bb 06 00 	lea    0x6bb4a(%rip),%rdi        # 168944 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x14eec4>
+   fcdfa:	31 c0                	xor    %eax,%eax
+   fcdfc:	ff d1                	call   *%rcx
+   fcdfe:	e9 47 fe ff ff       	jmp    fcc4a <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe31ca>
+   fce03:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
+   fce08:	48 8d 05 ca 05 fc 02 	lea    0x2fc05ca(%rip),%rax        # 30bd3d9 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x30a3959>
+   fce0f:	0f b6 10             	movzbl (%rax),%edx
+   fce12:	80 fa 01             	cmp    $0x1,%dl
+   fce15:	0f 84 c2 04 00 00    	je     fd2dd <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe385d>
+   fce1b:	0f b6 00             	movzbl (%rax),%eax
+   fce1e:	c7 44 24 60 fe ff ff 	movl   $0xfffffffe,0x60(%rsp)
+   fce25:	ff 
+   fce26:	3c 02                	cmp    $0x2,%al
+   fce28:	0f 85 4a f7 ff ff    	jne    fc578 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe2af8>
+   fce2e:	48 8d 05 63 c5 10 00 	lea    0x10c563(%rip),%rax        # 209398 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x1ef918>
+   fce35:	83 38 05             	cmpl   $0x5,(%rax)
+   fce38:	0f 87 3a f7 ff ff    	ja     fc578 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe2af8>
+   fce3e:	48 8d 05 8b 05 fc 02 	lea    0x2fc058b(%rip),%rax        # 30bd3d0 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x30a3950>
+   fce45:	48 8b 08             	mov    (%rax),%rcx
+   fce48:	48 85 c9             	test   %rcx,%rcx
+   fce4b:	0f 84 27 f7 ff ff    	je     fc578 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe2af8>
+   fce51:	ba fe ff ff ff       	mov    $0xfffffffe,%edx
+   fce56:	48 8d 35 c3 c7 0a 00 	lea    0xac7c3(%rip),%rsi        # 1a9620 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x18fba0>
+   fce5d:	48 8d 3d e0 ba 06 00 	lea    0x6bae0(%rip),%rdi        # 168944 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x14eec4>
+   fce64:	31 c0                	xor    %eax,%eax
+   fce66:	ff d1                	call   *%rcx
+   fce68:	e9 0b f7 ff ff       	jmp    fc578 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe2af8>
+   fce6d:	0f 1f 00             	nopl   (%rax)
+   fce70:	0f b7 7c 24 78       	movzwl 0x78(%rsp),%edi
+   fce75:	e9 61 fd ff ff       	jmp    fcbdb <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe315b>
+   fce7a:	66 0f ef d2          	pxor   %xmm2,%xmm2
+   fce7e:	31 c9                	xor    %ecx,%ecx
+   fce80:	66 89 4c 24 40       	mov    %cx,0x40(%rsp)
+   fce85:	0f 28 ca             	movaps %xmm2,%xmm1
+   fce88:	0f 28 ea             	movaps %xmm2,%xmm5
+   fce8b:	e9 20 fa ff ff       	jmp    fc8b0 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe2e30>
+   fce90:	89 e8                	mov    %ebp,%eax
+   fce92:	66 0f ef db          	pxor   %xmm3,%xmm3
+   fce96:	66 c1 e8 03          	shr    $0x3,%ax
+   fce9a:	0f 28 c5             	movaps %xmm5,%xmm0
+   fce9d:	66 89 84 24 b0 00 00 	mov    %ax,0xb0(%rsp)
+   fcea4:	00 
+   fcea5:	0f b7 84 24 ba 00 00 	movzwl 0xba(%rsp),%eax
+   fceac:	00 
+   fcead:	66 41 c1 ed 03       	shr    $0x3,%r13w
+   fceb2:	f3 0f 59 c5          	mulss  %xmm5,%xmm0
+   fceb6:	44 89 eb             	mov    %r13d,%ebx
+   fceb9:	f3 0f 2a d8          	cvtsi2ss %eax,%xmm3
+   fcebd:	f3 0f 59 cb          	mulss  %xmm3,%xmm1
+   fcec1:	f3 0f 5c c8          	subss  %xmm0,%xmm1
+   fcec5:	f3 0f 59 cb          	mulss  %xmm3,%xmm1
+   fcec9:	f3 0f 5c 1d cf fb 09 	subss  0x9fbcf(%rip),%xmm3        # 19caa0 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x183020>
+   fced0:	00 
+   fced1:	f3 0f 59 c3          	mulss  %xmm3,%xmm0
+   fced5:	f3 0f 5e c8          	divss  %xmm0,%xmm1
+   fced9:	f3 0f 51 c1          	sqrtss %xmm1,%xmm0
+   fcedd:	0f 2e c0             	ucomiss %xmm0,%xmm0
+   fcee0:	0f 8a b2 04 00 00    	jp     fd398 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe3918>
+   fcee6:	f3 0f 58 05 b2 fb 09 	addss  0x9fbb2(%rip),%xmm0        # 19caa0 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x183020>
+   fceed:	00 
+   fceee:	f3 0f 10 1d b2 fb 09 	movss  0x9fbb2(%rip),%xmm3        # 19caa8 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x183028>
+   fcef5:	00 
+   fcef6:	0f 28 fb             	movaps %xmm3,%xmm7
+   fcef9:	f3 0f 5e f8          	divss  %xmm0,%xmm7
+   fcefd:	f3 0f 2c c7          	cvttss2si %xmm7,%eax
+   fcf01:	89 84 24 cc 00 00 00 	mov    %eax,0xcc(%rsp)
+   fcf08:	0f b6 84 24 b0 00 00 	movzbl 0xb0(%rsp),%eax
+   fcf0f:	00 
+   fcf10:	66 89 84 24 c8 00 00 	mov    %ax,0xc8(%rsp)
+   fcf17:	00 
+   fcf18:	66 85 c0             	test   %ax,%ax
+   fcf1b:	0f b6 c3             	movzbl %bl,%eax
+   fcf1e:	89 84 24 bc 00 00 00 	mov    %eax,0xbc(%rsp)
+   fcf25:	0f 84 a3 02 00 00    	je     fd1ce <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe374e>
+   fcf2b:	c1 e0 03             	shl    $0x3,%eax
+   fcf2e:	4c 89 bc 24 d0 00 00 	mov    %r15,0xd0(%rsp)
+   fcf35:	00 
+   fcf36:	44 0f b7 7c 24 10    	movzwl 0x10(%rsp),%r15d
+   fcf3c:	48 98                	cltq
+   fcf3e:	31 d2                	xor    %edx,%edx
+   fcf40:	31 c9                	xor    %ecx,%ecx
+   fcf42:	48 89 84 24 c0 00 00 	mov    %rax,0xc0(%rsp)
+   fcf49:	00 
+   fcf4a:	41 0f b6 c5          	movzbl %r13b,%eax
+   fcf4e:	31 f6                	xor    %esi,%esi
+   fcf50:	66 89 44 24 48       	mov    %ax,0x48(%rsp)
+   fcf55:	48 8b 84 24 20 01 00 	mov    0x120(%rsp),%rax
+   fcf5c:	00 
+   fcf5d:	31 ff                	xor    %edi,%edi
+   fcf5f:	45 31 c0             	xor    %r8d,%r8d
+   fcf62:	45 31 c9             	xor    %r9d,%r9d
+   fcf65:	45 31 d2             	xor    %r10d,%r10d
+   fcf68:	45 31 db             	xor    %r11d,%r11d
+   fcf6b:	31 db                	xor    %ebx,%ebx
+   fcf6d:	31 ed                	xor    %ebp,%ebp
+   fcf6f:	48 89 44 24 40       	mov    %rax,0x40(%rsp)
+   fcf74:	31 c0                	xor    %eax,%eax
+   fcf76:	45 31 ed             	xor    %r13d,%r13d
+   fcf79:	66 89 44 24 68       	mov    %ax,0x68(%rsp)
+   fcf7e:	66 89 94 24 a8 00 00 	mov    %dx,0xa8(%rsp)
+   fcf85:	00 
+   fcf86:	66 89 8c 24 a0 00 00 	mov    %cx,0xa0(%rsp)
+   fcf8d:	00 
+   fcf8e:	66 89 b4 24 90 00 00 	mov    %si,0x90(%rsp)
+   fcf95:	00 
+   fcf96:	66 89 bc 24 88 00 00 	mov    %di,0x88(%rsp)
+   fcf9d:	00 
+   fcf9e:	66 44 89 84 24 80 00 	mov    %r8w,0x80(%rsp)
+   fcfa5:	00 00 
+   fcfa7:	66 44 89 8c 24 ba 00 	mov    %r9w,0xba(%rsp)
+   fcfae:	00 00 
+   fcfb0:	66 44 89 94 24 b8 00 	mov    %r10w,0xb8(%rsp)
+   fcfb7:	00 00 
+   fcfb9:	66 44 89 5c 24 78    	mov    %r11w,0x78(%rsp)
+   fcfbf:	66 89 5c 24 70       	mov    %bx,0x70(%rsp)
+   fcfc4:	66 89 6c 24 50       	mov    %bp,0x50(%rsp)
+   fcfc9:	f3 0f 10 15 8f fb 09 	movss  0x9fb8f(%rip),%xmm2        # 19cb60 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x1830e0>
+   fcfd0:	00 
+   fcfd1:	f3 0f 10 25 93 fb 09 	movss  0x9fb93(%rip),%xmm4        # 19cb6c <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x1830ec>
+   fcfd8:	00 
+   fcfd9:	4c 89 b4 24 d8 00 00 	mov    %r14,0xd8(%rsp)
+   fcfe0:	00 
+   fcfe1:	f3 0f 10 3d 13 fd 09 	movss  0x9fd13(%rip),%xmm7        # 19ccfc <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x18327c>
+   fcfe8:	00 
+   fcfe9:	f3 0f 10 35 0f fd 09 	movss  0x9fd0f(%rip),%xmm6        # 19cd00 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x183280>
+   fcff0:	00 
+   fcff1:	f3 0f 10 2d 0b fd 09 	movss  0x9fd0b(%rip),%xmm5        # 19cd04 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x183284>
+   fcff8:	00 
+   fcff9:	66 83 7c 24 48 00    	cmpw   $0x0,0x48(%rsp)
+   fcfff:	48 c7 44 24 10 00 00 	movq   $0x0,0x10(%rsp)
+   fd006:	00 00 
+   fd008:	66 44 89 6c 24 1c    	mov    %r13w,0x1c(%rsp)
+   fd00e:	0f 84 0c 01 00 00    	je     fd120 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe36a0>
+   fd014:	f3 44 0f 10 1d eb fc 	movss  0x9fceb(%rip),%xmm11        # 19cd08 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x183288>
+   fd01b:	09 00 
+   fd01d:	f3 44 0f 10 15 e6 fc 	movss  0x9fce6(%rip),%xmm10        # 19cd0c <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x18328c>
+   fd024:	09 00 
+   fd026:	f3 44 0f 10 0d e1 fc 	movss  0x9fce1(%rip),%xmm9        # 19cd10 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x183290>
+   fd02d:	09 00 
+   fd02f:	f3 44 0f 10 05 dc fc 	movss  0x9fcdc(%rip),%xmm8        # 19cd14 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x183294>
+   fd036:	09 00 
+   fd038:	0f 1f 84 00 00 00 00 	nopl   0x0(%rax,%rax,1)
+   fd03f:	00 
+   fd040:	48 8b 44 24 40       	mov    0x40(%rsp),%rax
+   fd045:	48 8b 5c 24 10       	mov    0x10(%rsp),%rbx
+   fd04a:	41 bc 08 00 00 00    	mov    $0x8,%r12d
+   fd050:	44 0f b7 74 24 1c    	movzwl 0x1c(%rsp),%r14d
+   fd056:	45 31 d2             	xor    %r10d,%r10d
+   fd059:	45 31 db             	xor    %r11d,%r11d
+   fd05c:	31 ed                	xor    %ebp,%ebp
+   fd05e:	45 31 c9             	xor    %r9d,%r9d
+   fd061:	48 01 c3             	add    %rax,%rbx
+   fd064:	0f 1f 40 00          	nopl   0x0(%rax)
+   fd068:	0f b7 f5             	movzwl %bp,%esi
+   fd06b:	31 c9                	xor    %ecx,%ecx
+   fd06d:	44 0f b7 c5          	movzwl %bp,%r8d
+   fd071:	4c 01 f6             	add    %r14,%rsi
+   fd074:	48 03 74 24 08       	add    0x8(%rsp),%rsi
+   fd079:	0f 1f 80 00 00 00 00 	nopl   0x0(%rax)
+   fd080:	41 8d 04 08          	lea    (%r8,%rcx,1),%eax
+   fd084:	0f b6 16             	movzbl (%rsi),%edx
+   fd087:	89 c7                	mov    %eax,%edi
+   fd089:	83 e0 07             	and    $0x7,%eax
+   fd08c:	c1 ff 03             	sar    $0x3,%edi
+   fd08f:	48 63 ff             	movslq %edi,%rdi
+   fd092:	0f b6 3c 3b          	movzbl (%rbx,%rdi,1),%edi
+   fd096:	0f a3 c7             	bt     %eax,%edi
+   fd099:	73 11                	jae    fd0ac <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe362c>
+   fd09b:	41 01 d3             	add    %edx,%r11d
+   fd09e:	41 83 c5 01          	add    $0x1,%r13d
+   fd0a2:	41 83 c1 01          	add    $0x1,%r9d
+   fd0a6:	0f af d2             	imul   %edx,%edx
+   fd0a9:	41 01 d2             	add    %edx,%r10d
+   fd0ac:	83 c1 01             	add    $0x1,%ecx
+   fd0af:	48 83 c6 01          	add    $0x1,%rsi
+   fd0b3:	83 f9 08             	cmp    $0x8,%ecx
+   fd0b6:	75 c8                	jne    fd080 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe3600>
+   fd0b8:	44 01 fd             	add    %r15d,%ebp
+   fd0bb:	41 80 ec 01          	sub    $0x1,%r12b
+   fd0bf:	75 a7                	jne    fd068 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe35e8>
+   fd0c1:	66 45 85 c9          	test   %r9w,%r9w
+   fd0c5:	74 3d                	je     fd104 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe3684>
+   fd0c7:	45 0f b7 c9          	movzwl %r9w,%r9d
+   fd0cb:	66 0f ef c0          	pxor   %xmm0,%xmm0
+   fd0cf:	45 0f af d1          	imul   %r9d,%r10d
+   fd0d3:	66 0f ef c9          	pxor   %xmm1,%xmm1
+   fd0d7:	45 0f af db          	imul   %r11d,%r11d
+   fd0db:	45 0f af c9          	imul   %r9d,%r9d
+   fd0df:	45 29 da             	sub    %r11d,%r10d
+   fd0e2:	f3 49 0f 2a c2       	cvtsi2ss %r10,%xmm0
+   fd0e7:	f3 41 0f 2a c9       	cvtsi2ss %r9d,%xmm1
+   fd0ec:	f3 0f 5e c1          	divss  %xmm1,%xmm0
+   fd0f0:	0f 2e d0             	ucomiss %xmm0,%xmm2
+   fd0f3:	77 0f                	ja     fd104 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe3684>
+   fd0f5:	0f 2e d8             	ucomiss %xmm0,%xmm3
+   fd0f8:	0f 86 62 01 00 00    	jbe    fd260 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe37e0>
+   fd0fe:	66 83 44 24 50 01    	addw   $0x1,0x50(%rsp)
+   fd104:	48 83 44 24 10 01    	addq   $0x1,0x10(%rsp)
+   fd10a:	66 83 44 24 1c 08    	addw   $0x8,0x1c(%rsp)
+   fd110:	48 8b 44 24 10       	mov    0x10(%rsp),%rax
+   fd115:	66 39 44 24 48       	cmp    %ax,0x48(%rsp)
+   fd11a:	0f 87 20 ff ff ff    	ja     fd040 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe35c0>
+   fd120:	66 83 44 24 68 01    	addw   $0x1,0x68(%rsp)
+   fd126:	48 8b 9c 24 c0 00 00 	mov    0xc0(%rsp),%rbx
+   fd12d:	00 
+   fd12e:	0f b7 44 24 68       	movzwl 0x68(%rsp),%eax
+   fd133:	48 01 5c 24 40       	add    %rbx,0x40(%rsp)
+   fd138:	66 39 84 24 c8 00 00 	cmp    %ax,0xc8(%rsp)
+   fd13f:	00 
+   fd140:	0f 85 b3 fe ff ff    	jne    fcff9 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe3579>
+   fd146:	0f b7 54 24 78       	movzwl 0x78(%rsp),%edx
+   fd14b:	0f b7 44 24 50       	movzwl 0x50(%rsp),%eax
+   fd150:	0f b7 8c 24 80 00 00 	movzwl 0x80(%rsp),%ecx
+   fd157:	00 
+   fd158:	0f b7 b4 24 88 00 00 	movzwl 0x88(%rsp),%esi
+   fd15f:	00 
+   fd160:	0f b7 bc 24 a8 00 00 	movzwl 0xa8(%rsp),%edi
+   fd167:	00 
+   fd168:	66 0f ef d2          	pxor   %xmm2,%xmm2
+   fd16c:	4c 8b bc 24 d0 00 00 	mov    0xd0(%rsp),%r15
+   fd173:	00 
+   fd174:	4c 8b b4 24 d8 00 00 	mov    0xd8(%rsp),%r14
+   fd17b:	00 
+   fd17c:	01 d0                	add    %edx,%eax
+   fd17e:	01 c8                	add    %ecx,%eax
+   fd180:	44 8d 04 30          	lea    (%rax,%rsi,1),%r8d
+   fd184:	0f b7 44 24 70       	movzwl 0x70(%rsp),%eax
+   fd189:	01 d0                	add    %edx,%eax
+   fd18b:	0f b7 94 24 ba 00 00 	movzwl 0xba(%rsp),%edx
+   fd192:	00 
+   fd193:	01 f8                	add    %edi,%eax
+   fd195:	45 8d 04 40          	lea    (%r8,%rax,2),%r8d
+   fd199:	0f b7 84 24 b8 00 00 	movzwl 0xb8(%rsp),%eax
+   fd1a0:	00 
+   fd1a1:	01 d0                	add    %edx,%eax
+   fd1a3:	0f b7 94 24 90 00 00 	movzwl 0x90(%rsp),%edx
+   fd1aa:	00 
+   fd1ab:	01 c8                	add    %ecx,%eax
+   fd1ad:	0f b7 8c 24 a0 00 00 	movzwl 0xa0(%rsp),%ecx
+   fd1b4:	00 
+   fd1b5:	01 f0                	add    %esi,%eax
+   fd1b7:	41 8d 04 80          	lea    (%r8,%rax,4),%eax
+   fd1bb:	01 ca                	add    %ecx,%edx
+   fd1bd:	01 fa                	add    %edi,%edx
+   fd1bf:	8d 04 d0             	lea    (%rax,%rdx,8),%eax
+   fd1c2:	f3 0f 2a d0          	cvtsi2ss %eax,%xmm2
+   fd1c6:	f3 0f 59 15 8e f9 09 	mulss  0x9f98e(%rip),%xmm2        # 19cb5c <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x1830dc>
+   fd1cd:	00 
+   fd1ce:	0f b6 84 24 b0 00 00 	movzbl 0xb0(%rsp),%eax
+   fd1d5:	00 
+   fd1d6:	48 8b 5c 24 20       	mov    0x20(%rsp),%rbx
+   fd1db:	0f af 84 24 bc 00 00 	imul   0xbc(%rsp),%eax
+   fd1e2:	00 
+   fd1e3:	66 0f ef c0          	pxor   %xmm0,%xmm0
+   fd1e7:	0f b6 0b             	movzbl (%rbx),%ecx
+   fd1ea:	48 8b 5c 24 30       	mov    0x30(%rsp),%rbx
+   fd1ef:	6b c0 64             	imul   $0x64,%eax,%eax
+   fd1f2:	99                   	cltd
+   fd1f3:	f7 f9                	idiv   %ecx
+   fd1f5:	f3 0f 2a c0          	cvtsi2ss %eax,%xmm0
+   fd1f9:	f3 0f 5e d0          	divss  %xmm0,%xmm2
+   fd1fd:	f3 0f 2c c2          	cvttss2si %xmm2,%eax
+   fd201:	3c 32                	cmp    $0x32,%al
+   fd203:	88 03                	mov    %al,(%rbx)
+   fd205:	0f b6 c0             	movzbl %al,%eax
+   fd208:	0f 86 ac 00 00 00    	jbe    fd2ba <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe383a>
+   fd20e:	ba 64 00 00 00       	mov    $0x64,%edx
+   fd213:	66 0f ef c0          	pxor   %xmm0,%xmm0
+   fd217:	29 c2                	sub    %eax,%edx
+   fd219:	89 d0                	mov    %edx,%eax
+   fd21b:	01 c0                	add    %eax,%eax
+   fd21d:	f3 0f 2a c0          	cvtsi2ss %eax,%xmm0
+   fd221:	0f b6 84 24 cc 00 00 	movzbl 0xcc(%rsp),%eax
+   fd228:	00 
+   fd229:	48 8b 5c 24 28       	mov    0x28(%rsp),%rbx
+   fd22e:	66 0f ef c9          	pxor   %xmm1,%xmm1
+   fd232:	f3 0f 5a c0          	cvtss2sd %xmm0,%xmm0
+   fd236:	f2 0f 59 05 aa 53 09 	mulsd  0x953aa(%rip),%xmm0        # 1925e8 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x178b68>
+   fd23d:	00 
+   fd23e:	f2 0f 2a c8          	cvtsi2sd %eax,%xmm1
+   fd242:	f2 0f 59 0d 66 54 09 	mulsd  0x95466(%rip),%xmm1        # 1926b0 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x178c30>
+   fd249:	00 
+   fd24a:	f2 0f 58 c1          	addsd  %xmm1,%xmm0
+   fd24e:	f2 0f 2c c0          	cvttsd2si %xmm0,%eax
+   fd252:	88 03                	mov    %al,(%rbx)
+   fd254:	e9 f1 f9 ff ff       	jmp    fcc4a <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe31ca>
+   fd259:	0f 1f 80 00 00 00 00 	nopl   0x0(%rax)
+   fd260:	0f 2e e0             	ucomiss %xmm0,%xmm4
+   fd263:	76 0b                	jbe    fd270 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe37f0>
+   fd265:	66 83 44 24 70 01    	addw   $0x1,0x70(%rsp)
+   fd26b:	e9 94 fe ff ff       	jmp    fd104 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe3684>
+   fd270:	0f 2e f8             	ucomiss %xmm0,%xmm7
+   fd273:	76 0b                	jbe    fd280 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe3800>
+   fd275:	66 83 44 24 78 01    	addw   $0x1,0x78(%rsp)
+   fd27b:	e9 84 fe ff ff       	jmp    fd104 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe3684>
+   fd280:	0f 2e f0             	ucomiss %xmm0,%xmm6
+   fd283:	76 0e                	jbe    fd293 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe3813>
+   fd285:	66 83 84 24 b8 00 00 	addw   $0x1,0xb8(%rsp)
+   fd28c:	00 01 
+   fd28e:	e9 71 fe ff ff       	jmp    fd104 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe3684>
+   fd293:	0f 2e e8             	ucomiss %xmm0,%xmm5
+   fd296:	76 0e                	jbe    fd2a6 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe3826>
+   fd298:	66 83 84 24 ba 00 00 	addw   $0x1,0xba(%rsp)
+   fd29f:	00 01 
+   fd2a1:	e9 5e fe ff ff       	jmp    fd104 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe3684>
+   fd2a6:	44 0f 2e d8          	ucomiss %xmm0,%xmm11
+   fd2aa:	76 1d                	jbe    fd2c9 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe3849>
+   fd2ac:	66 83 84 24 80 00 00 	addw   $0x1,0x80(%rsp)
+   fd2b3:	00 01 
+   fd2b5:	e9 4a fe ff ff       	jmp    fd104 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe3684>
+   fd2ba:	66 0f ef c0          	pxor   %xmm0,%xmm0
+   fd2be:	01 c0                	add    %eax,%eax
+   fd2c0:	f3 0f 2a c0          	cvtsi2ss %eax,%xmm0
+   fd2c4:	e9 58 ff ff ff       	jmp    fd221 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe37a1>
+   fd2c9:	44 0f 2e d0          	ucomiss %xmm0,%xmm10
+   fd2cd:	76 51                	jbe    fd320 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe38a0>
+   fd2cf:	66 83 84 24 88 00 00 	addw   $0x1,0x88(%rsp)
+   fd2d6:	00 01 
+   fd2d8:	e9 27 fe ff ff       	jmp    fd104 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe3684>
+   fd2dd:	48 8d 05 b4 c0 10 00 	lea    0x10c0b4(%rip),%rax        # 209398 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0x1ef918>
+   fd2e4:	c7 44 24 60 fe ff ff 	movl   $0xfffffffe,0x60(%rsp)
+   fd2eb:	ff 
+   fd2ec:	83 38 05             	cmpl   $0x5,(%rax)
+   fd2ef:	0f 87 83 f2 ff ff    	ja     fc578 <fp_image_device_get_type@@LIBFPRINT_2.0.0+0xe2af8>
+   fd2f5:	b8 fe ff ff ff       	mov    $0xfffffffe,%eax
+   fd2fa:	41 b9 04 02 00 00    	mov    $0x204,%r9d

@@ -1,0 +1,272 @@
+=== POINTER REFERENCES ===
+   18001aaef:	48 39 1d ea 92 14 00 	cmp    QWORD PTR [rip+0x1492ea],rbx        # 0x180163de0
+   18001aaff:	48 39 1d e2 92 14 00 	cmp    QWORD PTR [rip+0x1492e2],rbx        # 0x180163de8
+   18001ab0d:	48 39 1d dc 92 14 00 	cmp    QWORD PTR [rip+0x1492dc],rbx        # 0x180163df0
+   18001ab1d:	48 39 1d d4 92 14 00 	cmp    QWORD PTR [rip+0x1492d4],rbx        # 0x180163df8
+   18001ad7b:	48 8b 05 76 90 14 00 	mov    rax,QWORD PTR [rip+0x149076]        # 0x180163df8
+   18001ad8d:	48 8b 05 4c 90 14 00 	mov    rax,QWORD PTR [rip+0x14904c]        # 0x180163de0
+   18001ad9c:	48 8b 05 45 90 14 00 	mov    rax,QWORD PTR [rip+0x149045]        # 0x180163de8
+   18001adb8:	48 8b 05 21 90 14 00 	mov    rax,QWORD PTR [rip+0x149021]        # 0x180163de0
+   18001aeb5:	48 8b 05 3c 8f 14 00 	mov    rax,QWORD PTR [rip+0x148f3c]        # 0x180163df8
+   18001aec7:	48 8b 05 12 8f 14 00 	mov    rax,QWORD PTR [rip+0x148f12]        # 0x180163de0
+   18001aed6:	48 8b 05 0b 8f 14 00 	mov    rax,QWORD PTR [rip+0x148f0b]        # 0x180163de8
+   18001aef1:	48 8b 05 e8 8e 14 00 	mov    rax,QWORD PTR [rip+0x148ee8]        # 0x180163de0
+   18001b07e:	48 8b 05 5b 8d 14 00 	mov    rax,QWORD PTR [rip+0x148d5b]        # 0x180163de0
+   18001b09e:	48 8b 05 43 8d 14 00 	mov    rax,QWORD PTR [rip+0x148d43]        # 0x180163de8
+   18001b0ba:	48 8b 05 1f 8d 14 00 	mov    rax,QWORD PTR [rip+0x148d1f]        # 0x180163de0
+   18001b0c7:	48 8b 05 2a 8d 14 00 	mov    rax,QWORD PTR [rip+0x148d2a]        # 0x180163df8
+   18001b0f0:	48 8b 05 e9 8c 14 00 	mov    rax,QWORD PTR [rip+0x148ce9]        # 0x180163de0
+   18001b0fd:	48 8b 05 e4 8c 14 00 	mov    rax,QWORD PTR [rip+0x148ce4]        # 0x180163de8
+   18001b117:	48 8b 05 c2 8c 14 00 	mov    rax,QWORD PTR [rip+0x148cc2]        # 0x180163de0
+   18001b1ff:	48 8b 05 da 8b 14 00 	mov    rax,QWORD PTR [rip+0x148bda]        # 0x180163de0
+   18001b215:	48 8b 05 cc 8b 14 00 	mov    rax,QWORD PTR [rip+0x148bcc]        # 0x180163de8
+   18001b231:	48 8b 05 a8 8b 14 00 	mov    rax,QWORD PTR [rip+0x148ba8]        # 0x180163de0
+   18001b23e:	48 8b 05 b3 8b 14 00 	mov    rax,QWORD PTR [rip+0x148bb3]        # 0x180163df8
+   18001b250:	48 8b 05 89 8b 14 00 	mov    rax,QWORD PTR [rip+0x148b89]        # 0x180163de0
+   18001b25f:	48 8b 05 82 8b 14 00 	mov    rax,QWORD PTR [rip+0x148b82]        # 0x180163de8
+   18001b289:	48 8b 05 60 8b 14 00 	mov    rax,QWORD PTR [rip+0x148b60]        # 0x180163df0
+   18001b29e:	48 8b 05 3b 8b 14 00 	mov    rax,QWORD PTR [rip+0x148b3b]        # 0x180163de0
+   18001b39c:	48 8b 05 3d 8a 14 00 	mov    rax,QWORD PTR [rip+0x148a3d]        # 0x180163de0
+   18001b3ab:	48 8b 05 36 8a 14 00 	mov    rax,QWORD PTR [rip+0x148a36]        # 0x180163de8
+   18001b3c4:	48 8b 05 15 8a 14 00 	mov    rax,QWORD PTR [rip+0x148a15]        # 0x180163de0
+   18001b522:	48 8b 05 b7 88 14 00 	mov    rax,QWORD PTR [rip+0x1488b7]        # 0x180163de0
+   18001b541:	48 8b 05 a0 88 14 00 	mov    rax,QWORD PTR [rip+0x1488a0]        # 0x180163de8
+   18001b55c:	48 8b 05 7d 88 14 00 	mov    rax,QWORD PTR [rip+0x14887d]        # 0x180163de0
+   18001b69c:	48 8b 05 55 87 14 00 	mov    rax,QWORD PTR [rip+0x148755]        # 0x180163df8
+   18001b6ae:	48 8b 05 2b 87 14 00 	mov    rax,QWORD PTR [rip+0x14872b]        # 0x180163de0
+   18001b6bd:	48 8b 05 24 87 14 00 	mov    rax,QWORD PTR [rip+0x148724]        # 0x180163de8
+   18001b6d9:	48 8b 05 00 87 14 00 	mov    rax,QWORD PTR [rip+0x148700]        # 0x180163de0
+   18001b874:	48 8b 05 7d 85 14 00 	mov    rax,QWORD PTR [rip+0x14857d]        # 0x180163df8
+   18001b886:	48 8b 05 53 85 14 00 	mov    rax,QWORD PTR [rip+0x148553]        # 0x180163de0
+   18001b895:	48 8b 05 4c 85 14 00 	mov    rax,QWORD PTR [rip+0x14854c]        # 0x180163de8
+   18001b8b1:	48 8b 05 28 85 14 00 	mov    rax,QWORD PTR [rip+0x148528]        # 0x180163de0
+   18001b911:	48 8b 05 e0 84 14 00 	mov    rax,QWORD PTR [rip+0x1484e0]        # 0x180163df8
+   18001b921:	48 8b 05 b8 84 14 00 	mov    rax,QWORD PTR [rip+0x1484b8]        # 0x180163de0
+   18001b930:	48 8b 05 b1 84 14 00 	mov    rax,QWORD PTR [rip+0x1484b1]        # 0x180163de8
+   18001b94c:	48 8b 05 8d 84 14 00 	mov    rax,QWORD PTR [rip+0x14848d]        # 0x180163de0
+   18001ba38:	48 8b 05 b9 83 14 00 	mov    rax,QWORD PTR [rip+0x1483b9]        # 0x180163df8
+   18001ba4a:	48 8b 05 8f 83 14 00 	mov    rax,QWORD PTR [rip+0x14838f]        # 0x180163de0
+   18001ba59:	48 8b 05 88 83 14 00 	mov    rax,QWORD PTR [rip+0x148388]        # 0x180163de8
+   18001ba78:	48 8b 05 71 83 14 00 	mov    rax,QWORD PTR [rip+0x148371]        # 0x180163df0
+   18001ba8a:	48 8b 05 4f 83 14 00 	mov    rax,QWORD PTR [rip+0x14834f]        # 0x180163de0
+   18001bc59:	48 8b 05 80 81 14 00 	mov    rax,QWORD PTR [rip+0x148180]        # 0x180163de0
+   18001bc6b:	48 8b 05 76 81 14 00 	mov    rax,QWORD PTR [rip+0x148176]        # 0x180163de8
+   18001bc87:	48 8b 05 52 81 14 00 	mov    rax,QWORD PTR [rip+0x148152]        # 0x180163de0
+   18001bd6a:	48 8b 05 87 80 14 00 	mov    rax,QWORD PTR [rip+0x148087]        # 0x180163df8
+   18001bd7c:	48 8b 05 5d 80 14 00 	mov    rax,QWORD PTR [rip+0x14805d]        # 0x180163de0
+   18001bd8b:	48 8b 05 56 80 14 00 	mov    rax,QWORD PTR [rip+0x148056]        # 0x180163de8
+   18001bda7:	48 8b 05 32 80 14 00 	mov    rax,QWORD PTR [rip+0x148032]        # 0x180163de0
+   18001c0b5:	48 89 05 24 7d 14 00 	mov    QWORD PTR [rip+0x147d24],rax        # 0x180163de0
+   18001c0c3:	48 89 05 1e 7d 14 00 	mov    QWORD PTR [rip+0x147d1e],rax        # 0x180163de8
+   18001c0d1:	48 89 05 18 7d 14 00 	mov    QWORD PTR [rip+0x147d18],rax        # 0x180163df0
+   18001c0df:	48 89 05 12 7d 14 00 	mov    QWORD PTR [rip+0x147d12],rax        # 0x180163df8
+
+=== BSS/RDATA SYMBOL AREA AROUND POINTERS ===
+
+=== ALL SYMBOLS/FUNCTIONS AROUND transport helpers ===
+
+=== CODE AROUND SPI0_Read_SPI ===
+
+/home/archer/projects/zerobook-focaltech-driver/reference/fte4800-project/ftWbioUmdfDriverV2.dll:     file format pei-x86-64
+
+
+Disassembly of section .text:
+
+000000018001b9ec <.text+0x1a9ec>:
+   18001b9ec:	48 89 5c 24 08       	mov    QWORD PTR [rsp+0x8],rbx
+   18001b9f1:	48 89 74 24 20       	mov    QWORD PTR [rsp+0x20],rsi
+   18001b9f6:	57                   	push   rdi
+   18001b9f7:	48 83 ec 40          	sub    rsp,0x40
+   18001b9fb:	48 8b 05 b6 cf 05 00 	mov    rax,QWORD PTR [rip+0x5cfb6]        # 0x1800789b8
+   18001ba02:	48 33 c4             	xor    rax,rsp
+   18001ba05:	48 89 44 24 38       	mov    QWORD PTR [rsp+0x38],rax
+   18001ba0a:	66 83 64 24 34 00    	and    WORD PTR [rsp+0x34],0x0
+   18001ba10:	49 8b f8             	mov    rdi,r8
+   18001ba13:	0f b7 da             	movzx  ebx,dx
+   18001ba16:	0f b7 c3             	movzx  eax,bx
+   18001ba19:	88 4c 24 30          	mov    BYTE PTR [rsp+0x30],cl
+   18001ba1d:	66 c1 e8 08          	shr    ax,0x8
+   18001ba21:	88 44 24 32          	mov    BYTE PTR [rsp+0x32],al
+   18001ba25:	c6 44 24 31 80       	mov    BYTE PTR [rsp+0x31],0x80
+   18001ba2a:	88 5c 24 33          	mov    BYTE PTR [rsp+0x33],bl
+   18001ba2e:	c6 44 24 36 00       	mov    BYTE PTR [rsp+0x36],0x0
+   18001ba33:	e8 10 02 00 00       	call   0x18001bc48
+   18001ba38:	48 8b 05 b9 83 14 00 	mov    rax,QWORD PTR [rip+0x1483b9]        # 0x180163df8
+   18001ba3f:	b9 01 00 00 00       	mov    ecx,0x1
+   18001ba44:	ff 15 06 69 01 00    	call   QWORD PTR [rip+0x16906]        # 0x180032350
+   18001ba4a:	48 8b 05 8f 83 14 00 	mov    rax,QWORD PTR [rip+0x14838f]        # 0x180163de0
+   18001ba51:	33 c9                	xor    ecx,ecx
+   18001ba53:	ff 15 f7 68 01 00    	call   QWORD PTR [rip+0x168f7]        # 0x180032350
+   18001ba59:	48 8b 05 88 83 14 00 	mov    rax,QWORD PTR [rip+0x148388]        # 0x180163de8
+   18001ba60:	48 8d 4c 24 30       	lea    rcx,[rsp+0x30]
+   18001ba65:	ba 07 00 00 00       	mov    edx,0x7
+   18001ba6a:	ff 15 e0 68 01 00    	call   QWORD PTR [rip+0x168e0]        # 0x180032350
+   18001ba70:	8b d3                	mov    edx,ebx
+   18001ba72:	48 8b cf             	mov    rcx,rdi
+   18001ba75:	40 8a f0             	mov    sil,al
+   18001ba78:	48 8b 05 71 83 14 00 	mov    rax,QWORD PTR [rip+0x148371]        # 0x180163df0
+   18001ba7f:	ff 15 cb 68 01 00    	call   QWORD PTR [rip+0x168cb]        # 0x180032350
+   18001ba85:	40 02 f0             	add    sil,al
+   18001ba88:	b1 01                	mov    cl,0x1
+   18001ba8a:	48 8b 05 4f 83 14 00 	mov    rax,QWORD PTR [rip+0x14834f]        # 0x180163de0
+   18001ba91:	ff 15 b9 68 01 00    	call   QWORD PTR [rip+0x168b9]        # 0x180032350
+   18001ba97:	40 84 f6             	test   sil,sil
+   18001ba9a:	74 54                	je     0x18001baf0
+   18001ba9c:	bf 5c 5c 00 00       	mov    edi,0x5c5c
+   18001baa1:	48 8d 1d f8 9e 01 00 	lea    rbx,[rip+0x19ef8]        # 0x1800359a0
+   18001baa8:	8b d7                	mov    edx,edi
+   18001baaa:	48 8b cb             	mov    rcx,rbx
+   18001baad:	e8 de 42 01 00       	call   0x18002fd90
+   18001bab2:	48 85 c0             	test   rax,rax
+   18001bab5:	74 0e                	je     0x18001bac5
+   18001bab7:	8b d7                	mov    edx,edi
+   18001bab9:	48 8b cb             	mov    rcx,rbx
+   18001babc:	e8 cf 42 01 00       	call   0x18002fd90
+   18001bac1:	48 8d 58 01          	lea    rbx,[rax+0x1]
+   18001bac5:	40 0f b6 c6          	movzx  eax,sil
+   18001bac9:	4c 8d 05 e0 9f 01 00 	lea    r8,[rip+0x19fe0]        # 0x180035ab0
+   18001bad0:	89 44 24 28          	mov    DWORD PTR [rsp+0x28],eax
+   18001bad4:	48 8d 15 1d 9f 01 00 	lea    rdx,[rip+0x19f1d]        # 0x1800359f8
+   18001badb:	4c 8b cb             	mov    r9,rbx
+   18001bade:	c7 44 24 20 f7 02 00 	mov    DWORD PTR [rsp+0x20],0x2f7
+   18001bae5:	00 
+   18001bae6:	b9 05 00 00 00       	mov    ecx,0x5
+   18001baeb:	e8 80 ce ff ff       	call   0x180018970
+   18001baf0:	40 8a c6             	mov    al,sil
+   18001baf3:	48 8b 4c 24 38       	mov    rcx,QWORD PTR [rsp+0x38]
+   18001baf8:	48 33 cc             	xor    rcx,rsp
+   18001bafb:	e8 40 34 01 00       	call   0x18002ef40
+   18001bb00:	48 8b 5c 24 50       	mov    rbx,QWORD PTR [rsp+0x50]
+   18001bb05:	48 8b 74 24 68       	mov    rsi,QWORD PTR [rsp+0x68]
+   18001bb0a:	48 83 c4 40          	add    rsp,0x40
+   18001bb0e:	5f                   	pop    rdi
+   18001bb0f:	c3                   	ret
+   18001bb10:	48 89 5c 24 10       	mov    QWORD PTR [rsp+0x10],rbx
+   18001bb15:	48 89 6c 24 18       	mov    QWORD PTR [rsp+0x18],rbp
+   18001bb1a:	48 89 74 24 20       	mov    QWORD PTR [rsp+0x20],rsi
+   18001bb1f:	57                   	push   rdi
+
+=== CODE AROUND SPI0_CMD_Set ===
+
+/home/archer/projects/zerobook-focaltech-driver/reference/fte4800-project/ftWbioUmdfDriverV2.dll:     file format pei-x86-64
+
+
+Disassembly of section .text:
+
+000000018001b684 <.text+0x1a684>:
+   18001b684:	48 89 5c 24 10       	mov    QWORD PTR [rsp+0x10],rbx
+   18001b689:	57                   	push   rdi
+   18001b68a:	48 83 ec 30          	sub    rsp,0x30
+   18001b68e:	83 64 24 40 00       	and    DWORD PTR [rsp+0x40],0x0
+   18001b693:	88 4c 24 40          	mov    BYTE PTR [rsp+0x40],cl
+   18001b697:	e8 ac 05 00 00       	call   0x18001bc48
+   18001b69c:	48 8b 05 55 87 14 00 	mov    rax,QWORD PTR [rip+0x148755]        # 0x180163df8
+   18001b6a3:	b9 01 00 00 00       	mov    ecx,0x1
+   18001b6a8:	ff 15 a2 6c 01 00    	call   QWORD PTR [rip+0x16ca2]        # 0x180032350
+   18001b6ae:	48 8b 05 2b 87 14 00 	mov    rax,QWORD PTR [rip+0x14872b]        # 0x180163de0
+   18001b6b5:	33 c9                	xor    ecx,ecx
+   18001b6b7:	ff 15 93 6c 01 00    	call   QWORD PTR [rip+0x16c93]        # 0x180032350
+   18001b6bd:	48 8b 05 24 87 14 00 	mov    rax,QWORD PTR [rip+0x148724]        # 0x180163de8
+   18001b6c4:	48 8d 4c 24 40       	lea    rcx,[rsp+0x40]
+   18001b6c9:	ba 04 00 00 00       	mov    edx,0x4
+   18001b6ce:	ff 15 7c 6c 01 00    	call   QWORD PTR [rip+0x16c7c]        # 0x180032350
+   18001b6d4:	0f b6 f8             	movzx  edi,al
+   18001b6d7:	b1 01                	mov    cl,0x1
+   18001b6d9:	48 8b 05 00 87 14 00 	mov    rax,QWORD PTR [rip+0x148700]        # 0x180163de0
+   18001b6e0:	ff 15 6a 6c 01 00    	call   QWORD PTR [rip+0x16c6a]        # 0x180032350
+   18001b6e6:	40 84 ff             	test   dil,dil
+   18001b6e9:	74 51                	je     0x18001b73c
+   18001b6eb:	48 8d 1d ae a2 01 00 	lea    rbx,[rip+0x1a2ae]        # 0x1800359a0
+   18001b6f2:	ba 5c 5c 00 00       	mov    edx,0x5c5c
+   18001b6f7:	48 8b cb             	mov    rcx,rbx
+   18001b6fa:	e8 91 46 01 00       	call   0x18002fd90
+   18001b6ff:	48 85 c0             	test   rax,rax
+   18001b702:	74 11                	je     0x18001b715
+   18001b704:	ba 5c 5c 00 00       	mov    edx,0x5c5c
+   18001b709:	48 8b cb             	mov    rcx,rbx
+   18001b70c:	e8 7f 46 01 00       	call   0x18002fd90
+   18001b711:	48 8d 58 01          	lea    rbx,[rax+0x1]
+   18001b715:	89 7c 24 28          	mov    DWORD PTR [rsp+0x28],edi
+   18001b719:	4c 8d 05 30 a3 01 00 	lea    r8,[rip+0x1a330]        # 0x180035a50
+   18001b720:	4c 8b cb             	mov    r9,rbx
+   18001b723:	c7 44 24 20 3d 02 00 	mov    DWORD PTR [rsp+0x20],0x23d
+   18001b72a:	00 
+   18001b72b:	48 8d 15 2e a3 01 00 	lea    rdx,[rip+0x1a32e]        # 0x180035a60
+   18001b732:	b9 05 00 00 00       	mov    ecx,0x5
+   18001b737:	e8 34 d2 ff ff       	call   0x180018970
+   18001b73c:	48                   	rex.W
+   18001b73d:	8b                   	.byte 0x8b
+   18001b73e:	5c                   	pop    rsp
+   18001b73f:	24                   	.byte 0x24
+
+=== CODE AROUND WRITE BACKEND ===
+
+/home/archer/projects/zerobook-focaltech-driver/reference/fte4800-project/ftWbioUmdfDriverV2.dll:     file format pei-x86-64
+
+
+Disassembly of section .text:
+
+000000018001bcf8 <.text+0x1acf8>:
+   18001bcf8:	48 89 5c 24 08       	mov    QWORD PTR [rsp+0x8],rbx
+   18001bcfd:	48 89 74 24 10       	mov    QWORD PTR [rsp+0x10],rsi
+   18001bd02:	57                   	push   rdi
+   18001bd03:	48 83 ec 30          	sub    rsp,0x30
+   18001bd07:	49 8b f8             	mov    rdi,r8
+   18001bd0a:	0f b7 f2             	movzx  esi,dx
+   18001bd0d:	8a d9                	mov    bl,cl
+   18001bd0f:	33 d2                	xor    edx,edx
+   18001bd11:	41 b8 ff 63 00 00    	mov    r8d,0x63ff
+   18001bd17:	48 8d 0d a9 33 15 00 	lea    rcx,[rip+0x1533a9]        # 0x18016f0c7
+   18001bd1e:	e8 9d 48 01 00       	call   0x1800305c0
+   18001bd23:	66 83 25 99 33 15 00 	and    WORD PTR [rip+0x153399],0x0        # 0x18016f0c4
+   18001bd2a:	00 
+   18001bd2b:	48 8d 0d 95 33 15 00 	lea    rcx,[rip+0x153395]        # 0x18016f0c7
+   18001bd32:	0f b7 c6             	movzx  eax,si
+   18001bd35:	88 1d 85 33 15 00    	mov    BYTE PTR [rip+0x153385],bl        # 0x18016f0c0
+   18001bd3b:	66 c1 e8 08          	shr    ax,0x8
+   18001bd3f:	44 8b c6             	mov    r8d,esi
+   18001bd42:	48 8b d7             	mov    rdx,rdi
+   18001bd45:	88 05 77 33 15 00    	mov    BYTE PTR [rip+0x153377],al        # 0x18016f0c2
+   18001bd4b:	c6 05 6f 33 15 00 00 	mov    BYTE PTR [rip+0x15336f],0x0        # 0x18016f0c1
+   18001bd52:	40 88 35 6a 33 15 00 	mov    BYTE PTR [rip+0x15336a],sil        # 0x18016f0c3
+   18001bd59:	c6 05 66 33 15 00 00 	mov    BYTE PTR [rip+0x153366],0x0        # 0x18016f0c6
+   18001bd60:	e8 8b 41 01 00       	call   0x18002fef0
+   18001bd65:	e8 de fe ff ff       	call   0x18001bc48
+   18001bd6a:	48 8b 05 87 80 14 00 	mov    rax,QWORD PTR [rip+0x148087]        # 0x180163df8
+   18001bd71:	b9 01 00 00 00       	mov    ecx,0x1
+   18001bd76:	ff 15 d4 65 01 00    	call   QWORD PTR [rip+0x165d4]        # 0x180032350
+   18001bd7c:	48 8b 05 5d 80 14 00 	mov    rax,QWORD PTR [rip+0x14805d]        # 0x180163de0
+   18001bd83:	33 c9                	xor    ecx,ecx
+   18001bd85:	ff 15 c5 65 01 00    	call   QWORD PTR [rip+0x165c5]        # 0x180032350
+   18001bd8b:	48 8b 05 56 80 14 00 	mov    rax,QWORD PTR [rip+0x148056]        # 0x180163de8
+   18001bd92:	8d 56 07             	lea    edx,[rsi+0x7]
+   18001bd95:	48 8d 0d 24 33 15 00 	lea    rcx,[rip+0x153324]        # 0x18016f0c0
+   18001bd9c:	ff 15 ae 65 01 00    	call   QWORD PTR [rip+0x165ae]        # 0x180032350
+   18001bda2:	0f b6 f8             	movzx  edi,al
+   18001bda5:	b1 01                	mov    cl,0x1
+   18001bda7:	48 8b 05 32 80 14 00 	mov    rax,QWORD PTR [rip+0x148032]        # 0x180163de0
+   18001bdae:	ff 15 9c 65 01 00    	call   QWORD PTR [rip+0x1659c]        # 0x180032350
+   18001bdb4:	40 84 ff             	test   dil,dil
+   18001bdb7:	74 50                	je     0x18001be09
+   18001bdb9:	be 5c 5c 00 00       	mov    esi,0x5c5c
+   18001bdbe:	48 8d 1d db 9b 01 00 	lea    rbx,[rip+0x19bdb]        # 0x1800359a0
+   18001bdc5:	8b d6                	mov    edx,esi
+   18001bdc7:	48 8b cb             	mov    rcx,rbx
+   18001bdca:	e8 c1 3f 01 00       	call   0x18002fd90
+   18001bdcf:	48 85 c0             	test   rax,rax
+   18001bdd2:	74 0e                	je     0x18001bde2
+   18001bdd4:	8b d6                	mov    edx,esi
+   18001bdd6:	48 8b cb             	mov    rcx,rbx
+   18001bdd9:	e8 b2 3f 01 00       	call   0x18002fd90
+   18001bdde:	48 8d 58 01          	lea    rbx,[rax+0x1]
+   18001bde2:	89 7c 24 28          	mov    DWORD PTR [rsp+0x28],edi
+   18001bde6:	4c 8d 05 a3 9c 01 00 	lea    r8,[rip+0x19ca3]        # 0x180035a90
+   18001bded:	4c 8b cb             	mov    r9,rbx
+   18001bdf0:	c7 44 24 20 9c 02 00 	mov    DWORD PTR [rsp+0x20],0x29c
+   18001bdf7:	00 
+   18001bdf8:	48 8d 15 f9 9b 01 00 	lea    rdx,[rip+0x19bf9]        # 0x1800359f8
+   18001bdff:	b9 05 00 00 00       	mov    ecx,0x5
+   18001be04:	e8 67 cb ff ff       	call   0x180018970
+   18001be09:	48 8b 5c 24 40       	mov    rbx,QWORD PTR [rsp+0x40]
+   18001be0e:	40                   	rex
+   18001be0f:	8a                   	.byte 0x8a

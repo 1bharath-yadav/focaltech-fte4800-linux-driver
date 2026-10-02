@@ -1,0 +1,48 @@
+=== DMI ===
+sys_vendor:      Infinix
+product_name:    ZERO BOOK 13
+product_version: ZL513_BIOS_ZEROBOOK13_EM_IDL822_V2.0_IN_0.04
+bios_version:    ZL513_BIOS_ZEROBOOK13_EM_IDL822_V2.0_IN_0.04
+=== ACPI candidates ===
+/sys/bus/acpi/devices/FTE4800:00
+/sys/bus/acpi/devices/SYNA3602:00
+=== FTE/FPNT details ===
+--- /sys/bus/acpi/devices/FTE4800:00
+/sys/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/device:73/FTE4800:00
+15
+acpi:FTE4800:
+FTE4800
+=== SPI devices ===
+--- /sys/bus/spi/devices/spi0.0
+/sys/devices/pci0000:00/0000:00:1f.5/spi_master/spi0/spi0.0
+spi:spi-nor
+--- /sys/bus/spi/devices/spi-FTE4800:00
+/sys/devices/pci0000:00/0000:00:12.6/pxa2xx-spi.0/spi_master/spi1/spi-FTE4800:00
+acpi:FTE4800:
+=== I2C named devices ===
+--- /sys/bus/i2c/devices/i2c-SYNA3602:00 name=SYNA3602:00 modalias=acpi:SYNA3602:PNP0C50:
+=== modules ===
+uhid                   24576  1
+hid_sensor_prox        16384  0
+hid_sensor_trigger     20480  2 hid_sensor_prox
+kfifo_buf              12288  1 hid_sensor_trigger
+hid_sensor_iio_common    24576  2 hid_sensor_trigger,hid_sensor_prox
+industrialio          147456  3 hid_sensor_trigger,hid_sensor_prox,kfifo_buf
+hid_sensor_custom      28672  0
+hid_sensor_hub         32768  4 hid_sensor_trigger,hid_sensor_iio_common,hid_sensor_prox,hid_sensor_custom
+intel_ishtp_hid        32768  0
+hid_multitouch         40960  0
+spi_nor               196608  0
+mtd                   118784  3 spi_nor
+i2c_hid_acpi           12288  0
+i2c_hid                45056  1 i2c_hid_acpi
+intel_hid              36864  0
+sparse_keymap          12288  1 intel_hid
+intel_ishtp            94208  2 intel_ishtp_hid,intel_ish_ipc
+mac_hid                12288  0
+spi_pxa2xx_platform    12288  0
+spi_pxa2xx_core        36864  1 spi_pxa2xx_platform
+spi_intel_pci          12288  0
+spi_intel              40960  1 spi_intel_pci
+=== fprint discovery ===
+Usage: fprintd-list <username> [usernames...]

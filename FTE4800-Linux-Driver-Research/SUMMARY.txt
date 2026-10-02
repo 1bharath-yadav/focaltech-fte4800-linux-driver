@@ -1,0 +1,33 @@
+﻿FTE4800 DRIVER RESEARCH
+=======================
+
+Device
+------
+ACPI\FTE4800\4&f064bb&0
+
+Hardware IDs
+------------
+ACPI\VEN_FTE&DEV_4800
+ACPI\FTE4800
+*FTE4800
+
+ACPI path
+---------
+\_SB.PC00.SPI2.FPNT
+
+Parent
+------
+PCI\VEN_8086&DEV_51FB
+
+Windows driver
+--------------
+Published INF : oem37.inf
+Original INF  : ftwbioumdfdriverv2.inf
+Version       : 2.2.3.79
+Provider      : FocalTech Electronics (ShenZhen) Co., Ltd
+Service       : WUDFRd
+Class         : Biometric
+
+Collection directory
+--------------------
+C:\FTE4800-Linux-Driver-Research

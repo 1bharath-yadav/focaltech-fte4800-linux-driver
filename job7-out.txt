@@ -1,0 +1,85 @@
+== kernel module state
+focal_spi              24576  0
+== device node
+crw------- 1 root root 10, 262 Oct  2 09:08 /dev/focal_moh_spi
+== driver binding
+5CF0BBBC84AB49570C9AB76
+
+== Running diagnose_libfprint.py
+========================================================================
+DIAGNOSE LIBFPRINT vs DIRECT SPI
+========================================================================
+
+--- PHASE 1: Kernel driver read()/write() paths (libfprint's method) ---
+
+1a. Reset via ioctl 0x8086
+1b. Write reg 0xC6 = 1 (set sensor SPI mode) via kernel write()
+1c. Read reg 0xC6 via kernel read() [spi_write_then_read]
+    reg 0xC6 = 0xff
+    Expected: 0x01, Got: 0xff
+1d. Read chip ID at 0x1A8B via kernel read() [spi_write_then_read]
+    chip_id = 0xffff
+    Expected: 0x9391 or 0x9368
+
+--- PHASE 2: Same operations via FF_IOC_XFER (spi_sync, CS held) ---
+
+2a. Reset via ioctl 0x8086
+2b. Write reg 0xC6 = 1 via XFER
+2c. Read reg 0xC6 via XFER
+    reg 0xC6 = 0x00
+2d. Read chip ID at 0x1A8B via XFER (CS held)
+    chip_id = 0x0000
+
+--- PHASE 3: Known-good winid.py test (reg 0x91, full-duplex) ---
+
+3a. Reset
+3b. Wake [FF 00 00 00]
+3c. Read reg 0x91, 0x20 bytes (full-duplex, Windows app-ID method)
+    raw: 000000000000000000000000000000000000000000000000000000000000000000000000000000
+    data[0x13:0x15]: 00 00
+    ✗ NOT FT9368
+
+--- PHASE 4: Raw byte-level comparison ---
+
+4a. After reset, try 8-bit read [08 F7 C6 00] via XFER (full duplex)
+    tx: 08f7c60000
+    rx: 0000000000
+4b. [08 F7 C6 00] tx, then 1-byte rx (cs_change split)
+    tx: 08f7c600
+    rx[0] (frame echo): 00000000
+    rx[1] (data): 00
+4c. [08 F7 C6 00] tx, then 1-byte rx (spi_write_then_read via kernel read())
+    rx: ff
+
+4d. Chip ID [04 FB 8B 9A 00 00] via multiple methods
+    full-duplex: tx=04fb8b9a0000 rx=00000000000000000000
+    CS held:     tx=04fb8b9a0000 rx_frame=000000000000 rx_data=00000000
+    CS split:    tx=04fb8b9a0000 rx_frame=000000000000 rx_data=00000000
+    write_then_read: tx=04fb8b9a0000 rx=ffffffff
+
+--- PHASE 5: Kernel driver read() path trace ---
+
+Enable kernel trace to see what spi_write_then_read actually sends
+5a. kernel read(): type=0xA5 tx=[08 F7 C6 00] rx_len=1
+    result: ff
+5b. kernel read(): type=0xA5 tx=[04 FB 8B 9A 00 00] rx_len=4
+    result: ffffffff
+
+========================================================================
+SUMMARY
+========================================================================
+Phase 1 (kernel path): mode_reg=0xff
+Phase 1 (kernel path): chip_id=0xffff
+Phase 2 (XFER path):   mode_reg=0x00
+Phase 2 (XFER path):   chip_id=0x0000
+
+>>> DIVERGENCE DETECTED! <<<
+>>> Kernel read() returns 0xff but XFER returns 0x00
+>>> This explains the libfprint failure!
+
+== dmesg focal-trace (last 30)
+dmesg: read kernel buffer failed: Operation not permitted
+
+== dmesg health
+dmesg: read kernel buffer failed: Operation not permitted
+(end)

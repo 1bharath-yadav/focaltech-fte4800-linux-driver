@@ -1,0 +1,11 @@
+make -C /lib/modules/7.2.5-3-omarchy/build M=/home/archer/projects/zerobook-focaltech-driver modules
+make[1]: Entering directory '/usr/lib/modules/7.2.5-3-omarchy/build'
+make[2]: Entering directory '/home/archer/projects/zerobook-focaltech-driver'
+  CC [M]  focal_spi.o
+  MODPOST Module.symvers
+  CC [M]  focal_spi.mod.o
+  CC [M]  .module-common.o
+  LD [M]  focal_spi.ko
+  BTF [M] focal_spi.ko
+make[2]: Leaving directory '/home/archer/projects/zerobook-focaltech-driver'
+make[1]: Leaving directory '/usr/lib/modules/7.2.5-3-omarchy/build'
