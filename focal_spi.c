@@ -287,10 +287,8 @@ static int focal_compat_write(struct focal_fp_data *data, const u8 *buf, size_t 
 	    buf[1] == FTE4800_COMPAT_WRITE8_TAG)
 		return focal_native_write8(data, buf[2], buf[3]);
 
-	if (len >= 2 && buf[0] == 0xC4 && buf[1] == 0x3B) {
-		data->sensor_state = FOCAL_STATE_TOUCH;
+	if (len >= 2 && buf[0] == 0xC4 && buf[1] == 0x3B)
 		return 0;
-	}
 
 	if (len >= 2 && buf[0] == 0xC8 && buf[1] == 0x37)
 		return 0;
@@ -510,9 +508,13 @@ static __poll_t focal_poll(struct file *file, poll_table *wait)
 	poll_wait(file, &focal_poll_wq, wait);
 	mutex_lock(&focal_ctl_lock);
 	data = ctx->data;
-	if (data && data->event_pending) {
-		mask = EPOLLIN | EPOLLRDNORM;
-		data->event_pending = false;
+	if (data) {
+		mutex_lock(&data->lock);
+		if (data->event_pending) {
+			mask = EPOLLIN | EPOLLRDNORM;
+			data->event_pending = false;
+		}
+		mutex_unlock(&data->lock);
 	}
 	mutex_unlock(&focal_ctl_lock);
 	return mask;
