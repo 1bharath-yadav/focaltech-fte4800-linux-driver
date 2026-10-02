@@ -51,7 +51,7 @@ Expected: FAIL because current focal_spi.c still contains synthetic-frame code.
 - Create: tests/test_protocol_constants.py
 
 **Interfaces:**
-- Produces fte4800_spi_capture_frame(struct focal_fp_data *, u8 *, size_t) -> int and bounded native register helpers used only by the compatibility layer.
+- Produces named protocol constants in protocol/fte4800_protocol.h; native capture helpers remain private implementation details of focal_spi.c.
 - Native capture must read exactly 5120 bytes from register 0x90 with flag 0x80.
 
 - [ ] Step 1: Write failing protocol-constant tests for 64x80, 5120-byte native payload, 10240-byte compatibility frame, and seven-byte header.
