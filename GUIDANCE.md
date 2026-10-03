@@ -8,6 +8,8 @@ Focused hardware and Windows-driver investigation started on 2026-10-02. The wor
 
 The baseline is functional, not production-certified.
 
+The work started without a clear Linux implementation plan. The practical path was discovery first, then evidence collection, then a minimal transport driver, then userspace, then matching, and finally desktop integration. That order matters: each layer was proved before the next layer was trusted.
+
 ## Core rule
 
 Always separate facts from guesses.
@@ -204,6 +206,64 @@ The effective pattern is:
 
 For future driver projects, use multiple agents for parallel investigation, but keep hardware writes and system-wide changes centrally controlled.
 
+## The actual investigation pattern
+
+The project used two parallel tracks: an evidence track and an implementation track.
+
+The evidence track answered “what does the hardware actually do?” using Windows PnP/DriverStore data, ACPI tables, registry/resource blobs, DLL/INF inspection, disassembly, SPI traces, real captures, and archived failed experiments.
+
+The implementation track converted only verified facts into small Linux components. This prevented guesses from becoming driver behavior.
+
+A useful loop for future drivers is:
+
+`observe -> record -> reproduce -> implement -> test -> document -> commit`
+
+When stuck, stop changing the driver and collect another fact. When an experiment fails, keep the failure and write down what it ruled out.
+
+## Main tools and repeated scripts
+
+The core Linux tools used repeatedly were `make`, DKMS, `modprobe`, `dmesg`/`journalctl`, `spi`, `udev`, `fprintd`, `systemctl`, `readelf`, `strings`, `objdump`, Python, shell scripts, Git, and normal `/sys` and `/proc` inspection.
+
+The most useful project scripts became the reusable toolbox:
+
+- `install/install.sh` — prerequisites, DKMS installation, and basic validation.
+- `install/build-libfprint.sh` — build the isolated native libfprint tree.
+- `install/install-native-fte4800.sh` — install the native libfprint build without replacing the distro library.
+- `install/verify-fprintd-runtime.sh` — prove which libfprint the running fprintd process actually loads.
+- `install/restore-fprintd-packages.sh` — recover the distribution fprintd/libfprint stack after package changes.
+- `install/omarchy-hw-fingerprint-fte4800` — detect ACPI/SPI FTE4800 hardware alongside USB readers.
+- `install/omarchy-setup-security-fingerprint-fte4800` — safe setup wrapper that preserves the native stack.
+- `tools/ft9368.py` — low-level FT9368 protocol operations used during hardware experiments.
+- `tools/fte4800_capture.py` — reproducible real-frame capture.
+- `tools/fte4800_selftest.py` — reset/identity/transport checks.
+- `tools/live-finger-monitor.py` — observe live physical frame changes.
+- `tools/matcher_ref.py` — Python specification for the experimental matcher.
+- `tools/matcher_lab.py` and `tools/offline-biometric-eval.py` — offline matcher/evaluation work.
+- `tools/native-live-test.c` / `tools/live-native-test.sh` — live native libfprint validation.
+- `tools/diagnose_libfprint.py` — userspace diagnosis.
+- `tools/collect2.py` — guided genuine/impostor capture collection.
+
+Windows evidence collection was kept separately under `archive/research/windows-package/scripts/`, including the final evidence-gate and resource-extraction scripts. The important Windows sequence was: boot Windows, identify the exact ACPI device, locate its DriverStore package, collect INF/DLL/CAT/package hashes, inspect PnP resources and registry state, extract ACPI/SMBIOS evidence, and copy the useful evidence into the timestamped research archive before returning to Linux.
+
+## AI-assisted strategy
+
+AI was used as an engineering force multiplier, not as an authority.
+
+The practical split was:
+
+- ChatGPT: control plane, architecture decisions, evidence synthesis, command planning, review, and cross-agent coordination through the tunnel/desktop connection.
+- Agy CLI: parallel specialist work and agent swarms for research, kernel engineering, libfprint, tooling, QA, and documentation.
+- Claude Desktop: interactive investigation and remote-computer work.
+- Screenpipe: useful in principle for reconstructing what was on screen, active windows, and work context. A check on 2026-10-03 found no retained captures for the October 1–3 project window; the last retained frame was September 29, so this document does not use Screenpipe as evidence for the project timeline.
+
+For future projects, give agents narrow jobs, require exact evidence, keep a shared fact ledger, and make the control plane approve destructive or system-wide changes. Do not let several agents independently invent competing protocol interpretations.
+
+## Reusable driver-development checklist
+
+For another Linux hardware driver, start with identity and topology, then obtain the working vendor environment, collect a complete evidence bundle, map resources and lifecycle, reproduce raw I/O in small tools, build the smallest possible kernel transport, prove real hardware data, integrate the proper userspace subsystem, test normal and failure paths, package it reproducibly, and only then integrate desktop-specific behavior.
+
+For a sensor with a vendor algorithm, treat the vendor implementation as evidence. First establish whether the upstream algorithm works. If it does not, document why with measurements and keep the replacement matcher isolated, deterministic, auditable, and clearly marked as experimental.
+
 ### 12. Keep the repository portable
 
 Before every public commit:
@@ -218,7 +278,7 @@ Before every public commit:
 - test the install/check path;
 - run `git diff --check`.
 
-Use `$HOME` or environment variables in examples. Use repository-relative paths in scripts.
+Use `$HOME`, `$USER`, or environment variables in examples. Use repository-relative paths in scripts. Never encode the developer account name into code, docs, tests, examples, or service helpers.
 
 ## What not to repeat
 
