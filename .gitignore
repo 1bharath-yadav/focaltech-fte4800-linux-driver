@@ -25,3 +25,6 @@ dataset/
 tools/vendor-emulator/*.so
 tools/vendor-emulator/native-e2e
 tools/vendor-emulator/*.out
+
+# Local research/archive data (intentionally untracked)
+/archive/
