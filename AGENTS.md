@@ -574,3 +574,78 @@ Negative results added (do not repeat): wake=[00] single byte; any single-variab
 - Low-quality/poor placements can score below threshold (examples 0.6697, 0.5886, 0.5762, 0.4938), so threshold robustness is not yet established.
 - Current native stack is functionally working through fprintd, but production biometric validation remains incomplete.
 - Current remaining validation: larger genuine/impostor dataset, explicit different-finger rejection runs, reboot, suspend/resume, PAM login integration, and reproducible packaging.
+
+
+## Session 2026-10-03 -- Live usability finding and final Omarchy integration plan
+
+### Finger placement sensitivity
+- **Confirmed live behavior:** the enrolled finger must be placed on the sensing area in a sufficiently similar position, angle, and contact pattern to the enrollment samples. Poor placement can produce a score below the current threshold and result in `verify-no-match`.
+- Observed live same-finger scores include strong matches around 0.79-0.92, while weaker/poor placements produced scores around 0.49-0.67.
+- This is expected for the current small-area sensor and raw-frame rotation/translation matcher, but the acceptable placement envelope is **not yet characterized**.
+- Do not treat a successful enrollment as proof of production-grade robustness. The matcher threshold and placement tolerance still require a larger genuine/impostor evaluation.
+- Future validation must deliberately vary position, angle, pressure, partial contact, and lift/repress cycles to measure the failure envelope.
+- Do not solve placement sensitivity by simply lowering the threshold. The earlier 0.55 threshold was unsafe in offline evaluation and must not be restored without new biometric evidence.
+
+### Omarchy support -- final integration phase
+- **Omarchy does not provide a separate fingerprint hardware stack.** Its fingerprint authentication flow sits on the normal Linux layers:
+  ```text
+  FocalTech FT9368 sensor
+          |
+          v
+  focal_spi kernel transport
+          |
+          v
+      libfprint
+          |
+          v
+       fprintd
+          |
+          v
+     pam_fprintd
+          |
+      +---+-----------+
+      |       |       |
+     sudo   polkit  Omarchy lock screen
+  ```
+- The official Omarchy hardware-authentication flow exposes **Setup -> Security -> Fingerprint** from the Omarchy menu. It installs/uses the fingerprint stack, collects a fingerprint, verifies it, and enables fingerprint use for lock-screen unlock, sudo, and system authorization prompts. Source: Omarchy Hardware Authentication manual.
+- Omarchy therefore **does not add FocalTech hardware support**. Hardware support must already work through the kernel transport + libfprint + fprintd stack.
+- For this laptop, the intended dependency chain is:
+  ```text
+  Infinix ZERO BOOK 13
+          |
+      FTE4800/FT9368
+          |
+     focal_spi DKMS
+          |
+   native FTE4800 libfprint
+          |
+        fprintd
+          |
+      pam_fprintd
+          |
+       Omarchy
+  ```
+- Omarchy integration is intentionally a **final phase after core driver completion**. Do not let Omarchy-specific PAM or shell behavior obscure unresolved sensor, matcher, or lifecycle problems.
+- Final Omarchy work should verify:
+  1. Omarchy fingerprint detection recognizes the already-working fprintd device.
+  2. Omarchy's fingerprint setup can enroll/verify without replacing the native FTE4800 libfprint deployment.
+  3. `pam_fprintd.so` is wired into the intended authentication stacks with password fallback preserved.
+  4. Hyprlock/Omarchy lock-screen fingerprint unlock works from a clean boot.
+  5. Suspend/resume and lid-close behavior are reliable; password fallback remains available when the sensor is unavailable.
+  6. Omarchy package/update operations do not silently replace the native FTE4800 libfprint implementation.
+  7. Device access, fprintd service overrides, and library selection are reproducible after reboot and system updates.
+- Current Omarchy community reports show that unsupported readers may require alternative/patched libfprint packages and that lock-screen fingerprint behavior can have retry/suspend edge cases. Treat these as integration risks to test, not as reasons to modify the hardware driver prematurely.
+- Official reference: https://github.com/omacom/omarchy/blob/quattro/manual/37-hardware-authentication.md
+- Community references:
+  - https://github.com/omacom/omarchy/discussions/3542
+  - https://github.com/omacom/omarchy/issues/9905
+  - https://github.com/omacom/omarchy/issues/10796
+
+### Updated completion order
+1. Complete larger biometric genuine/impostor validation and threshold selection.
+2. Validate explicit different-finger rejection and placement robustness.
+3. Run reboot, module reload, fprintd restart, suspend/resume, and recovery tests.
+4. Complete PAM integration and password-fallback testing.
+5. Produce reproducible packaging/install/recovery for the clean driver + native libfprint stack.
+6. **Final phase: integrate and validate Omarchy fingerprint setup, sudo/polkit authentication, and lock-screen unlock.**
+7. Only after all of the above, declare the project production-ready for this laptop.
