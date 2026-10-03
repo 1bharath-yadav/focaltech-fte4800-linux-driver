@@ -1,0 +1,2 @@
+# Permissions for the FocalTech FTE4800 / FT9368 SPI device node.
+KERNEL=="focal_moh_spi", MODE="0660", GROUP="wheel", TAG+="uaccess"
