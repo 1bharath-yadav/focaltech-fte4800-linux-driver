@@ -6,7 +6,7 @@ set -euo pipefail
 
 NATIVE_LIB="/opt/fte4800/libfprint/lib/libfprint-2.so.2.0.0"
 NATIVE_DROPIN="/etc/systemd/system/fprintd.service.d/00-native-fte4800.conf"
-PROJECT_ROOT="/home/archer/projects/zerobook-focaltech-driver/.worktrees/fte4800-clean-driver"
+PROJECT_ROOT="${FTE4800_PROJECT_ROOT:-/home/archer/projects/focaltech-fte4800-linux-driver}"
 SYSTEM_SETUP="/usr/bin/omarchy-setup-security-fingerprint"
 DETECTOR="$PROJECT_ROOT/install/omarchy-hw-fingerprint-fte4800"
 

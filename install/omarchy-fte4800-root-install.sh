@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-ROOT="/home/archer/projects/zerobook-focaltech-driver/.worktrees/fte4800-clean-driver"
+ROOT="${FTE4800_PROJECT_ROOT:-/home/archer/projects/focaltech-fte4800-linux-driver}"
 INSTALL_DIR="$ROOT/install"
 MODE="${1:-full}"
 NATIVE_LIB="/opt/fte4800/libfprint/lib/libfprint-2.so.2.0.0"

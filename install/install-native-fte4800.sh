@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-BUILD="${LIBFPRINT_BUILD:-/home/archer/projects/zerobook-focaltech-driver/libfprint-upstream/build-fte}"
+ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+BUILD="${LIBFPRINT_BUILD:-$ROOT/../libfprint-upstream/build-fte}"
 LIB="$BUILD/libfprint/libfprint-2.so.2.0.0"
 PREFIX="/opt/fte4800/libfprint"
 LIBDIR="$PREFIX/lib"

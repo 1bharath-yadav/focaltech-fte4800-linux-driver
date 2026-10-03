@@ -1,6 +1,6 @@
 # FocalTech FTE4800 / FT9368 Linux Driver
 
-Hardware-backed Linux support for the FocalTech FTE4800 / FT9368 SPI fingerprint sensor found in the Infinix ZERO BOOK 13 (ZL513).
+Hardware-backed Linux support for FocalTech FTE4800 / FT9368 SPI fingerprint sensors. The implementation is currently validated on the Infinix ZERO BOOK 13 (ZL513).
 
 Target ACPI device: `FTE4800:00`
 Target sensor: FocalTech FT9368

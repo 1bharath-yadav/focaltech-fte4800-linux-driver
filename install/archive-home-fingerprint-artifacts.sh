@@ -2,7 +2,7 @@
 set -euo pipefail
 
 HOME_DIR="/home/archer"
-PROJECT="/home/archer/projects/zerobook-focaltech-driver/.worktrees/fte4800-clean-driver"
+PROJECT="${FTE4800_PROJECT_ROOT:-$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)}"
 ARCHIVE="$PROJECT/archive"
 
 mkdir -p "$ARCHIVE"

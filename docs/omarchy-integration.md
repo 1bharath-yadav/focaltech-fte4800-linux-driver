@@ -2,7 +2,7 @@
 
 ## Current target
 
-The Infinix ZERO BOOK 13 has a FocalTech FTE4800 / FT9368 fingerprint reader exposed through ACPI/SPI.
+The validated reference platform is the Infinix ZERO BOOK 13, whose FocalTech FTE4800 / FT9368 fingerprint reader is exposed through ACPI/SPI. The project is named for the supported FocalTech hardware, not the laptop model.
 
 Working stack:
 
