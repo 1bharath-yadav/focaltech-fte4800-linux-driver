@@ -6,9 +6,10 @@ set -euo pipefail
 
 NATIVE_LIB="/opt/fte4800/libfprint/lib/libfprint-2.so.2.0.0"
 NATIVE_DROPIN="/etc/systemd/system/fprintd.service.d/00-native-fte4800.conf"
-PROJECT_ROOT="${FTE4800_PROJECT_ROOT:-/home/archer/projects/focaltech-fte4800-linux-driver}"
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 SYSTEM_SETUP="/usr/bin/omarchy-setup-security-fingerprint"
-DETECTOR="$PROJECT_ROOT/install/omarchy-hw-fingerprint-fte4800"
+DETECTOR="${FTE4800_DETECTOR:-$SCRIPT_DIR/omarchy-hw-fingerprint-fte4800}"
+ROOT_INSTALLER="${FTE4800_ROOT_INSTALLER:-/usr/local/sbin/omarchy-fte4800-root-install.sh}"
 
 native_fte4800_ready() {
   [[ -s "$NATIVE_LIB" && -f "$NATIVE_DROPIN" ]] || return 1
@@ -47,7 +48,7 @@ fprintd-verify
 
 echo
 echo "Applying Omarchy PAM/lock integration."
-sudo "$PROJECT_ROOT/install/omarchy-fte4800-root-install.sh"
+sudo "$ROOT_INSTALLER"
 
 echo
 echo "FTE4800 fingerprint authentication configured for sudo, polkit, and Omarchy lock screen."

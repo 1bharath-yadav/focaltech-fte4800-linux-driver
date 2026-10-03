@@ -27,6 +27,8 @@ Verified:
 
 The matching threshold remains an experimental value. The current local biometric dataset is too small to establish production FAR/FRR bounds or security certification.
 
+For the complete development workflow, timeline, Windows-driver extraction process, AI-assisted workflow, and future-driver checklist, see `GUIDANCE.md`.
+
 ## Architecture
 
 ```
@@ -162,18 +164,9 @@ See `docs/libfprint-upstream.md` before preparing an upstream merge request.
 
 The FT9368 provides only 64x80 imaging data. The current driver retains five individual raw enrollment frames and compares a probe against the stored samples.
 
-The matcher applies:
+The matcher applies local background/ridge normalization, a validity mask, bounded rotation and translation search, overlap-aware normalized correlation, and best-of-five scoring. The current threshold is `0.75`; it is explicitly a research threshold and is not security-certified.
 
-- local background and ridge normalization;
-- a validity mask;
-- rotation search from -24 degrees to +24 degrees in 4-degree steps;
-- translation search with bounded offsets;
-- overlap-aware normalized correlation;
-- best-of-five template scoring.
-
-The current threshold is `0.75`. It is explicitly a research threshold and is not security-certified.
-
-The matcher specification and reference implementation are in `tools/matcher_ref.py`.
+See `docs/matching.md` for the algorithm, evidence, limitations, and improvement roadmap. The Python reference implementation is `tools/matcher_ref.py`.
 
 ## Omarchy integration
 
@@ -185,27 +178,40 @@ The long-term upstream work belongs in Omarchy and libfprint rather than in this
 
 ## Repository hygiene
 
-The public Git tree intentionally excludes:
+The public Git tree intentionally excludes generated build artifacts, local biometric captures, proprietary Windows driver packages and extracted firmware, raw ACPI dumps, internal agent material, and legacy reverse-engineering copies whose redistribution status is not established.
 
-- generated kernel build artifacts;
-- local biometric captures;
-- proprietary Windows driver packages and extracted firmware;
-- raw ACPI dumps;
-- internal agent instructions;
-- legacy reverse-engineering copies whose redistribution status is not established.
+These files are preserved locally under the root `archive/` directory for future development. The archive is valuable research material and is not disposable cache data.
 
-Those files are preserved locally under the root `archive/` directory.
+## Acknowledgements and references
+
+This project was informed by the Linux kernel SPI/driver model, libfprint and fprintd, the public `FTEXX00-Ubuntu` community implementation, Omarchy hardware-authentication work, and public FocalTech/Infinix device information.
+
+Useful references:
+
+- Linux kernel: https://kernel.org/
+- libfprint: https://gitlab.freedesktop.org/libfprint/libfprint
+- fprintd: https://fprint.freedesktop.org/fprintd/
+- FTEXX00-Ubuntu: https://github.com/vobademi/FTEXX00-Ubuntu
+- Omarchy: https://github.com/omacom/omarchy
+- Infinix ZERO BOOK 13 specifications: https://infinixmobiles.in/pages/zero-book-13-specs
+
+These references are research inputs or upstream components, not a claim of code ownership by those projects.
 
 ## License
 
-The kernel transport is GPL-2.0-only.
+Keep both licenses because the repository contains two distinct source contexts:
 
-The downstream libfprint driver and matcher patch is LGPL-2.1-or-later to match the libfprint component being modified.
+- kernel transport: GPL-2.0-only;
+- downstream libfprint driver/matcher patch: LGPL-2.1-or-later.
 
-License texts are provided under `LICENSES/`, and source files carry SPDX identifiers where applicable.
+The `LICENSES/` directory contains both texts, and source files carry SPDX identifiers where applicable.
 
 ## Security
 
 This project is experimental biometric infrastructure. It is not security-certified. Do not treat the current matcher measurements as production biometric guarantees.
 
 See `SECURITY.md` for reporting guidance.
+
+## Development guidance
+
+Start with `GUIDANCE.md`. It is the practical playbook for repeating this process on another Linux device or driver.

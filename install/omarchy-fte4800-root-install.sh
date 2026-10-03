@@ -1,13 +1,18 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-ROOT="${FTE4800_PROJECT_ROOT:-/home/archer/projects/focaltech-fte4800-linux-driver}"
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+ROOT="${FTE4800_PROJECT_ROOT:-$(cd -- "$SCRIPT_DIR/.." && pwd)}"
 INSTALL_DIR="$ROOT/install"
 MODE="${1:-full}"
 NATIVE_LIB="/opt/fte4800/libfprint/lib/libfprint-2.so.2.0.0"
 NATIVE_DROPIN="/etc/systemd/system/fprintd.service.d/00-native-fte4800.conf"
 DETECTOR_SRC="$INSTALL_DIR/omarchy-hw-fingerprint-fte4800"
 SETUP_SRC="$INSTALL_DIR/omarchy-setup-security-fingerprint-fte4800"
+if [[ ! -f "$DETECTOR_SRC" || ! -f "$SETUP_SRC" ]]; then
+  DETECTOR_SRC="/usr/local/bin/omarchy-hw-fingerprint-fte4800"
+  SETUP_SRC="/usr/local/bin/omarchy-setup-security-fingerprint-fte4800"
+fi
 LOCK_QML="/usr/share/omarchy/shell/plugins/lock/Service.qml"
 STATE_DIR="/var/lib/omarchy-fte4800"
 

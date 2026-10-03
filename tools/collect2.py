@@ -17,11 +17,13 @@ NB = int(sys.argv[2]) if len(sys.argv) > 2 else 6
 TOUCH_S, LIFT_S = 3.0, 2.5
 
 DN = subprocess.DEVNULL
-ENV = ["env", "DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus", "XDG_RUNTIME_DIR=/run/user/1000"]
+RUN_USER = os.environ.get("SUDO_USER") or os.environ.get("USER") or subprocess.check_output(["id", "-un"], text=True).strip()
+RUN_UID = subprocess.check_output(["id", "-u", RUN_USER], text=True).strip()
+ENV = ["env", f"DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/{RUN_UID}/bus", f"XDG_RUNTIME_DIR=/run/user/{RUN_UID}"]
 SND = "/usr/share/sounds/freedesktop/stereo/"
 def cue(msg, snd="message.oga"):
     print(">>> " + msg, flush=True)
-    run = ["runuser", "-u", "archer", "--"] + ENV
+    run = ["runuser", "-u", RUN_USER, "--"] + ENV
     subprocess.Popen(run + ["notify-send", "-u", "critical", "-t", "2500",
                             "-h", "string:x-canonical-private-synchronous:fte", "FTE4800", msg], stdout=DN, stderr=DN)
     subprocess.Popen(run + ["paplay", SND + snd], stdout=DN, stderr=DN)

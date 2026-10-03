@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="470" viewBox="0 0 1100 470" role="img" aria-labelledby="title desc">
+  <title id="title">FTE4800 Linux driver architecture and research path</title>
+  <desc id="desc">Hardware flows through ACPI and SPI into the Linux kernel transport, libfprint, fprintd, PAM and desktop authentication. Windows driver evidence feeds protocol research but is not a runtime dependency.</desc>
+  <defs><style>.box{fill:#f5f5f5;stroke:#202020;stroke-width:2;rx:12}.label{font-family:sans-serif;font-size:18px;fill:#171717;text-anchor:middle}.small{font-family:sans-serif;font-size:14px;fill:#4a4a4a;text-anchor:middle}.line{stroke:#202020;stroke-width:2.5;fill:none;marker-end:url(#arrow)}.dline{stroke:#666;stroke-width:2;stroke-dasharray:8 7;fill:none;marker-end:url(#arrow)}</style><marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L10,3 L0,6 Z" fill="#202020"/></marker></defs>
+<rect x="45" y="55" width="170" height="70" class="box"/><text x="130" y="86" class="label">FT9368 sensor</text><text x="130" y="108" class="small">FTE4800 family</text>
+<rect x="265" y="55" width="170" height="70" class="box"/><text x="350" y="86" class="label">ACPI + SPI</text><text x="350" y="108" class="small">controller / IRQ / reset</text>
+<rect x="485" y="55" width="170" height="70" class="box"/><text x="570" y="86" class="label">focal_spi</text><text x="570" y="108" class="small">kernel transport</text>
+<rect x="705" y="55" width="170" height="70" class="box"/><text x="790" y="86" class="label">libfprint</text><text x="790" y="108" class="small">native FTE4800 driver</text>
+<rect x="485" y="180" width="170" height="70" class="box"/><text x="570" y="211" class="label">fprintd</text><text x="570" y="233" class="small">device service</text>
+<rect x="705" y="180" width="170" height="70" class="box"/><text x="790" y="211" class="label">pam_fprintd</text><text x="790" y="233" class="small">authentication</text>
+<rect x="925" y="180" width="130" height="70" class="box"/><text x="990" y="211" class="label">Desktop</text><text x="990" y="233" class="small">lock / polkit / sudo</text>
+<rect x="45" y="330" width="190" height="70" class="box"/><text x="140" y="361" class="label">Windows driver</text><text x="140" y="383" class="small">INF / DLL / registry</text>
+<rect x="285" y="330" width="190" height="70" class="box"/><text x="380" y="361" class="label">Research archive</text><text x="380" y="383" class="small">protocol / ACPI / captures</text>
+<rect x="525" y="330" width="190" height="70" class="box"/><text x="620" y="361" class="label">Matcher</text><text x="620" y="383" class="small">Python spec + C implementation</text>
+<path d="M215 90 H265" class="line"/><path d="M435 90 H485" class="line"/><path d="M655 90 H705" class="line"/><path d="M790 125 V180 H655" class="line"/><path d="M655 215 H705" class="line"/><path d="M875 215 H925" class="line"/>
+<path d="M235 365 H285" class="dline"/><path d="M475 365 H525" class="dline"/><path d="M380 330 C480 250,520 190,570 125" class="dline"/><path d="M620 330 C700 290,760 270,790 250" class="dline"/>
+</svg>

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-HOME_DIR="/home/archer"
+HOME_DIR="${FTE4800_HOME_DIR:-$HOME}"
 PROJECT="${FTE4800_PROJECT_ROOT:-$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)}"
 ARCHIVE="$PROJECT/archive"
 

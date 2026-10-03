@@ -69,10 +69,7 @@ echo
 echo "Distro libfprint package remains installed and untouched:"
 ls -l /usr/lib/libfprint-2.so.2.0.0
 
-if [ -f /etc/sudoers.d/archer-nopasswd ]; then
-  sudo rm -f /etc/sudoers.d/archer-nopasswd
-  echo "Removed temporary /etc/sudoers.d/archer-nopasswd"
-fi
-
+echo
+echo "No sudoers changes are performed by the native libfprint installer."
 echo
 echo "Native libfprint installation complete."
