@@ -26,7 +26,7 @@ libfprint also states that proprietary driver code will not be accepted upstream
 
 The current FTE4800 implementation uses a driver-specific host-side matcher because the sensor exposes 64x80 imaging data and the experiments performed here did not produce a usable signal from the standard NBIS/Bozorth3 path.
 
-The matcher is implemented inside the FTE4800 driver and stores five raw enrollment samples in the `FpPrint` driver data. Verification and identification compare the probe against the stored samples using local ridge/background normalization plus bounded rotation and translation search with normalized correlation.
+The matcher is implemented inside the FTE4800 driver and stores fifteen raw enrollment samples in the `FpPrint` driver data. Enrollment uses libfprint's standard pixel-variance primitive for quality gating, rejects near-duplicate raw frames using `fpi_mean_sq_diff_norm()`, requires confirmed finger removal between accepted stages, and reports standard libfprint retry codes. Verification and identification compare the probe against the stored samples using local ridge/background normalization plus bounded rotation and translation search with normalized correlation.
 
 A driver-specific matcher is not categorically prohibited by the contribution guidance. However, this is the part of the patch most likely to receive detailed maintainer review because it affects authentication behaviour. The upstream submission should explain:
 

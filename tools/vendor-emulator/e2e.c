@@ -22,7 +22,7 @@ static void *watchdog(void *x) {
 }
 static void progress(FpDevice *d, gint done, FpPrint *p, gpointer u, GError *err) {
   (void)d; (void)p; (void)u;
-  printf("   enroll progress: %d/12 frames_read=%d queue_left=%d %s%s\n", done, emu_read_cnt(), emu_left(),
+  printf("   enroll progress: %d/%d frames_read=%d queue_left=%d %s%s\n", done, fp_device_get_nr_enroll_stages(d), emu_read_cnt(), emu_left(),
          err ? "retry/err: " : "", err ? err->message : "");
 }
 

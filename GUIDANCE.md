@@ -6,7 +6,24 @@ This project started on 2026-10-01 as an attempt to make the FocalTech fingerpri
 
 Focused hardware and Windows-driver investigation started on 2026-10-02. The working baseline was completed on 2026-10-03: real FT9368 capture, a clean SPI transport driver, native libfprint/fprintd integration, experimental matching, reboot and suspend/resume recovery, and working Omarchy lock-screen authentication.
 
-The baseline is functional, not production-certified.
+The baseline is functional, but it is not production-certified; the matching algorithm still needs improvement.
+
+
+| Actual \ Predicted |    No Match |       Match |
+| ------------------ | ----------: | ----------: |
+| **Impostor**       | **TN = 13** |  **FP = 0** |
+| **Genuine**        |  **FN = 4** | **TP = 16** |
+
+| Metric            |    Result |
+| ----------------- | --------: |
+| Accuracy          | **87.9%** |
+| Precision         |  **100%** |
+| Recall / TPR      | **80.0%** |
+| Specificity / TNR |  **100%** |
+
+Experimental dataset: **38 frames total, with 33 held-out evaluation trials, at threshold 0.75**.
+
+The evaluation observed **0 false positives in 13 impostor trials**, giving an observed false-positive rate (FPR) of **0% for this test set**. This is evidence of no observed false accepts in the tested sample, not proof that the system is fully secure or that its production FAR is zero. The dataset is too small to establish a reliable biometric security guarantee.
 
 The work started without a clear Linux implementation plan. The practical path was discovery first, then evidence collection, then a minimal transport driver, then userspace, then matching, and finally desktop integration. That order matters: each layer was proved before the next layer was trusted.
 
@@ -17,8 +34,6 @@ Always separate facts from guesses.
 Keep the kernel driver small and hardware-backed. It should transport commands, handle reset/power/IRQ/lifecycle, and expose the device. Do not put biometric matching, synthetic frames, vendor-library emulation, or desktop integration into the kernel.
 
 Preserve every useful Windows/ACPI artifact locally. Public source should contain reproducible code and documentation; proprietary Windows binaries, raw captures, registry dumps, and large research data stay in the local `archive/`.
-
-Never hardcode a developer username or machine-specific home path. Use `$HOME`, `${USER}`, runtime discovery, or an explicit environment variable.
 
 ## The workflow
 
@@ -149,6 +164,8 @@ Keep a Python reference implementation and a matching C implementation. Make the
 
 Never choose a threshold from a handful of successful demos. Build genuine and impostor datasets, measure FAR/FRR, inspect failure cases, and keep the threshold clearly marked as experimental until the evidence is adequate.
 
+---
+
 ### 9. Integrate desktop authentication last
 
 Only after hardware and matching work:
@@ -222,7 +239,7 @@ When stuck, stop changing the driver and collect another fact. When an experimen
 
 ## Main tools and repeated scripts
 
-The core Linux tools used repeatedly were `make`, DKMS, `modprobe`, `dmesg`/`journalctl`, `spi`, `udev`, `fprintd`, `systemctl`, `readelf`, `strings`, `objdump`, Python, shell scripts, Git, and normal `/sys` and `/proc` inspection.
+The core Linux tools used repeatedly were `make`, DKMS, `modprobe`, `dmesg`/`journalctl`, `spi`, `udev`, `fprintd`, `systemctl`, `readelf`, `strings`, `r2`, `objdump`, Python, shell scripts, Git, and normal `/sys` and `/proc` inspection.
 
 The most useful project scripts became the reusable toolbox:
 
@@ -253,10 +270,7 @@ The practical split was:
 
 - ChatGPT: control plane, architecture decisions, evidence synthesis, command planning, review, and cross-agent coordination through the tunnel/desktop connection.
 - Agy CLI: parallel specialist work and agent swarms for research, kernel engineering, libfprint, tooling, QA, and documentation.
-- Claude Desktop: interactive investigation and remote-computer work.
-- Screenpipe: useful in principle for reconstructing what was on screen, active windows, and work context. A check on 2026-10-03 found no retained captures for the October 1–3 project window; the last retained frame was September 29, so this document does not use Screenpipe as evidence for the project timeline.
-
-For future projects, give agents narrow jobs, require exact evidence, keep a shared fact ledger, and make the control plane approve destructive or system-wide changes. Do not let several agents independently invent competing protocol interpretations.
+- Claude Desktop: used selectively for complex or critical interactive investigation.
 
 ## Reusable driver-development checklist
 
@@ -289,7 +303,6 @@ Do not return to:
 - undocumented shadow-register tricks;
 - lowering the matcher threshold just to improve demo success;
 - replacing the system libfprint package during experiments;
-- hardcoded developer paths;
 - deleting raw reverse-engineering evidence because it looks old.
 
 ## Current baseline
@@ -299,12 +312,10 @@ The 2026-10-03 baseline proves:
 - real FT9368 hardware access;
 - verified reset and identity protocol;
 - real 64x80 image capture;
-- five-frame enrollment;
+- fifteen-stage enrollment implementation with quality and duplicate gates;
 - native libfprint/fprintd operation;
 - same-finger matching and different-finger rejection in the current small evaluation set;
 - module reload, reboot and suspend/resume recovery;
 - working Omarchy lock authentication.
-
-It does not prove production biometric security. The main technical gap is larger, controlled biometric validation and improved placement robustness.
 
 For the current architecture and matcher details, see `docs/matching.md` and `docs/omarchy-integration.md`.

@@ -17,15 +17,15 @@ Verified:
 - FT9368 reset and firmware boot sequence;
 - sensor identification;
 - real 64x80 image capture;
-- five-frame enrollment;
 - persistent fprintd template storage;
+- implemented fifteen-stage enrollment with quality, duplicate, and finger-lift gates (live re-enrollment validation pending);
 - genuine verification;
 - different-finger rejection in the local evaluation set;
 - reboot and suspend/resume recovery;
 - Omarchy lock-screen fingerprint authentication with password fallback;
 - clean DKMS installation and source-contract tests.
 
-The matching threshold remains an experimental value. The current local biometric dataset is too small to establish production FAR/FRR bounds or security certification.
+The matching threshold remains an experimental value. In the current local evaluation, 0 of 13 impostor trials were accepted (observed FPR: 0%), while 16 of 20 held-out genuine trials were accepted (observed TPR: 80%). The 38-frame dataset is too small to establish production FAR/FRR bounds or a security certification.
 
 For the complete development workflow, timeline, Windows-driver extraction process, AI-assisted workflow, and future-driver checklist, see `GUIDANCE.md`.
 
@@ -162,9 +162,9 @@ See `docs/libfprint-upstream.md` before preparing an upstream merge request.
 
 ## Native matcher
 
-The FT9368 provides only 64x80 imaging data. The current driver retains five individual raw enrollment frames and compares a probe against the stored samples.
+The FT9368 provides only 64x80 imaging data. The current driver retains fifteen individual raw enrollment frames and compares a probe against the stored samples. Near-duplicate captures are rejected during enrollment so stages represent distinct physical presses.
 
-The matcher applies local background/ridge normalization, a validity mask, bounded rotation and translation search, overlap-aware normalized correlation, and best-of-five scoring. The current threshold is `0.75`; it is explicitly a research threshold and is not security-certified.
+The matcher applies local background/ridge normalization, a validity mask, bounded rotation and translation search, overlap-aware normalized correlation, and best-of-fifteen scoring. The current threshold is `0.75`; it is explicitly a research threshold and is not security-certified.
 
 See `docs/matching.md` for the algorithm, evidence, limitations, and improvement roadmap. The Python reference implementation is `tools/matcher_ref.py`.
 

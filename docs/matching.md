@@ -28,7 +28,7 @@ translation search: bounded dx/dy
 overlap-aware normalized correlation
       |
       v
-best score across 5 enrollment frames
+best score across 15 enrollment frames
       |
       v
 threshold: 0.75 (research only)
@@ -44,9 +44,9 @@ The current method works directly on the image signal, so it can still use ridge
 
 ## Enrollment
 
-Enrollment stores five raw FT9368 frames independently.
+Enrollment stores fifteen raw FT9368 frames independently. Each accepted stage must pass a libfprint pixel-variance quality gate and a near-duplicate check, and each stage is separated by confirmed finger removal.
 
-The stored payload uses the `FTE1` marker followed by `5 × 64 × 80` raw 8-bit frames.
+The stored payload uses the `FTE2` marker, a one-byte sample count, and `15 × 64 × 80` raw 8-bit frames.
 
 Keeping the samples separate avoids averaging away useful ridge detail and gives verification several physical placements to compare against.
 
@@ -59,7 +59,7 @@ For each probe:
 3. Search bounded translations for every allowed rotation.
 4. Compute normalized correlation only where enough pixels overlap.
 5. Keep the highest aligned score.
-6. Repeat against all five enrolled frames.
+6. Repeat against all fifteen enrolled frames.
 7. Use the best template score as the verification score.
 
 Conceptually:
@@ -73,9 +73,9 @@ The matcher also rejects very low-coverage or very-low-contrast captures before 
 
 ## Current evidence
 
-The local dataset contains 38 real frames from two fingers.
+The pre-change local dataset contains 38 real frames from two fingers. Five frames were used for enrollment, leaving 33 held-out evaluation trials. That evaluation predates the fifteen-sample enrollment change and is retained as historical matcher evidence.
 
-At threshold 0.75, the offline replay matched 16/20 held-out genuine frames and rejected 13/13 impostor frames in that small set.
+At threshold 0.75, the offline replay matched 16/20 held-out genuine trials and accepted 0/13 impostor trials. That corresponds to an observed TPR of 80% and an observed FPR of 0% on this test set. The zero observed false-accept rate is evidence for this sample only; it does not prove a zero production FAR or a fully secure biometric system.
 
 Live testing also showed genuine matches around 0.79-0.92 and weaker placements around 0.49-0.67. A deliberate different-finger presentation scored 0.6141 and was rejected.
 
@@ -87,7 +87,7 @@ The sensor area is tiny, so small changes in placement can change the image subs
 
 The current matcher still uses a relatively broad brute-force alignment search. It does not model fingerprint orientation fields, elastic deformation, ridge frequency, or a learned representation.
 
-The five raw samples are a research-oriented storage format. They are useful for development but should not be treated as a final secure biometric-template design.
+The fifteen raw samples are a research-oriented storage format. They are useful for development but should not be treated as a final secure biometric-template design.
 
 ## Improvements
 

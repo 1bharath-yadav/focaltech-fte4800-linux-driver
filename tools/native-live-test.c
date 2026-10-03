@@ -7,7 +7,7 @@ static void progress(FpDevice *dev, gint done, FpPrint *print, gpointer user_dat
     (void)dev;
     (void)print;
     (void)user_data;
-    printf("  enroll stage %d/5%s%s\n", done,
+    printf("  enroll stage %d/%d%s%s\n", done, fp_device_get_nr_enroll_stages(dev),
            error ? ": " : "",
            error ? error->message : "");
     fflush(stdout);
