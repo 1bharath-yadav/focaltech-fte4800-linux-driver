@@ -17,6 +17,7 @@ SPI_READ_WRITE = 0xA5
 HEADER_SIZE = 5
 
 READ_IMAGE_REQUEST = bytes((0x90, 0x80, 0x14, 0x00, 0x00, 0x00, 0x00))
+CAPTURE_TRIGGER = bytes((0x70, 0x07, 0xF8, 0x00, 0x3B, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00))
 NATIVE_FRAME_BYTES = 5120
 COMPAT_FRAME_BYTES = 10240
 FRAME_WIDTH = 64
@@ -25,6 +26,8 @@ FRAME_HEIGHT = 80
 libc = ctypes.CDLL(None, use_errno=True)
 libc.read.argtypes = [ctypes.c_int, ctypes.c_void_p, ctypes.c_size_t]
 libc.read.restype = ctypes.c_ssize_t
+libc.write.argtypes = [ctypes.c_int, ctypes.c_void_p, ctypes.c_size_t]
+libc.write.restype = ctypes.c_ssize_t
 libc.ioctl.argtypes = [ctypes.c_int, ctypes.c_ulong, ctypes.c_ulong]
 libc.ioctl.restype = ctypes.c_int
 
@@ -42,8 +45,27 @@ def compat_capture_request() -> bytes:
     return bytes(request)
 
 
-def read_frame(fd: int) -> bytes:
-    """Read a raw 5120-byte native frame from the FT9368 sensor via SPI."""
+def write_request(fd: int, tx: bytes) -> None:
+    request = bytearray(HEADER_SIZE + len(tx))
+    struct.pack_into("<BHH", request, 0, SPI_READ_WRITE, len(tx), 0)
+    request[HEADER_SIZE:] = tx
+    buf = (ctypes.c_ubyte * len(request)).from_buffer_copy(request)
+    result = libc.write(fd, ctypes.byref(buf), len(request))
+    if result < 0:
+        _raise_errno("sensor write")
+    if result != len(request):
+        raise RuntimeError(f"sensor write returned {result} bytes, expected {len(request)}")
+
+
+def trigger_capture(fd: int, delay: float = 0.060) -> None:
+    """Trigger the FT9368 ADC scan and wait for its image FIFO to fill."""
+    write_request(fd, CAPTURE_TRIGGER)
+    time.sleep(delay)
+
+
+def read_frame(fd: int, delay: float = 0.060) -> bytes:
+    """Trigger and read one raw 5120-byte native FT9368 frame."""
+    trigger_capture(fd, delay)
     request = compat_capture_request()
     buf = (ctypes.c_ubyte * len(request)).from_buffer_copy(request)
     result = libc.read(fd, ctypes.byref(buf), len(request))
@@ -133,6 +155,8 @@ def main() -> int:
     parser.add_argument("--ascii", action="store_true", help="Print ASCII representation to stdout")
     parser.add_argument("--count", type=int, default=1, help="Number of frames to capture")
     parser.add_argument("--interval", type=float, default=0.1, help="Interval between frames in seconds")
+    parser.add_argument("--capture-delay", type=float, default=0.060,
+                        help="Delay after SFR 0x003B capture trigger (default: 60 ms)")
     args = parser.parse_args()
 
     try:
@@ -151,7 +175,7 @@ def main() -> int:
             if i > 0:
                 time.sleep(args.interval)
 
-            frame = read_frame(fd)
+            frame = read_frame(fd, args.capture_delay)
             stats = compute_statistics(frame)
             tag = "PASS (finger contrast)" if stats["has_contrast"] else "idle/blank"
             print(

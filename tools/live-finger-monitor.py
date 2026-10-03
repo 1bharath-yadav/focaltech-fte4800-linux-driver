@@ -16,6 +16,8 @@ HEADER_SIZE = 5
 libc = ctypes.CDLL(None, use_errno=True)
 libc.read.argtypes = [ctypes.c_int, ctypes.c_void_p, ctypes.c_size_t]
 libc.read.restype = ctypes.c_ssize_t
+libc.write.argtypes = [ctypes.c_int, ctypes.c_void_p, ctypes.c_size_t]
+libc.write.restype = ctypes.c_ssize_t
 
 def compat_read(fd, tx_bytes, rx_len):
     tx_len = len(tx_bytes)
@@ -29,12 +31,29 @@ def compat_read(fd, tx_bytes, rx_len):
         raise OSError(err, os.strerror(err))
     return bytes(buf[:rx_len])
 
+def write_compat(fd, tx_bytes):
+    tx_len = len(tx_bytes)
+    request = bytearray(HEADER_SIZE + tx_len)
+    struct.pack_into("<BHH", request, 0, SPI_READ_WRITE, tx_len, 0)
+    request[HEADER_SIZE:] = tx_bytes
+    buf = (ctypes.c_ubyte * len(request)).from_buffer_copy(bytes(request))
+    result = libc.write(fd, ctypes.byref(buf), len(request))
+    if result < 0:
+        err = ctypes.get_errno()
+        raise OSError(err, os.strerror(err))
+
+
 def read_9368(fd, addr16, length):
     addr_hi = (addr16 >> 8) & 0xFF
     addr_lo = addr16 & 0xFF
     len_hi = (length >> 8) & 0xFF
     len_lo = length & 0xFF
     return compat_read(fd, bytes([addr_hi, addr_lo, len_hi, len_lo, 0x00, 0x00, 0x00]), length)
+
+
+def trigger_capture(fd):
+    write_compat(fd, bytes([0x70, 0x07, 0xF8, 0x00, 0x3B, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00]))
+    time.sleep(0.060)
 
 def render_ascii(img):
     # 64 width, 80 height; subsample rows by 2 for square aspect ratio in terminal
@@ -67,6 +86,7 @@ def main():
 
         while frame_count < 15:
             time.sleep(0.15)
+            trigger_capture(fd)
             img = read_9368(fd, 0x9080, 5120)
             if len(img) != 5120:
                 continue

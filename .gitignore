@@ -17,3 +17,11 @@ modules.order
 # Scratch dumps
 tools/*.pgm
 tools/*.bin
+
+# Local biometric/replay data
+dataset/
+
+# Vendor emulator build outputs
+tools/vendor-emulator/*.so
+tools/vendor-emulator/native-e2e
+tools/vendor-emulator/*.out

@@ -1,0 +1,1244 @@
+diff --git c/libfprint/drivers/fte4800-match.c w/libfprint/drivers/fte4800-match.c
+new file mode 100644
+index 0000000..5a25bbf
+--- /dev/null
++++ w/libfprint/drivers/fte4800-match.c
+@@ -0,0 +1,249 @@
++/*
++ * FocalTech FTE4800 / FT9368 64x80 fingerprint matcher (implementation)
++ * Copyright (C) 2026
++ * SPDX-License-Identifier: LGPL-2.1-or-later
++ */
++#include "fte4800-match.h"
++
++#include <math.h>
++#include <string.h>
++
++#define BG_R        5
++#define VAR_R       7
++#define EPS_CONTRAST 8.0f
++#define MASK_THR    14.0f
++#define EPS_E       50.0f
++#define MAX_DX      26
++#define MAX_DY      32
++#define MIN_OVERLAP 1000
++#define ANG_STEP    4.0f
++#define ANG_FIRST   (-24.0f)
++
++/* ---- box blur, radius r, edge replicated; vertical pass then horizontal ---- */
++static void
++box_blur (const float *src, float *dst, int r)
++{
++  float tmp[FTE_PIX];
++  float k = (float) (2 * r + 1);
++  int x, y, i;
++
++  for (x = 0; x < FTE_W; x++)
++    {
++      float sum = 0;
++      for (i = -r; i <= r; i++)
++        {
++          int yy = i < 0 ? 0 : (i >= FTE_H ? FTE_H - 1 : i);
++          sum += src[yy * FTE_W + x];
++        }
++      for (y = 0; y < FTE_H; y++)
++        {
++          tmp[y * FTE_W + x] = sum / k;
++          {
++            int yo = y - r, yn = y + r + 1;
++            yo = yo < 0 ? 0 : yo;
++            yn = yn >= FTE_H ? FTE_H - 1 : yn;
++            sum += src[yn * FTE_W + x] - src[yo * FTE_W + x];
++          }
++        }
++    }
++  for (y = 0; y < FTE_H; y++)
++    {
++      float sum = 0;
++      for (i = -r; i <= r; i++)
++        {
++          int xx = i < 0 ? 0 : (i >= FTE_W ? FTE_W - 1 : i);
++          sum += tmp[y * FTE_W + xx];
++        }
++      for (x = 0; x < FTE_W; x++)
++        {
++          dst[y * FTE_W + x] = sum / k;
++          {
++            int xo = x - r, xn = x + r + 1;
++            xo = xo < 0 ? 0 : xo;
++            xn = xn >= FTE_W ? FTE_W - 1 : xn;
++            sum += tmp[y * FTE_W + xn] - tmp[y * FTE_W + xo];
++          }
++        }
++    }
++}
++
++static void
++build_integral (const float *e, double *sq)
++{
++  int x, y;
++
++  memset (sq, 0, sizeof (double) * (FTE_H + 1) * (FTE_W + 1));
++  for (y = 0; y < FTE_H; y++)
++    {
++      double row = 0;
++      for (x = 0; x < FTE_W; x++)
++        {
++          double v = e[y * FTE_W + x];
++          row += v * v;
++          sq[(y + 1) * (FTE_W + 1) + (x + 1)] = sq[y * (FTE_W + 1) + (x + 1)] + row;
++        }
++    }
++}
++
++static double
++rect_sum (const double *sq, int x0, int y0, int x1, int y1)  /* [x0,x1) x [y0,y1) */
++{
++  const int s = FTE_W + 1;
++
++  return sq[y1 * s + x1] - sq[y0 * s + x1] - sq[y1 * s + x0] + sq[y0 * s + x0];
++}
++
++void
++fte_template_init (FteTemplate *t, const uint8_t raw[FTE_PIX])
++{
++  float f[FTE_PIX], bg[FTE_PIX], d[FTE_PIX], d2[FTE_PIX], var[FTE_PIX];
++  float s[FTE_PIX], e0[FTE_PIX], e[FTE_PIX], m0[FTE_PIX], m[FTE_PIX];
++  int i, valid = 0;
++  double csum = 0;
++
++  for (i = 0; i < FTE_PIX; i++)
++    f[i] = raw[i];
++  box_blur (f, bg, BG_R);
++  for (i = 0; i < FTE_PIX; i++)
++    {
++      d[i] = f[i] - bg[i];
++      d2[i] = d[i] * d[i];
++    }
++  box_blur (d2, var, VAR_R);
++  for (i = 0; i < FTE_PIX; i++)
++    {
++      s[i] = sqrtf (var[i]);
++      e0[i] = d[i] / (s[i] + EPS_CONTRAST);
++      m0[i] = s[i] > MASK_THR ? 1.0f : 0.0f;
++    }
++  box_blur (e0, e, 1);
++  box_blur (m0, m, 3);
++  for (i = 0; i < FTE_PIX; i++)
++    {
++      if (m[i] > 0.6f)
++        {
++          t->e[i] = e[i];
++          valid++;
++          csum += s[i];
++        }
++      else
++        {
++          t->e[i] = 0.0f;
++        }
++    }
++  t->coverage = (float) valid / FTE_PIX;
++  t->contrast = valid ? (float) (csum / valid) : 0.0f;
++  build_integral (t->e, t->sq);
++}
++
++static void
++rotate_bilinear (const float *src, float *dst, float deg)
++{
++  const float t = deg * (float) M_PI / 180.0f;
++  const float c = cosf (t), sn = sinf (t);
++  const float cy = (FTE_H - 1) / 2.0f, cx = (FTE_W - 1) / 2.0f;
++  int x, y;
++
++  for (y = 0; y < FTE_H; y++)
++    for (x = 0; x < FTE_W; x++)
++      {
++        float xs = c * (x - cx) + sn * (y - cy) + cx;
++        float ys = -sn * (x - cx) + c * (y - cy) + cy;
++        int x0 = (int) floorf (xs), y0 = (int) floorf (ys);
++        float fx = xs - x0, fy = ys - y0;
++        float v00 = 0, v01 = 0, v10 = 0, v11 = 0;
++
++        if (x0 >= 0 && x0 < FTE_W && y0 >= 0 && y0 < FTE_H)
++          v00 = src[y0 * FTE_W + x0];
++        if (x0 + 1 >= 0 && x0 + 1 < FTE_W && y0 >= 0 && y0 < FTE_H)
++          v01 = src[y0 * FTE_W + x0 + 1];
++        if (x0 >= 0 && x0 < FTE_W && y0 + 1 >= 0 && y0 + 1 < FTE_H)
++          v10 = src[(y0 + 1) * FTE_W + x0];
++        if (x0 + 1 >= 0 && x0 + 1 < FTE_W && y0 + 1 >= 0 && y0 + 1 < FTE_H)
++          v11 = src[(y0 + 1) * FTE_W + x0 + 1];
++        dst[y * FTE_W + x] = v00 * (1 - fx) * (1 - fy) + v01 * fx * (1 - fy) +
++                             v10 * (1 - fx) * fy + v11 * fx * fy;
++      }
++}
++
++void
++fte_probe_init (FteProbe *p, const FteTemplate *src)
++{
++  int a;
++
++  for (a = 0; a < FTE_NANG; a++)
++    {
++      rotate_bilinear (src->e, p->rot[a], ANG_FIRST + a * ANG_STEP);
++      build_integral (p->rot[a], p->sq[a]);
++    }
++}
++
++static inline float
++dot_row (const float *a, const float *b, int n)
++{
++  float s0 = 0, s1 = 0, s2 = 0, s3 = 0;
++  int i = 0;
++
++  for (; i + 4 <= n; i += 4)
++    {
++      s0 += a[i] * b[i];
++      s1 += a[i + 1] * b[i + 1];
++      s2 += a[i + 2] * b[i + 2];
++      s3 += a[i + 3] * b[i + 3];
++    }
++  for (; i < n; i++)
++    s0 += a[i] * b[i];
++  return (s0 + s1) + (s2 + s3);
++}
++
++float
++fte_match (const FteTemplate *tmpl, const FteProbe *probe,
++           float *ang_out, int *dx_out, int *dy_out)
++{
++  float best = -1.0f, best_ang = 0;
++  int best_dx = 0, best_dy = 0;
++  int a, dx, dy, y;
++
++  for (a = 0; a < FTE_NANG; a++)
++    {
++      const float *b = probe->rot[a];
++      const double *bsq = probe->sq[a];
++
++      for (dy = -MAX_DY; dy <= MAX_DY; dy++)
++        {
++          int ay0 = dy > 0 ? dy : 0, ay1 = dy > 0 ? FTE_H : FTE_H + dy;
++          int h = ay1 - ay0;
++
++          for (dx = -MAX_DX; dx <= MAX_DX; dx++)
++            {
++              int ax0 = dx > 0 ? dx : 0, ax1 = dx > 0 ? FTE_W : FTE_W + dx;
++              int w = ax1 - ax0;
++              double num = 0, sa2, sb2;
++              float v;
++
++              if (w * h < MIN_OVERLAP)
++                continue;
++              for (y = ay0; y < ay1; y++)
++                num += dot_row (tmpl->e + y * FTE_W + ax0,
++                                b + (y - dy) * FTE_W + (ax0 - dx), w);
++              sa2 = rect_sum (tmpl->sq, ax0, ay0, ax1, ay1);
++              sb2 = rect_sum (bsq, ax0 - dx, ay0 - dy, ax1 - dx, ay1 - dy);
++              v = (float) (num / sqrt ((sa2 + EPS_E) * (sb2 + EPS_E)));
++              if (v > best)
++                {
++                  best = v;
++                  best_ang = ANG_FIRST + a * ANG_STEP;
++                  best_dx = dx;
++                  best_dy = dy;
++                }
++            }
++        }
++    }
++  if (ang_out)
++    *ang_out = best_ang;
++  if (dx_out)
++    *dx_out = best_dx;
++  if (dy_out)
++    *dy_out = best_dy;
++  return best;
++}
+diff --git c/libfprint/drivers/fte4800-match.h w/libfprint/drivers/fte4800-match.h
+new file mode 100644
+index 0000000..0cd7693
+--- /dev/null
++++ w/libfprint/drivers/fte4800-match.h
+@@ -0,0 +1,48 @@
++/*
++ * FocalTech FTE4800 / FT9368 64x80 fingerprint matcher
++ * Copyright (C) 2026
++ * SPDX-License-Identifier: LGPL-2.1-or-later
++ *
++ * Specification: tools/matcher_ref.py (spec v2) in the clean-driver worktree.
++ *
++ *  1. enhance():  ridge normalisation (local mean removal, local contrast
++ *                 normalisation) + validity mask  -> e * mask
++ *  2. match():    max over rotation x translation of
++ *                   sum(a*b) / sqrt((sum a^2 + eps) (sum b^2 + eps))
++ *                 evaluated over the rectangular overlap of the two frames.
++ *
++ * Pure C, no GLib dependency, so it can be unit-tested in isolation.
++ */
++#pragma once
++
++#include <stdint.h>
++
++#define FTE_W 64
++#define FTE_H 80
++#define FTE_PIX (FTE_W * FTE_H)
++#define FTE_NANG 13
++
++typedef struct
++{
++  float  e[FTE_PIX];                     /* enhanced * mask               */
++  double sq[(FTE_H + 1) * (FTE_W + 1)];  /* integral image of e^2         */
++  float  coverage;                       /* fraction of valid pixels      */
++  float  contrast;                       /* mean local std on valid area  */
++} FteTemplate;
++
++typedef struct
++{
++  float  rot[FTE_NANG][FTE_PIX];
++  double sq[FTE_NANG][(FTE_H + 1) * (FTE_W + 1)];
++} FteProbe;
++
++/* Build a template (or probe source) from a raw 64x80 8-bit frame. */
++void fte_template_init (FteTemplate *t, const uint8_t raw[FTE_PIX]);
++
++/* Rotated copies of a probe, reused across all templates it is compared to. */
++void fte_probe_init (FteProbe *p, const FteTemplate *src);
++
++/* Best aligned similarity of probe vs template, in [-1, 1].
++ * ang/dx/dy are optional outputs. */
++float fte_match (const FteTemplate *tmpl, const FteProbe *probe,
++                 float *ang, int *dx, int *dy);
+diff --git c/libfprint/drivers/fte4800.c w/libfprint/drivers/fte4800.c
+index 1b20d57..1e8eb8d 100644
+--- c/libfprint/drivers/fte4800.c
++++ w/libfprint/drivers/fte4800.c
+@@ -15,80 +15,156 @@
+  * You should have received a copy of the GNU Lesser General Public
+  * License along with this library; if not, write to the Free Software
+  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
++ *
++ * Matching strategy:
++ *   NBIS/Bozorth3 does not produce a usable signal on this tiny 64×80 sensing
++ *   area, so this driver uses a local ridge-normalisation matcher with explicit
++ *   rotation/translation search. Enrollment stores five raw frames; verification
++ *   compares the probe against all five and uses the best alignment score.
++ *
++ *   The threshold is deliberately conservative and remains an experimental
++ *   value until a larger multi-finger dataset establishes FAR/FRR bounds.
+  */
+ 
+ #define FP_COMPONENT "fte4800"
+ 
+ #include "drivers_api.h"
+ #include "fte4800.h"
++#include "fte4800-match.h"
+ 
+ #include <fcntl.h>
++#include <math.h>
+ #include <sys/ioctl.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #include <unistd.h>
+ #include <errno.h>
+ 
++/* --------------------------------------------------------------------------
++ * Parameters
++ * -------------------------------------------------------------------------- */
++#define FTE4800_MATCH_THRESHOLD  0.75f /* conservative research threshold        */
++#define FTE4800_ENROLL_STAGES    5      /* raw samples retained in the print       */
++#define FTE4800_TOUCH_VAR_THRESH 350    /* variance below = no finger              */
++#define FTE4800_POLL_MS           50    /* poll interval after a trigger            */
++#define FTE4800_FINGER_WAIT_MAX   100   /* bounded wait: 10 s worst case            */
++#define FTE4800_TEMPLATE_MAGIC    "FTE1"
++
++/* --------------------------------------------------------------------------
++ * Device instance data
++ * -------------------------------------------------------------------------- */
+ struct _FpiDeviceFte4800
+ {
+   FpImageDevice parent;
+ 
+   int           spi_fd;
+-  guint         poll_timeout_id;
+   gboolean      deactivating;
+-  guint8        last_frame[FTE4800_RAW_PIXELS];
+-  gboolean      last_frame_valid;
++
++  /* Raw enrollment samples are retained individually so finger motion does
++   * not blur the stored ridge pattern. */
++  guint8        enroll_frames[FTE4800_ENROLL_STAGES][FTE4800_RAW_PIXELS];
++  gint          enroll_count;
+ };
+ 
+ G_DECLARE_FINAL_TYPE (FpiDeviceFte4800, fpi_device_fte4800, FPI, DEVICE_FTE4800, FpImageDevice);
+ G_DEFINE_TYPE (FpiDeviceFte4800, fpi_device_fte4800, FP_TYPE_IMAGE_DEVICE);
+ 
+-#define SPI_READ_WRITE 0xA5
++/* --------------------------------------------------------------------------
++ * Low-level SPI helpers
++ * -------------------------------------------------------------------------- */
+ 
++/*
++ * Send tx_buf / receive rx_len bytes via the focal_spi kernel misc device.
++ * Header format: [0xA5, tx_len_lo, tx_len_hi, rx_len_lo, rx_len_hi, <tx_bytes>]
++ * The kernel driver returns rx_len bytes starting at offset 0 of the same buf.
++ */
+ static int
+-fte4800_spi_transfer (int fd, const guint8 *tx_buf, gsize tx_len, guint8 *rx_buf, gsize rx_len)
++fte4800_spi_transfer (int fd, const guint8 *tx, gsize tx_len,
++                      guint8 *rx, gsize rx_len)
+ {
+-  gsize req_len = 5 + tx_len;
+-  gsize total_len = (req_len > rx_len) ? req_len : rx_len;
+-  g_autofree guint8 *buf = g_malloc0 (total_len);
++  gsize buf_len = MAX (5 + tx_len, rx_len);
++  g_autofree guint8 *buf = g_malloc0 (buf_len);
+ 
+-  buf[0] = SPI_READ_WRITE;
++  buf[0] = 0xA5;
+   buf[1] = (guint8) (tx_len & 0xFF);
+   buf[2] = (guint8) ((tx_len >> 8) & 0xFF);
+   buf[3] = (guint8) (rx_len & 0xFF);
+   buf[4] = (guint8) ((rx_len >> 8) & 0xFF);
+-  if (tx_buf && tx_len > 0)
+-    memcpy (buf + 5, tx_buf, tx_len);
++  if (tx && tx_len)
++    memcpy (buf + 5, tx, tx_len);
+ 
+-  ssize_t n = read (fd, buf, total_len);
++  ssize_t n = read (fd, buf, buf_len);
+   if (n < 0)
+     return -errno;
+   if ((gsize) n < rx_len)
+     return -EIO;
+-
+-  if (rx_buf && rx_len > 0)
+-    memcpy (rx_buf, buf, rx_len);
+-
++  if (rx && rx_len)
++    memcpy (rx, buf, rx_len);
+   return 0;
+ }
+ 
+-static gboolean
+-fte4800_read_chip_id (int fd, guint16 *chip_id)
++/* Read one 64×80 raw grayscale frame. */
++static int
++fte4800_write (int fd, const guint8 *tx, gsize tx_len)
+ {
+-  guint8 tx[7] = { 0x91, 0x80, 0x00, 0x20, 0x00, 0x00, 0x00 };
+-  guint8 rx[32];
+-  int ret;
++  gsize buf_len = 5 + tx_len;
++  guint8 *buf = g_malloc0 (buf_len);
+ 
+-  for (int retry = 0; retry < 6; retry++)
++  buf[0] = 0xA5;
++  buf[1] = (guint8) (tx_len & 0xFF);
++  buf[2] = (guint8) ((tx_len >> 8) & 0xFF);
++  buf[3] = 0;
++  buf[4] = 0;
++  if (tx_len)
++    memcpy (buf + 5, tx, tx_len);
++
++  ssize_t n = write (fd, buf, buf_len);
++  g_free (buf);
++  if (n < 0)
++    return -errno;
++  return ((gsize) n == buf_len) ? 0 : -EIO;
++}
++
++/* Trigger one physical FT9368 scan.  The sensor populates its image FIFO
++ * asynchronously; ~60 ms is the measured safe integration window. */
++static int
++fte4800_trigger_capture (int fd)
++{
++  static const guint8 tx[11] = {
++    0x70, 0x07, 0xF8,
++    0x00, 0x3B, 0x00, 0x00,
++    0x00, 0x01, 0x00, 0x00
++  };
++
++  int ret = fte4800_write (fd, tx, sizeof (tx));
++  if (ret < 0)
++    return ret;
++  g_usleep (60 * 1000);
++  return 0;
++}
++
++static int
++fte4800_read_frame (int fd, guint8 *out)
++{
++  static const guint8 tx[7] = { 0x90, 0x80, 0x14, 0x00, 0x00, 0x00, 0x00 };
++  return fte4800_spi_transfer (fd, tx, sizeof (tx), out, FTE4800_RAW_PIXELS);
++}
++
++/* Verify sensor identity (retries until chip-ID 0x9368 appears). */
++static gboolean
++fte4800_read_chip_id (int fd, guint16 *id_out)
++{
++  static const guint8 tx[7] = { 0x91, 0x80, 0x00, 0x20, 0x00, 0x00, 0x00 };
++  guint8 rx[32];
++
++  for (int i = 0; i < 6; i++)
+     {
+-      ret = fte4800_spi_transfer (fd, tx, sizeof (tx), rx, sizeof (rx));
+-      if (ret == 0)
++      if (fte4800_spi_transfer (fd, tx, sizeof (tx), rx, sizeof (rx)) == 0)
+         {
+           guint16 id = ((guint16) rx[0x13] << 8) | rx[0x14];
+           if (id == 0x9368)
+             {
+-              if (chip_id)
+-                *chip_id = id;
++              if (id_out) *id_out = id;
+               return TRUE;
+             }
+         }
+@@ -97,277 +173,576 @@ fte4800_read_chip_id (int fd, guint16 *chip_id)
+   return FALSE;
+ }
+ 
+-static int
+-fte4800_read_frame (int fd, guint8 *frame_buf)
++/* TRUE when variance of pixel buffer exceeds the finger-present threshold. */
++static gboolean
++fte4800_is_finger (const guint8 *px, gsize n)
+ {
+-  guint8 tx[7] = { 0x90, 0x80, 0x14, 0x00, 0x00, 0x00, 0x00 };
+-  return fte4800_spi_transfer (fd, tx, sizeof (tx), frame_buf, FTE4800_RAW_PIXELS);
++  return fpi_std_sq_dev (px, n) > FTE4800_TOUCH_VAR_THRESH;
+ }
+ 
+-static gboolean
+-fte4800_is_finger_present (const guint8 *pixels, gsize len)
+-{
+-  gint var = fpi_std_sq_dev (pixels, len);
+-  /* Idle sensor has variance < 20. Real physical finger contact gives variance > 350. */
+-  return var > 350;
+-}
++/* --------------------------------------------------------------------------
++ * Template storage in FpPrint (five raw 64x80 frames)
++ * -------------------------------------------------------------------------- */
+ 
+ static void
+-fte4800_stop_poll (FpiDeviceFte4800 *self)
++fte4800_set_print_template (FpPrint *print,
++                            const guint8 frames[FTE4800_ENROLL_STAGES][FTE4800_RAW_PIXELS])
+ {
+-  if (self->poll_timeout_id != 0)
+-    {
+-      g_source_remove (self->poll_timeout_id);
+-      self->poll_timeout_id = 0;
+-    }
++  const gsize payload = strlen (FTE4800_TEMPLATE_MAGIC) +
++                        FTE4800_ENROLL_STAGES * FTE4800_RAW_PIXELS;
++  guint8 *buf = g_malloc (payload);
++  memcpy (buf, FTE4800_TEMPLATE_MAGIC, strlen (FTE4800_TEMPLATE_MAGIC));
++
++  for (gint i = 0; i < FTE4800_ENROLL_STAGES; i++)
++    memcpy (buf + strlen (FTE4800_TEMPLATE_MAGIC) + i * FTE4800_RAW_PIXELS,
++            frames[i], FTE4800_RAW_PIXELS);
++
++  GVariant *data = g_variant_new_fixed_array (G_VARIANT_TYPE_BYTE,
++                                              buf, payload, sizeof (guint8));
++  fpi_print_set_type (print, FPI_PRINT_RAW);
++  g_object_set (print, "fpi-data", data, NULL);
++  g_free (buf);
+ }
+ 
+-static gboolean
+-fte4800_poll_finger_on_cb (gpointer user_data)
++static guint8 *
++fte4800_get_print_frames (FpPrint *print)
+ {
+-  FpImageDevice *dev = FP_IMAGE_DEVICE (user_data);
+-  FpiDeviceFte4800 *self = FPI_DEVICE_FTE4800 (dev);
+-  guint8 frame[FTE4800_RAW_PIXELS];
++  GVariant *data = NULL;
++  gsize n = 0;
++  const gsize header = strlen (FTE4800_TEMPLATE_MAGIC);
++  const gsize expected = header + FTE4800_ENROLL_STAGES * FTE4800_RAW_PIXELS;
+ 
+-  if (self->deactivating)
+-    return G_SOURCE_REMOVE;
++  g_object_get (print, "fpi-data", &data, NULL);
++  if (!data)
++    return NULL;
+ 
+-  if (fte4800_read_frame (self->spi_fd, frame) == 0)
++  const guint8 *raw = g_variant_get_fixed_array (data, &n, sizeof (guint8));
++  guint8 *out = NULL;
++  if (raw && n == expected &&
++      memcmp (raw, FTE4800_TEMPLATE_MAGIC, header) == 0)
++    out = g_memdup2 (raw + header, n - header);
++
++  g_variant_unref (data);
++  return out;
++}
++
++/* Score one probe against the five enrolled frames. */
++static float
++fte4800_match_frames (const guint8 probe_raw[FTE4800_RAW_PIXELS],
++                      const guint8 *templates,
++                      gint *best_index)
++{
++  FteTemplate probe_t;
++  FteProbe probe;
++  float best = -1.0f;
++  gint best_i = -1;
++
++  fte_template_init (&probe_t, probe_raw);
++  if (probe_t.coverage <= 0.05f || probe_t.contrast <= 2.0f)
+     {
+-      if (fte4800_is_finger_present (frame, sizeof (frame)))
++      if (best_index)
++        *best_index = -1;
++      return -1.0f;
++    }
++
++  fte_probe_init (&probe, &probe_t);
++
++  for (gint i = 0; i < FTE4800_ENROLL_STAGES; i++)
++    {
++      FteTemplate tmpl;
++      float score;
++
++      fte_template_init (&tmpl,
++                         templates + i * FTE4800_RAW_PIXELS);
++      if (tmpl.coverage <= 0.05f || tmpl.contrast <= 2.0f)
++        continue;
++
++      score = fte_match (&tmpl, &probe, NULL, NULL, NULL);
++      if (score > best)
+         {
+-          fp_dbg ("Finger touch detected!");
+-          memcpy (self->last_frame, frame, sizeof (frame));
+-          self->last_frame_valid = TRUE;
+-          self->poll_timeout_id = 0;
+-          fpi_image_device_report_finger_status (dev, TRUE);
+-          return G_SOURCE_REMOVE;
++          best = score;
++          best_i = i;
+         }
+     }
+ 
+-  return G_SOURCE_CONTINUE;
++  if (best_index)
++    *best_index = best_i;
++  return best;
+ }
+ 
++/* --------------------------------------------------------------------------
++ * Blocking capture helper (runs in a GTask worker thread)
++ *
++ * Triggers a physical scan, reads the resulting frame, and accepts it only
++ * when the frame has sufficient contact contrast.
++ * Returns TRUE on success; frame is filled with FTE4800_RAW_PIXELS bytes.
++ * -------------------------------------------------------------------------- */
+ static gboolean
+-fte4800_poll_finger_off_cb (gpointer user_data)
++fte4800_capture_frame_blocking (FpiDeviceFte4800 *self, guint8 *frame)
+ {
+-  FpImageDevice *dev = FP_IMAGE_DEVICE (user_data);
+-  FpiDeviceFte4800 *self = FPI_DEVICE_FTE4800 (dev);
+-  guint8 frame[FTE4800_RAW_PIXELS];
++  guint8 tmp[FTE4800_RAW_PIXELS];
+ 
+-  if (self->deactivating)
+-    return G_SOURCE_REMOVE;
+-
+-  if (fte4800_read_frame (self->spi_fd, frame) == 0)
++  for (int i = 0; i < FTE4800_FINGER_WAIT_MAX; i++)
+     {
+-      if (!fte4800_is_finger_present (frame, sizeof (frame)))
++      if (fte4800_trigger_capture (self->spi_fd) != 0)
++        return FALSE;
++      if (fte4800_read_frame (self->spi_fd, tmp) != 0)
++        return FALSE;
++      if (fte4800_is_finger (tmp, sizeof (tmp)))
+         {
+-          fp_dbg ("Finger release detected!");
+-          self->poll_timeout_id = 0;
+-          fpi_image_device_report_finger_status (dev, FALSE);
+-          return G_SOURCE_REMOVE;
++          /* The triggered frame is already a complete 64x80 integration.
++           * Use it as the logical capture so one physical placement maps to
++           * exactly one libfprint enroll/verify sample. */
++          memcpy (frame, tmp, FTE4800_RAW_PIXELS);
++          return TRUE;
+         }
++      g_usleep (FTE4800_POLL_MS * 1000);
+     }
+-
+-  return G_SOURCE_CONTINUE;
++  return FALSE;
+ }
+ 
++/* Wait for finger to lift (polls until no finger present). */
+ static void
+-fte4800_capture_frame (FpImageDevice *dev)
++fte4800_wait_finger_off (FpiDeviceFte4800 *self)
+ {
+-  FpiDeviceFte4800 *self = FPI_DEVICE_FTE4800 (dev);
+-  g_autoptr(FpImage) img = NULL;
+-  g_autoptr(FpImage) scaled = NULL;
+-
+-  if (!self->last_frame_valid)
++  guint8 tmp[FTE4800_RAW_PIXELS];
++  for (int i = 0; i < FTE4800_FINGER_WAIT_MAX; i++)
+     {
+-      if (fte4800_read_frame (self->spi_fd, self->last_frame) != 0)
+-        {
+-          fpi_image_device_session_error (dev,
+-            fpi_device_error_new (FP_DEVICE_ERROR_GENERAL));
+-          return;
+-        }
++      if (fte4800_trigger_capture (self->spi_fd) != 0)
++        break;
++      if (fte4800_read_frame (self->spi_fd, tmp) != 0)
++        break;
++      if (!fte4800_is_finger (tmp, sizeof (tmp)))
++        break;
++      g_usleep (FTE4800_POLL_MS * 1000);
+     }
+-  self->last_frame_valid = FALSE;
+-
+-  img = fp_image_new (FTE4800_RAW_WIDTH, FTE4800_RAW_HEIGHT);
+-  memcpy (img->data, self->last_frame, FTE4800_RAW_PIXELS);
+-  img->ppmm = 10.0; /* Native ~254 DPI */
+-
+-  scaled = fpi_image_resize (img, 2, 2); /* 128x160 at 20 ppmm (~508 DPI for NIST NBIS) */
+-  scaled->flags |= FPI_IMAGE_PARTIAL | FPI_IMAGE_COLORS_INVERTED;
+-
+-  fpi_image_device_image_captured (dev, g_steal_pointer (&scaled));
+ }
+ 
++/* --------------------------------------------------------------------------
++ * Open / Close / Activate / Deactivate (standard FpImageDevice plumbing)
++ * -------------------------------------------------------------------------- */
+ static void
+-fte4800_open (FpImageDevice *dev)
++fte4800_open (FpImageDevice *imgdev)
+ {
+-  FpiDeviceFte4800 *self = FPI_DEVICE_FTE4800 (dev);
+-  const gchar *path;
+-  GError *error = NULL;
++  FpiDeviceFte4800 *self = FPI_DEVICE_FTE4800 (imgdev);
+   guint16 chip_id = 0;
++  GError *err = NULL;
++  const gchar *path;
+   int fd;
+ 
+   G_DEBUG_HERE ();
+ 
+-  path = fpi_device_get_udev_data (FP_DEVICE (dev), FPI_DEVICE_UDEV_SUBTYPE_MISC);
++  path = fpi_device_get_udev_data (FP_DEVICE (imgdev), FPI_DEVICE_UDEV_SUBTYPE_MISC);
+   if (!path)
+     path = "/dev/focal_moh_spi";
+ 
+   fd = open (path, O_RDWR | O_CLOEXEC);
+   if (fd < 0)
+     {
+-      error = fpi_device_error_new_msg (FP_DEVICE_ERROR_GENERAL,
+-                                        "Failed to open %s: %s",
+-                                        path, g_strerror (errno));
+-      fpi_image_device_open_complete (dev, error);
++      err = fpi_device_error_new_msg (FP_DEVICE_ERROR_GENERAL,
++                                      "open(%s): %s", path, g_strerror (errno));
++      fpi_image_device_open_complete (imgdev, err);
+       return;
+     }
+ 
+-  /* Hardware reset via kernel driver */
+   if (ioctl (fd, FTE4800_IOCTL_RESET, 0) < 0)
+-    {
+-      fp_warn ("Reset ioctl failed: %s", g_strerror (errno));
+-    }
+-  g_usleep (100 * 1000);
++    fp_warn ("Reset ioctl failed: %s", g_strerror (errno));
++
++  /* Discard the first post-reset read: FT9368 can return SPI shift-register
++   * residue before application firmware has produced a stable response. */
++  {
++    guint8 throwaway[2];
++    if (fte4800_spi_transfer (fd,
++                              (const guint8[]) { 0x91, 0x80, 0x00, 0x02, 0x00, 0x00, 0x00 },
++                              7, throwaway, sizeof (throwaway)) != 0)
++      fp_warn ("post-reset throwaway read failed: %s", g_strerror (errno));
++  }
+ 
+-  /* Verify sensor identity */
+   if (!fte4800_read_chip_id (fd, &chip_id))
+     {
+       close (fd);
+-      error = fpi_device_error_new_msg (FP_DEVICE_ERROR_NOT_SUPPORTED,
+-                                        "Device at %s is not an FT9368 sensor",
+-                                        path);
+-      fpi_image_device_open_complete (dev, error);
++      err = fpi_device_error_new_msg (FP_DEVICE_ERROR_NOT_SUPPORTED,
++                                      "%s: FT9368 not detected", path);
++      fpi_image_device_open_complete (imgdev, err);
+       return;
+     }
+ 
+-  fp_info ("FocalTech FT9368 sensor online (chip ID 0x%04x) on %s", chip_id, path);
++  fp_info ("FocalTech FT9368 (0x%04x) at %s", chip_id, path);
+   self->spi_fd = fd;
+-  fpi_image_device_open_complete (dev, NULL);
++  fpi_image_device_open_complete (imgdev, NULL);
+ }
+ 
+ static void
+-fte4800_close (FpImageDevice *dev)
++fte4800_close (FpImageDevice *imgdev)
+ {
+-  FpiDeviceFte4800 *self = FPI_DEVICE_FTE4800 (dev);
++  FpiDeviceFte4800 *self = FPI_DEVICE_FTE4800 (imgdev);
+ 
+   G_DEBUG_HERE ();
+ 
+-  fte4800_stop_poll (self);
+-
+   if (self->spi_fd >= 0)
+     {
+       close (self->spi_fd);
+       self->spi_fd = -1;
+     }
+-
+-  fpi_image_device_close_complete (dev, NULL);
++  fpi_image_device_close_complete (imgdev, NULL);
+ }
+ 
+ static void
+-fte4800_activate (FpImageDevice *dev)
++fte4800_activate (FpImageDevice *imgdev)
+ {
+-  FpiDeviceFte4800 *self = FPI_DEVICE_FTE4800 (dev);
+-
+   G_DEBUG_HERE ();
+-
+-  self->deactivating = FALSE;
+-  fpi_image_device_activate_complete (dev, NULL);
++  FPI_DEVICE_FTE4800 (imgdev)->deactivating = FALSE;
++  fpi_image_device_activate_complete (imgdev, NULL);
+ }
+ 
+ static void
+-fte4800_deactivate (FpImageDevice *dev)
++fte4800_deactivate (FpImageDevice *imgdev)
+ {
+-  FpiDeviceFte4800 *self = FPI_DEVICE_FTE4800 (dev);
+-
+   G_DEBUG_HERE ();
+-
+-  self->deactivating = TRUE;
+-  fte4800_stop_poll (self);
+-  fpi_image_device_deactivate_complete (dev, NULL);
++  FPI_DEVICE_FTE4800 (imgdev)->deactivating = TRUE;
++  fpi_image_device_deactivate_complete (imgdev, NULL);
+ }
+ 
+ static void
+-fte4800_change_state (FpImageDevice *dev, FpiImageDeviceState state)
++fte4800_change_state (FpImageDevice *imgdev, FpiImageDeviceState state)
+ {
+-  FpiDeviceFte4800 *self = FPI_DEVICE_FTE4800 (dev);
+-
++  /* Capture state machine not used; NCC enroll/verify/identify handle everything. */
+   G_DEBUG_HERE ();
++}
+ 
+-  fte4800_stop_poll (self);
++/* --------------------------------------------------------------------------
++ * Custom Enroll
++ * -------------------------------------------------------------------------- */
++typedef struct {
++  FpiDeviceFte4800 *self;
++  FpPrint          *enroll_print;
++} EnrollData;
+ 
+-  switch (state)
++static void
++fte4800_enroll_thread (GTask *task, gpointer src,
++                       gpointer task_data, GCancellable *cancel)
++{
++  EnrollData *ed = task_data;
++  FpiDeviceFte4800 *self = ed->self;
++  guint8 frame[FTE4800_RAW_PIXELS];
++
++  memset (self->enroll_frames, 0, sizeof (self->enroll_frames));
++  self->enroll_count = 0;
++
++  while (self->enroll_count < FTE4800_ENROLL_STAGES)
+     {
+-    case FPI_IMAGE_DEVICE_STATE_AWAIT_FINGER_ON:
+-      self->last_frame_valid = FALSE;
+-      self->poll_timeout_id = g_timeout_add (50, fte4800_poll_finger_on_cb, dev);
+-      break;
++      if (g_task_return_error_if_cancelled (task))
++        return;
+ 
+-    case FPI_IMAGE_DEVICE_STATE_CAPTURE:
+-      fte4800_capture_frame (dev);
+-      break;
++      /* Capture one settled frame. */
++      if (!fte4800_capture_frame_blocking (self, frame))
++        {
++          g_task_return_new_error (task, G_IO_ERROR, G_IO_ERROR_TIMED_OUT,
++                                   "No finger detected during enroll");
++          return;
++        }
+ 
+-    case FPI_IMAGE_DEVICE_STATE_AWAIT_FINGER_OFF:
+-      self->poll_timeout_id = g_timeout_add (50, fte4800_poll_finger_off_cb, dev);
+-      break;
++      /* Retain this physical placement as its own enrollment sample. */
++      memcpy (self->enroll_frames[self->enroll_count],
++              frame, FTE4800_RAW_PIXELS);
++      self->enroll_count++;
+ 
+-    case FPI_IMAGE_DEVICE_STATE_IDLE:
+-    case FPI_IMAGE_DEVICE_STATE_INACTIVE:
+-    case FPI_IMAGE_DEVICE_STATE_ACTIVATING:
+-    case FPI_IMAGE_DEVICE_STATE_DEACTIVATING:
+-    default:
+-      break;
++      fp_dbg ("Enroll stage %d/%d", self->enroll_count, FTE4800_ENROLL_STAGES);
++
++      /* Report progress from the GTask thread via fpi_device_enroll_progress.
++       * This is safe to call from a worker thread in recent libfprint. */
++      fpi_device_enroll_progress (FP_DEVICE (self),
++                                  self->enroll_count, NULL, NULL);
++
++      /* Wait for finger lift before prompting for the next press. */
++      if (self->enroll_count < FTE4800_ENROLL_STAGES)
++        fte4800_wait_finger_off (self);
+     }
++
++  fte4800_set_print_template (ed->enroll_print, self->enroll_frames);
++  g_task_return_boolean (task, TRUE);
+ }
+ 
++static void
++fte4800_enroll_done (GObject *src, GAsyncResult *res, gpointer task_data)
++{
++  FpDevice   *dev = FP_DEVICE (src);
++  EnrollData *ed  = task_data;
++  GError     *err = NULL;
++
++  if (!g_task_propagate_boolean (G_TASK (res), &err))
++    {
++      fpi_device_enroll_complete (dev, NULL, err);
++    }
++  else
++    {
++      fp_info ("Enrollment complete (five raw FT9368 samples stored)");
++      fpi_device_enroll_complete (dev, g_object_ref (ed->enroll_print), NULL);
++    }
++  g_object_unref (ed->enroll_print);
++  g_free (ed);
++}
++
++static void
++fte4800_enroll (FpDevice *dev)
++{
++  FpiDeviceFte4800 *self = FPI_DEVICE_FTE4800 (dev);
++  FpPrint *enroll_print = NULL;
++
++  fpi_device_get_enroll_data (dev, &enroll_print);
++
++  EnrollData *ed = g_new0 (EnrollData, 1);
++  ed->self         = self;
++  ed->enroll_print = g_object_ref (enroll_print);
++
++  GTask *task = g_task_new (dev, NULL, fte4800_enroll_done, ed);
++  g_task_set_task_data (task, ed, NULL);
++  g_task_run_in_thread (task, fte4800_enroll_thread);
++  g_object_unref (task);
++}
++
++/* --------------------------------------------------------------------------
++ * Custom Verify
++ * -------------------------------------------------------------------------- */
++typedef struct {
++  FpiDeviceFte4800 *self;
++  FpPrint          *verify_print;
++} VerifyData;
++
++static void
++fte4800_verify_thread (GTask *task, gpointer src,
++                       gpointer task_data, GCancellable *cancel)
++{
++  VerifyData *vd = task_data;
++  FpiDeviceFte4800 *self = vd->self;
++  guint8 frame[FTE4800_RAW_PIXELS];
++
++  if (g_task_return_error_if_cancelled (task))
++    return;
++
++  if (!fte4800_capture_frame_blocking (self, frame))
++    {
++      g_task_return_new_error (task, G_IO_ERROR, G_IO_ERROR_TIMED_OUT,
++                               "No finger detected during verify");
++      return;
++    }
++
++  guint8 *templates = fte4800_get_print_frames (vd->verify_print);
++  if (!templates)
++    {
++      g_task_return_new_error (task, G_IO_ERROR, G_IO_ERROR_INVALID_DATA,
++                               "Stored print has no FT9368 raw templates");
++      return;
++    }
++
++  float score = fte4800_match_frames (frame, templates, NULL);
++  g_free (templates);
++  fp_dbg ("Verify aligned score = %.4f (threshold %.2f)",
++          score, FTE4800_MATCH_THRESHOLD);
++
++  /* Pass score back as a heap-allocated float. */
++  float *result = g_new (float, 1);
++  *result = score;
++  g_task_return_pointer (task, result, g_free);
++}
++
++static void
++fte4800_verify_done (GObject *src, GAsyncResult *res, gpointer task_data)
++{
++  FpDevice   *dev = FP_DEVICE (src);
++  VerifyData *vd  = task_data;
++  GError     *err = NULL;
++
++  float *score_p = g_task_propagate_pointer (G_TASK (res), &err);
++  if (err)
++    {
++      fpi_device_verify_complete (dev, err);
++    }
++  else
++    {
++      float score = *score_p;
++      g_free (score_p);
++      if (score >= FTE4800_MATCH_THRESHOLD)
++        {
++          fp_info ("Verify MATCH (aligned score %.4f)", score);
++          fpi_device_verify_report (dev, FPI_MATCH_SUCCESS, NULL, NULL);
++        }
++      else
++        {
++          fp_info ("Verify NO-MATCH (aligned score %.4f)", score);
++          fpi_device_verify_report (dev, FPI_MATCH_FAIL, NULL, NULL);
++        }
++      fpi_device_verify_complete (dev, NULL);
++    }
++
++  g_object_unref (vd->verify_print);
++  g_free (vd);
++}
++
++static void
++fte4800_verify (FpDevice *dev)
++{
++  FpiDeviceFte4800 *self = FPI_DEVICE_FTE4800 (dev);
++  FpPrint *print = NULL;
++
++  fpi_device_get_verify_data (dev, &print);
++
++  VerifyData *vd = g_new0 (VerifyData, 1);
++  vd->self         = self;
++  vd->verify_print = g_object_ref (print);
++
++  GTask *task = g_task_new (dev, NULL, fte4800_verify_done, vd);
++  g_task_set_task_data (task, vd, NULL);
++  g_task_run_in_thread (task, fte4800_verify_thread);
++  g_object_unref (task);
++}
++
++/* --------------------------------------------------------------------------
++ * Custom Identify
++ * -------------------------------------------------------------------------- */
++typedef struct {
++  FpiDeviceFte4800 *self;
++  GPtrArray        *prints;
++  FpPrint          *matched_print; /* filled by thread, borrowed from prints */
++  double            best_score;
++} IdentifyData;
++
++static void
++fte4800_identify_thread (GTask *task, gpointer src,
++                         gpointer task_data, GCancellable *cancel)
++{
++  IdentifyData *id = task_data;
++  FpiDeviceFte4800 *self = id->self;
++  guint8 frame[FTE4800_RAW_PIXELS];
++
++  if (g_task_return_error_if_cancelled (task))
++    return;
++
++  if (!fte4800_capture_frame_blocking (self, frame))
++    {
++      g_task_return_new_error (task, G_IO_ERROR, G_IO_ERROR_TIMED_OUT,
++                               "No finger detected during identify");
++      return;
++    }
++
++  id->best_score   = -1.0f;
++  id->matched_print = NULL;
++
++  for (guint i = 0; i < id->prints->len; i++)
++    {
++      FpPrint *p = g_ptr_array_index (id->prints, i);
++      guint8 *templates = fte4800_get_print_frames (p);
++      if (!templates)
++        continue;
++      float s = fte4800_match_frames (frame, templates, NULL);
++      g_free (templates);
++      fp_dbg ("Identify aligned score[%u] = %.4f", i, s);
++      if (s > id->best_score)
++        {
++          id->best_score    = s;
++          id->matched_print = p;
++        }
++    }
++
++  g_task_return_boolean (task, TRUE);
++}
++
++static void
++fte4800_identify_done (GObject *src, GAsyncResult *res, gpointer task_data)
++{
++  FpDevice     *dev = FP_DEVICE (src);
++  IdentifyData *id  = task_data;
++  GError       *err = NULL;
++
++  if (!g_task_propagate_boolean (G_TASK (res), &err))
++    {
++      fpi_device_identify_complete (dev, err);
++    }
++  else if (id->best_score >= FTE4800_MATCH_THRESHOLD && id->matched_print)
++    {
++      fp_info ("Identify MATCH (aligned score %.4f)", id->best_score);
++      fpi_device_identify_report (dev, id->matched_print, NULL, NULL);
++      fpi_device_identify_complete (dev, NULL);
++    }
++  else
++    {
++      fp_info ("Identify NO-MATCH (best aligned score %.4f)", id->best_score);
++      fpi_device_identify_report (dev, NULL, NULL, NULL);
++      fpi_device_identify_complete (dev, NULL);
++    }
++
++  g_ptr_array_unref (id->prints);
++  g_free (id);
++}
++
++static void
++fte4800_identify (FpDevice *dev)
++{
++  FpiDeviceFte4800 *self = FPI_DEVICE_FTE4800 (dev);
++  GPtrArray *prints = NULL;
++
++  fpi_device_get_identify_data (dev, &prints);
++
++  IdentifyData *id = g_new0 (IdentifyData, 1);
++  id->self   = self;
++  id->prints = g_ptr_array_ref (prints);
++
++  GTask *task = g_task_new (dev, NULL, fte4800_identify_done, id);
++  g_task_set_task_data (task, id, NULL);
++  g_task_run_in_thread (task, fte4800_identify_thread);
++  g_object_unref (task);
++}
++
++/* --------------------------------------------------------------------------
++ * GObject lifecycle
++ * -------------------------------------------------------------------------- */
+ static void
+ fpi_device_fte4800_init (FpiDeviceFte4800 *self)
+ {
+-  self->spi_fd = -1;
+-  self->poll_timeout_id = 0;
++  self->spi_fd      = -1;
+   self->deactivating = FALSE;
+-  self->last_frame_valid = FALSE;
+ }
+ 
+ static void
+-fpi_device_fte4800_finalize (GObject *object)
++fpi_device_fte4800_finalize (GObject *obj)
+ {
+-  FpiDeviceFte4800 *self = FPI_DEVICE_FTE4800 (object);
++  FpiDeviceFte4800 *self = FPI_DEVICE_FTE4800 (obj);
+ 
+-  fte4800_stop_poll (self);
+   if (self->spi_fd >= 0)
+     {
+       close (self->spi_fd);
+       self->spi_fd = -1;
+     }
+-
+-  G_OBJECT_CLASS (fpi_device_fte4800_parent_class)->finalize (object);
++  G_OBJECT_CLASS (fpi_device_fte4800_parent_class)->finalize (obj);
+ }
+ 
+ static void
+ fpi_device_fte4800_class_init (FpiDeviceFte4800Class *klass)
+ {
+-  FpDeviceClass *dev_class = FP_DEVICE_CLASS (klass);
++  GObjectClass       *obj_class = G_OBJECT_CLASS (klass);
++  FpDeviceClass      *dev_class = FP_DEVICE_CLASS (klass);
+   FpImageDeviceClass *img_class = FP_IMAGE_DEVICE_CLASS (klass);
+ 
+-  dev_class->id = "fte4800";
+-  dev_class->full_name = "FocalTech FTE4800 / FT9368 Fingerprint Sensor";
+-  dev_class->type = FP_DEVICE_TYPE_UDEV;
+-  dev_class->id_table = fte4800_id_table;
+-  dev_class->scan_type = FP_SCAN_TYPE_PRESS;
+-  dev_class->nr_enroll_stages = 5;
++  obj_class->finalize = fpi_device_fte4800_finalize;
+ 
+-  img_class->bz3_threshold = 24;
+-  img_class->img_width = FTE4800_SCALED_WIDTH;
+-  img_class->img_height = FTE4800_SCALED_HEIGHT;
++  dev_class->id             = "fte4800";
++  dev_class->full_name      = "FocalTech FTE4800 / FT9368 Fingerprint Sensor";
++  dev_class->type           = FP_DEVICE_TYPE_UDEV;
++  dev_class->id_table       = fte4800_id_table;
++  dev_class->scan_type      = FP_SCAN_TYPE_PRESS;
++  dev_class->nr_enroll_stages = FTE4800_ENROLL_STAGES;
+ 
+-  img_class->img_open = fte4800_open;
+-  img_class->activate = fte4800_activate;
+-  img_class->deactivate = fte4800_deactivate;
++  /* NCC-based custom matching — overrides the FpImageDevice NBIS pipeline. */
++  dev_class->enroll   = fte4800_enroll;
++  dev_class->verify   = fte4800_verify;
++  dev_class->identify = fte4800_identify;
++
++  /* Standard image-device plumbing for open/close/activate/deactivate. */
++  img_class->img_open     = fte4800_open;
++  img_class->img_close    = fte4800_close;
++  img_class->activate     = fte4800_activate;
++  img_class->deactivate   = fte4800_deactivate;
+   img_class->change_state = fte4800_change_state;
+-  img_class->img_close = fte4800_close;
+-
+-  G_OBJECT_CLASS (klass)->finalize = fpi_device_fte4800_finalize;
++  img_class->img_width    = FTE4800_RAW_WIDTH;
++  img_class->img_height   = FTE4800_RAW_HEIGHT;
+ }
+diff --git c/libfprint/meson.build w/libfprint/meson.build
+index bf23802..09642cc 100644
+--- c/libfprint/meson.build
++++ w/libfprint/meson.build
+@@ -122,7 +122,10 @@ driver_sources = {
+     'elan' : files('drivers/elan.c'),
+     'elanmoc' : files('drivers/elanmoc/elanmoc.c'),
+     'elanspi' : files('drivers/elanspi.c'),
+-    'fte4800' : files('drivers/fte4800.c'),
++    'fte4800' : files(
++        'drivers/fte4800.c',
++        'drivers/fte4800-match.c',
++    ),
+     'nb1010' : files('drivers/nb1010.c'),
+     'virtual_image' : files('drivers/virtual-image.c'),
+     'virtual_device' : files('drivers/virtual-device.c'),
