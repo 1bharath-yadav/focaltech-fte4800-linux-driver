@@ -9,13 +9,15 @@ import os
 import select
 import struct
 import sys
+import time
 from pathlib import Path
 
 DEV = "/dev/focal_moh_spi"
 IOCTL_RESET = 0x8086
 IOCTL_IRQ_ENABLE = 0x8089
 SPI_READ_WRITE = 0xA5
-READ_REQUEST = bytes((0x08, 0xF7, 0x91, 0x00))
+READ_INFO_REQUEST = bytes((0x91, 0x80, 0x00, 0x20, 0x00, 0x00, 0x00))
+READ_REQUEST = READ_INFO_REQUEST
 INFO_BYTES = 32
 INFO_CHIP_OFFSET = 0x13
 CHIP_ID = 0x9368
@@ -35,12 +37,12 @@ def _raise_errno(op: str) -> None:
 
 def compat_read_request() -> bytes:
     request = bytearray(INFO_BYTES)
-    struct.pack_into("<BHH", request, 0, SPI_READ_WRITE, len(READ_REQUEST), INFO_BYTES)
-    request[HEADER_SIZE:HEADER_SIZE + len(READ_REQUEST)] = READ_REQUEST
+    struct.pack_into("<BHH", request, 0, SPI_READ_WRITE, len(READ_INFO_REQUEST), INFO_BYTES)
+    request[HEADER_SIZE:HEADER_SIZE + len(READ_INFO_REQUEST)] = READ_INFO_REQUEST
     return bytes(request)
 
 
-def read_info(fd: int) -> bytes:
+def read_info_single(fd: int) -> bytes:
     request = compat_read_request()
     buffer = (ctypes.c_ubyte * len(request)).from_buffer_copy(request)
     result = libc.read(fd, ctypes.byref(buffer), len(request))
@@ -53,9 +55,22 @@ def read_info(fd: int) -> bytes:
     return bytes(buffer[:result])
 
 
+def read_info(fd: int, retries: int = 6) -> bytes:
+    data = b""
+    for _ in range(retries):
+        data = read_info_single(fd)
+        if len(data) >= INFO_CHIP_OFFSET + 2:
+            chip = int.from_bytes(data[INFO_CHIP_OFFSET:INFO_CHIP_OFFSET + 2], "big")
+            if chip == CHIP_ID:
+                return data
+        time.sleep(0.05)
+    return data
+
+
 def reset_sensor(fd: int) -> None:
     if libc.ioctl(fd, IOCTL_RESET, 0) < 0:
         _raise_errno("reset ioctl")
+    time.sleep(0.35)  # Wait for sensor to auto-boot firmware from internal flash
 
 
 def enable_irq(fd: int) -> None:
