@@ -44,7 +44,7 @@ The current method works directly on the image signal, so it can still use ridge
 
 ## Enrollment
 
-Enrollment stores fifteen raw FT9368 frames independently. Each accepted stage must pass a libfprint pixel-variance quality gate and a near-duplicate check, and each stage is separated by confirmed finger removal.
+Enrollment stores fifteen raw FT9368 frames independently. Each accepted stage must pass a libfprint pixel-variance quality gate, and each stage is separated by confirmed finger removal.
 
 The stored payload uses the `FTE2` marker, a one-byte sample count, and `15 × 64 × 80` raw 8-bit frames.
 

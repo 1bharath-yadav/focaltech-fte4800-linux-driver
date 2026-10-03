@@ -312,7 +312,7 @@ The 2026-10-03 baseline proves:
 - real FT9368 hardware access;
 - verified reset and identity protocol;
 - real 64x80 image capture;
-- fifteen-stage enrollment implementation with quality and duplicate gates;
+- fifteen-stage enrollment implementation with image-quality and press/release gates;
 - native libfprint/fprintd operation;
 - same-finger matching and different-finger rejection in the current small evaluation set;
 - module reload, reboot and suspend/resume recovery;

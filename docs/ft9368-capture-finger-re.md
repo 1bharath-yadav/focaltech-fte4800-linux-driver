@@ -11,17 +11,12 @@ This document details the reverse-engineered protocol for the FocalTech FT9368 f
 **Polling & Status Read:**
 - **Polling Interval:** The driver sleeps for 5 milliseconds (`Sleep(5)`) between the wake command and reading the status.
 - **Read Operation:** It reads exactly 6 bytes from logical address `0x9180` into a buffer.
-- **Status Byte Parsing:** The response contains the status byte replicated across the first four bytes. The driver verifies this replication:
+- **Status Byte Parsing:** The vendor routine reads 6 bytes from `0x9180` and uses the third byte (buffer offset `+2`) for the finger-present test. The disassembly directly compares that byte with `0x11`.
   ```assembly
-  mov cl, byte [var_10h] ; byte 0
-  mov dl, byte [var_fh]  ; byte 1
-  cmp cl, dl             ; must match
-  mov al, byte [var_eh]  ; byte 2
-  cmp cl, al             ; must match
-  mov r8b, byte [var_dh] ; byte 3
-  cmp cl, r8b            ; must match
+  ; var_20h points to the six-byte response buffer
+  ; response[2] is tested against 0x11 below
   ```
-- **Finger Present Condition:** If the repeated status byte is `0x11` (decimal 17), the sensor has detected a finger.
+- **Finger Present Condition:** The vendor routine checks response byte 2; when it is `0x11` (decimal 17), the sensor has detected a finger.
   ```assembly
   cmp al, 0x11
   je finger_detected

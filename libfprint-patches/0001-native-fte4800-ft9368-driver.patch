@@ -308,7 +308,7 @@ index 0000000..bb07342
 +float fte_match (const FteTemplate *tmpl, const FteProbe *probe,
 +                 float *ang, int *dx, int *dy);
 diff --git c/libfprint/drivers/fte4800.c w/libfprint/drivers/fte4800.c
-index 1b20d57..d84de4b 100644
+index 1b20d57..dd2354e 100644
 --- c/libfprint/drivers/fte4800.c
 +++ w/libfprint/drivers/fte4800.c
 @@ -15,12 +15,22 @@
@@ -334,7 +334,7 @@ index 1b20d57..d84de4b 100644
 
  #include <fcntl.h>
  #include <sys/ioctl.h>
-@@ -29,66 +39,133 @@
+@@ -29,66 +39,136 @@
  #include <unistd.h>
  #include <errno.h>
 
@@ -343,12 +343,15 @@ index 1b20d57..d84de4b 100644
 + * -------------------------------------------------------------------------- */
 +#define FTE4800_MATCH_THRESHOLD   0.75f /* conservative research threshold */
 +#define FTE4800_ENROLL_STAGES     15    /* distinct raw samples retained */
-+#define FTE4800_TOUCH_VAR_THRESH  350   /* libfprint blank-frame threshold */
-+#define FTE4800_ENROLL_MIN_VAR   1200   /* stronger enrollment quality floor */
-+#define FTE4800_SAMPLE_DIFF_MIN  4000   /* reject near-duplicate raw frames */
-+#define FTE4800_POLL_MS             50  /* poll interval after a trigger */
-+#define FTE4800_FINGER_WAIT_MAX    100  /* bounded wait: 10 s worst case */
-+#define FTE4800_TEMPLATE_MAGIC    "FTE2"
++#define FTE4800_TOUCH_VAR_THRESH    350   /* libfprint blank-frame threshold */
++#define FTE4800_ENROLL_MIN_VAR     1200   /* stronger enrollment quality floor */
++#define FTE4800_POLL_MS              50   /* status poll interval */
++#define FTE4800_FINGER_WAIT_MAX     240   /* bounded wait: 12 s */
++#define FTE4800_FINGER_ON_CONFIRM     2   /* consecutive present polls */
++#define FTE4800_FINGER_OFF_CONFIRM    8   /* consecutive absent polls */
++#define FTE4800_FINGER_OFF_MIN_MS   600   /* minimum confirmed release time */
++#define FTE4800_FINGER_STATUS_BYTE 0x11
++#define FTE4800_TEMPLATE_MAGIC      "FTE2"
 +
 +/* --------------------------------------------------------------------------
 + * Device instance data
@@ -494,34 +497,105 @@ index 1b20d57..d84de4b 100644
                return TRUE;
              }
          }
-@@ -97,277 +174,669 @@ fte4800_read_chip_id (int fd, guint16 *chip_id)
+@@ -97,277 +177,700 @@ fte4800_read_chip_id (int fd, guint16 *chip_id)
    return FALSE;
  }
 
--static int
--fte4800_read_frame (int fd, guint8 *frame_buf)
-+/* TRUE when variance of pixel buffer exceeds the finger-present threshold. */
++/* Libfprint's basic image-quality primitive: useful for accepting a
++ * captured image, but not for detecting finger removal because the FT9368
++ * image buffer can remain populated after the finger is lifted. */
 +static gboolean
-+fte4800_is_finger (const guint8 *px, gsize n)
++fte4800_image_has_signal (const guint8 *px, gsize n)
++{
++  return fpi_std_sq_dev (px, n) > FTE4800_ENROLL_MIN_VAR;
++}
++
++/* FT9368 POA finger-status read. Our captured Linux response places the
++ * status byte at response[2]; 0x11 means finger present. */
+ static int
+-fte4800_read_frame (int fd, guint8 *frame_buf)
++fte4800_read_finger_present (FpiDeviceFte4800 *self, gboolean *present)
  {
 -  guint8 tx[7] = { 0x90, 0x80, 0x14, 0x00, 0x00, 0x00, 0x00 };
 -  return fte4800_spi_transfer (fd, tx, sizeof (tx), frame_buf, FTE4800_RAW_PIXELS);
-+  return fpi_std_sq_dev (px, n) > FTE4800_TOUCH_VAR_THRESH;
++  static const guint8 wake[4] = { 0xFF, 0x00, 0x00, 0x00 };
++  static const guint8 status_read[7] = {
++    0x91, 0x80, 0x00, 0x06, 0x00, 0x00, 0x00
++  };
++  guint8 status[6];
++
++  if (fte4800_write (self->spi_fd, wake, sizeof (wake)) != 0)
++    return -EIO;
++
++  g_usleep (5 * 1000);
++
++  if (fte4800_spi_transfer (self->spi_fd,
++                            status_read, sizeof (status_read),
++                            status, sizeof (status)) != 0)
++    return -EIO;
++
++  *present = (status[2] == FTE4800_FINGER_STATUS_BYTE);
++  return 0;
  }
 
--static gboolean
+ static gboolean
 -fte4800_is_finger_present (const guint8 *pixels, gsize len)
--{
++fte4800_wait_finger_state (FpiDeviceFte4800 *self,
++                           GCancellable *cancel,
++                           gboolean want_present)
+ {
 -  gint var = fpi_std_sq_dev (pixels, len);
 -  /* Idle sensor has variance < 20. Real physical finger contact gives variance > 350. */
 -  return var > 350;
--}
++  guint confirmations = 0;
++  gint64 state_start = 0;
++
++  for (int i = 0; i < FTE4800_FINGER_WAIT_MAX; i++)
++    {
++      gboolean present = FALSE;
++
++      if (g_cancellable_is_cancelled (cancel))
++        return FALSE;
++
++      if (fte4800_read_finger_present (self, &present) != 0)
++        {
++          g_usleep (FTE4800_POLL_MS * 1000);
++          continue;
++        }
++
++      if (present == want_present)
++        {
++          if (confirmations == 0)
++            state_start = g_get_monotonic_time ();
++
++          confirmations++;
++
++          if ((want_present &&
++               confirmations >= FTE4800_FINGER_ON_CONFIRM) ||
++              (!want_present &&
++               confirmations >= FTE4800_FINGER_OFF_CONFIRM &&
++               g_get_monotonic_time () - state_start >=
++               FTE4800_FINGER_OFF_MIN_MS * 1000))
++            return TRUE;
++        }
++      else
++        {
++          confirmations = 0;
++          state_start = 0;
++        }
++
++      g_usleep (FTE4800_POLL_MS * 1000);
++    }
++
++  return FALSE;
+ }
+
 +/* --------------------------------------------------------------------------
 + * Template storage in FpPrint (fifteen raw 64x80 frames)
 + *
 + * FTE2 layout: magic[4] + sample_count[1] + sample_count * 5120 bytes.
 + * -------------------------------------------------------------------------- */
-
++
  static void
 -fte4800_stop_poll (FpiDeviceFte4800 *self)
 +fte4800_set_print_template (FpPrint *print,
@@ -551,27 +625,19 @@ index 1b20d57..d84de4b 100644
 +  g_free (buf);
  }
 
--static gboolean
--fte4800_poll_finger_on_cb (gpointer user_data)
 +static guint8 *
 +fte4800_get_print_frames (FpPrint *print)
- {
--  FpImageDevice *dev = FP_IMAGE_DEVICE (user_data);
--  FpiDeviceFte4800 *self = FPI_DEVICE_FTE4800 (dev);
--  guint8 frame[FTE4800_RAW_PIXELS];
++{
 +  GVariant *data = NULL;
 +  gsize n = 0;
 +  const gsize magic_len = strlen (FTE4800_TEMPLATE_MAGIC);
 +  const gsize header = magic_len + 1;
 +  const gsize expected = header + FTE4800_ENROLL_STAGES * FTE4800_RAW_PIXELS;
-
--  if (self->deactivating)
--    return G_SOURCE_REMOVE;
++
 +  g_object_get (print, "fpi-data", &data, NULL);
 +  if (!data)
 +    return NULL;
-
--  if (fte4800_read_frame (self->spi_fd, frame) == 0)
++
 +  const guint8 *raw = g_variant_get_fixed_array (data, &n, sizeof (guint8));
 +  guint8 *out = NULL;
 +  if (raw && n == expected &&
@@ -596,8 +662,7 @@ index 1b20d57..d84de4b 100644
 +
 +  fte_template_init (&probe_t, probe_raw);
 +  if (probe_t.coverage <= 0.05f || probe_t.contrast <= 2.0f)
-     {
--      if (fte4800_is_finger_present (frame, sizeof (frame)))
++    {
 +      if (best_index)
 +        *best_index = -1;
 +      return -1.0f;
@@ -617,24 +682,17 @@ index 1b20d57..d84de4b 100644
 +
 +      score = fte_match (&tmpl, &probe, NULL, NULL, NULL);
 +      if (score > best)
-         {
--          fp_dbg ("Finger touch detected!");
--          memcpy (self->last_frame, frame, sizeof (frame));
--          self->last_frame_valid = TRUE;
--          self->poll_timeout_id = 0;
--          fpi_image_device_report_finger_status (dev, TRUE);
--          return G_SOURCE_REMOVE;
++        {
 +          best = score;
 +          best_i = i;
-         }
-     }
-
--  return G_SOURCE_CONTINUE;
++        }
++    }
++
 +  if (best_index)
 +    *best_index = best_i;
 +  return best;
- }
-
++}
++
 +/* --------------------------------------------------------------------------
 + * Blocking capture helper (runs in a GTask worker thread)
 + *
@@ -643,85 +701,81 @@ index 1b20d57..d84de4b 100644
 + * Returns TRUE on success; frame is filled with FTE4800_RAW_PIXELS bytes.
 + * -------------------------------------------------------------------------- */
  static gboolean
--fte4800_poll_finger_off_cb (gpointer user_data)
+-fte4800_poll_finger_on_cb (gpointer user_data)
 +fte4800_capture_frame_blocking (FpiDeviceFte4800 *self, guint8 *frame)
  {
 -  FpImageDevice *dev = FP_IMAGE_DEVICE (user_data);
 -  FpiDeviceFte4800 *self = FPI_DEVICE_FTE4800 (dev);
 -  guint8 frame[FTE4800_RAW_PIXELS];
-+  guint8 tmp[FTE4800_RAW_PIXELS];
++  if (fte4800_trigger_capture (self->spi_fd) != 0)
++    return FALSE;
 
 -  if (self->deactivating)
 -    return G_SOURCE_REMOVE;
 -
 -  if (fte4800_read_frame (self->spi_fd, frame) == 0)
-+  for (int i = 0; i < FTE4800_FINGER_WAIT_MAX; i++)
-     {
+-    {
+-      if (fte4800_is_finger_present (frame, sizeof (frame)))
+-        {
+-          fp_dbg ("Finger touch detected!");
+-          memcpy (self->last_frame, frame, sizeof (frame));
+-          self->last_frame_valid = TRUE;
+-          self->poll_timeout_id = 0;
+-          fpi_image_device_report_finger_status (dev, TRUE);
+-          return G_SOURCE_REMOVE;
+-        }
+-    }
+-
+-  return G_SOURCE_CONTINUE;
+-}
+-
+-static gboolean
+-fte4800_poll_finger_off_cb (gpointer user_data)
+-{
+-  FpImageDevice *dev = FP_IMAGE_DEVICE (user_data);
+-  FpiDeviceFte4800 *self = FPI_DEVICE_FTE4800 (dev);
+-  guint8 frame[FTE4800_RAW_PIXELS];
+-
+-  if (self->deactivating)
+-    return G_SOURCE_REMOVE;
+-
+-  if (fte4800_read_frame (self->spi_fd, frame) == 0)
+-    {
 -      if (!fte4800_is_finger_present (frame, sizeof (frame)))
-+      if (fte4800_trigger_capture (self->spi_fd) != 0)
-+        return FALSE;
-+      if (fte4800_read_frame (self->spi_fd, tmp) != 0)
-+        return FALSE;
-+      if (fte4800_is_finger (tmp, sizeof (tmp)))
-         {
+-        {
 -          fp_dbg ("Finger release detected!");
 -          self->poll_timeout_id = 0;
 -          fpi_image_device_report_finger_status (dev, FALSE);
 -          return G_SOURCE_REMOVE;
-+          /* The triggered frame is already a complete 64x80 integration.
-+           * Use it as the logical capture so one physical placement maps to
-+           * exactly one libfprint enroll/verify sample. */
-+          memcpy (frame, tmp, FTE4800_RAW_PIXELS);
-+          return TRUE;
-         }
-+      g_usleep (FTE4800_POLL_MS * 1000);
-     }
+-        }
+-    }
 -
 -  return G_SOURCE_CONTINUE;
-+  return FALSE;
++  return fte4800_read_frame (self->spi_fd, frame) == 0;
  }
 
--static void
++/* --------------------------------------------------------------------------
++ * Open / Close / Activate / Deactivate (standard FpImageDevice plumbing)
++ * -------------------------------------------------------------------------- */
+ static void
 -fte4800_capture_frame (FpImageDevice *dev)
-+/* Wait for finger to lift (polls until no finger present). */
-+static gboolean
-+fte4800_wait_finger_off (FpiDeviceFte4800 *self, GCancellable *cancel)
++fte4800_open (FpImageDevice *imgdev)
  {
 -  FpiDeviceFte4800 *self = FPI_DEVICE_FTE4800 (dev);
 -  g_autoptr(FpImage) img = NULL;
 -  g_autoptr(FpImage) scaled = NULL;
-+  guint8 tmp[FTE4800_RAW_PIXELS];
-+  guint off_count = 0;
-
+-
 -  if (!self->last_frame_valid)
-+  for (int i = 0; i < FTE4800_FINGER_WAIT_MAX; i++)
-     {
+-    {
 -      if (fte4800_read_frame (self->spi_fd, self->last_frame) != 0)
-+      if (g_cancellable_is_cancelled (cancel))
-+        return FALSE;
-+      if (fte4800_trigger_capture (self->spi_fd) != 0)
-+        return FALSE;
-+      if (fte4800_read_frame (self->spi_fd, tmp) != 0)
-+        return FALSE;
-+
-+      if (!fte4800_is_finger (tmp, sizeof (tmp)))
-         {
+-        {
 -          fpi_image_device_session_error (dev,
 -            fpi_device_error_new (FP_DEVICE_ERROR_GENERAL));
 -          return;
-+          /* Require three consecutive blank frames so a transient low-
-+           * variance read cannot re-arm enrollment while the finger remains.
-+           */
-+          if (++off_count >= 3)
-+            return TRUE;
-         }
-+      else
-+        off_count = 0;
-+
-+      g_usleep (FTE4800_POLL_MS * 1000);
-     }
+-        }
+-    }
 -  self->last_frame_valid = FALSE;
-
+-
 -  img = fp_image_new (FTE4800_RAW_WIDTH, FTE4800_RAW_HEIGHT);
 -  memcpy (img->data, self->last_frame, FTE4800_RAW_PIXELS);
 -  img->ppmm = 10.0; /* Native ~254 DPI */
@@ -730,16 +784,11 @@ index 1b20d57..d84de4b 100644
 -  scaled->flags |= FPI_IMAGE_PARTIAL | FPI_IMAGE_COLORS_INVERTED;
 -
 -  fpi_image_device_image_captured (dev, g_steal_pointer (&scaled));
-+  return FALSE;
- }
-
-+/* --------------------------------------------------------------------------
-+ * Open / Close / Activate / Deactivate (standard FpImageDevice plumbing)
-+ * -------------------------------------------------------------------------- */
- static void
+-}
+-
+-static void
 -fte4800_open (FpImageDevice *dev)
-+fte4800_open (FpImageDevice *imgdev)
- {
+-{
 -  FpiDeviceFte4800 *self = FPI_DEVICE_FTE4800 (dev);
 -  const gchar *path;
 -  GError *error = NULL;
@@ -892,79 +941,66 @@ index 1b20d57..d84de4b 100644
 +                                   FTE4800_RAW_PIXELS);
 +  self->enroll_count = 0;
 +
-+  while (self->enroll_count < FTE4800_ENROLL_STAGES)
++  /* Begin in the same state as a normal press-style libfprint device:
++   * the finger must be absent before the first press. */
++  fpi_device_report_finger_status (FP_DEVICE (self),
++                                    FP_FINGER_STATUS_NONE | FP_FINGER_STATUS_NEEDED);
++  if (!fte4800_wait_finger_state (self, cancel, FALSE))
      {
 -    case FPI_IMAGE_DEVICE_STATE_AWAIT_FINGER_ON:
 -      self->last_frame_valid = FALSE;
 -      self->poll_timeout_id = g_timeout_add (50, fte4800_poll_finger_on_cb, dev);
 -      break;
-+      if (g_task_return_error_if_cancelled (task))
-+        return;
-
+-
 -    case FPI_IMAGE_DEVICE_STATE_CAPTURE:
 -      fte4800_capture_frame (dev);
 -      break;
-+      /* Capture one settled frame. */
-+      if (!fte4800_capture_frame_blocking (self, frame))
-+        {
-+          GError *retry = fpi_device_retry_new_msg (
-+            FP_DEVICE_RETRY_GENERAL,
-+            "No finger detected. Place your finger on the reader and try again.");
-+          fpi_device_enroll_progress (FP_DEVICE (self),
-+                                      self->enroll_count, NULL, retry);
-+          continue;
-+        }
-
+-
 -    case FPI_IMAGE_DEVICE_STATE_AWAIT_FINGER_OFF:
 -      self->poll_timeout_id = g_timeout_add (50, fte4800_poll_finger_off_cb, dev);
 -      break;
-+      /* Use libfprint's standard pixel variance primitive, but require a
-+       * stronger signal for an enrollment sample than for touch detection. */
-+      if (fpi_std_sq_dev (frame, FTE4800_RAW_PIXELS) <= FTE4800_ENROLL_MIN_VAR)
-+        {
-+          GError *retry = fpi_device_retry_new_msg (
-+            FP_DEVICE_RETRY_REMOVE_FINGER,
-+            "Fingerprint image quality is too low. Remove your finger and try again.");
-+          fpi_device_enroll_progress (FP_DEVICE (self),
-+                                      self->enroll_count, NULL, retry);
-+          if (!fte4800_wait_finger_off (self, cancel))
-+            {
-+              g_task_return_new_error (task, G_IO_ERROR, G_IO_ERROR_TIMED_OUT,
-+                                       "Finger was not removed during enroll");
-+              return;
-+            }
-+          continue;
-+        }
-
+-
 -    case FPI_IMAGE_DEVICE_STATE_IDLE:
 -    case FPI_IMAGE_DEVICE_STATE_INACTIVE:
 -    case FPI_IMAGE_DEVICE_STATE_ACTIVATING:
 -    case FPI_IMAGE_DEVICE_STATE_DEACTIVATING:
 -    default:
 -      break;
-+      /* Do not waste a stage on a near-duplicate of an earlier press. */
-+      gboolean duplicate = FALSE;
-+      for (gint i = 0; i < self->enroll_count; i++)
-+        {
-+          gint diff = fpi_mean_sq_diff_norm (
-+            frame,
-+            self->enroll_frames + (gsize) i * FTE4800_RAW_PIXELS,
-+            FTE4800_RAW_PIXELS);
-+          if (diff < FTE4800_SAMPLE_DIFF_MIN)
-+            {
-+              duplicate = TRUE;
-+              break;
-+            }
-+        }
++      g_task_return_new_error (task, G_IO_ERROR, G_IO_ERROR_TIMED_OUT,
++                               "Fingerprint sensor did not reach the released state");
++      return;
+     }
 +
-+      if (duplicate)
++  while (self->enroll_count < FTE4800_ENROLL_STAGES)
++    {
++      if (g_task_return_error_if_cancelled (task))
++        return;
++
++      /* WAIT_DOWN: do not capture until the sensor reports a new press. */
++      fpi_device_report_finger_status (FP_DEVICE (self),
++                                        FP_FINGER_STATUS_NONE | FP_FINGER_STATUS_NEEDED);
++      if (!fte4800_wait_finger_state (self, cancel, TRUE))
 +        {
 +          GError *retry = fpi_device_retry_new_msg (
-+            FP_DEVICE_RETRY_CENTER_FINGER,
-+            "This scan is too similar to an earlier sample. Reposition your finger and try again.");
++            FP_DEVICE_RETRY_GENERAL,
++            "Place your finger on the reader and try again.");
 +          fpi_device_enroll_progress (FP_DEVICE (self),
 +                                      self->enroll_count, NULL, retry);
-+          if (!fte4800_wait_finger_off (self, cancel))
++          continue;
++        }
++
++      fpi_device_report_finger_status (FP_DEVICE (self),
++                                        FP_FINGER_STATUS_PRESENT);
++
++      /* CAPTURE: exactly one image for this physical press. */
++      if (!fte4800_capture_frame_blocking (self, frame))
++        {
++          GError *retry = fpi_device_retry_new_msg (
++            FP_DEVICE_RETRY_GENERAL,
++            "The fingerprint scan could not be captured. Try again.");
++          fpi_device_enroll_progress (FP_DEVICE (self),
++                                      self->enroll_count, NULL, retry);
++          if (!fte4800_wait_finger_state (self, cancel, FALSE))
 +            {
 +              g_task_return_new_error (task, G_IO_ERROR, G_IO_ERROR_TIMED_OUT,
 +                                       "Finger was not removed during enroll");
@@ -973,35 +1009,55 @@ index 1b20d57..d84de4b 100644
 +          continue;
 +        }
 +
-+      /* Retain this physical placement as its own enrollment sample. */
++      /* QUALITY: only a real, sufficiently detailed frame advances the stage. */
++      if (!fte4800_image_has_signal (frame, FTE4800_RAW_PIXELS))
++        {
++          GError *retry = fpi_device_retry_new_msg (
++            FP_DEVICE_RETRY_REMOVE_FINGER,
++            "Fingerprint image quality is too low. Remove your finger and try again.");
++          fpi_device_enroll_progress (FP_DEVICE (self),
++                                      self->enroll_count, NULL, retry);
++          if (!fte4800_wait_finger_state (self, cancel, FALSE))
++            {
++              g_task_return_new_error (task, G_IO_ERROR, G_IO_ERROR_TIMED_OUT,
++                                       "Finger was not removed during enroll");
++              return;
++            }
++          continue;
++        }
++
++      /* STORE: exactly one accepted frame per confirmed physical press. */
 +      memcpy (self->enroll_frames +
 +              (gsize) self->enroll_count * FTE4800_RAW_PIXELS,
 +              frame, FTE4800_RAW_PIXELS);
 +      self->enroll_count++;
 +
 +      fp_dbg ("Enroll stage %d/%d", self->enroll_count, FTE4800_ENROLL_STAGES);
-+
-+      /* Report progress through the standard libfprint enrollment callback. */
 +      fpi_device_enroll_progress (FP_DEVICE (self),
 +                                  self->enroll_count, NULL, NULL);
 +
-+      /* Every accepted sample must be followed by a confirmed finger lift. */
-+      if (self->enroll_count < FTE4800_ENROLL_STAGES &&
-+          !fte4800_wait_finger_off (self, cancel))
++      /* WAIT_UP: never begin another stage until the physical finger is gone. */
++      if (self->enroll_count < FTE4800_ENROLL_STAGES)
 +        {
-+          GError *retry = fpi_device_retry_new_msg (
-+            FP_DEVICE_RETRY_REMOVE_FINGER,
-+            "Remove your finger completely before the next enrollment scan.");
-+          fpi_device_enroll_progress (FP_DEVICE (self),
-+                                      self->enroll_count, NULL, retry);
-+          if (!fte4800_wait_finger_off (self, cancel))
++          if (!fte4800_wait_finger_state (self, cancel, FALSE))
 +            {
-+              g_task_return_new_error (task, G_IO_ERROR, G_IO_ERROR_TIMED_OUT,
-+                                       "Finger was not removed during enroll");
-+              return;
++              GError *retry = fpi_device_retry_new_msg (
++                FP_DEVICE_RETRY_REMOVE_FINGER,
++                "Remove your finger completely before the next scan.");
++              fpi_device_enroll_progress (FP_DEVICE (self),
++                                          self->enroll_count, NULL, retry);
++              if (!fte4800_wait_finger_state (self, cancel, FALSE))
++                {
++                  g_task_return_new_error (
++                    task, G_IO_ERROR, G_IO_ERROR_TIMED_OUT,
++                    "Finger was not removed during enroll");
++                  return;
++                }
 +            }
++          fpi_device_report_finger_status (FP_DEVICE (self),
++                                            FP_FINGER_STATUS_NONE | FP_FINGER_STATUS_NEEDED);
 +        }
-     }
++    }
 +
 +  fte4800_set_print_template (ed->enroll_print, self->enroll_frames);
 +  g_clear_pointer (&self->enroll_frames, g_free);

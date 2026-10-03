@@ -18,7 +18,7 @@ Verified:
 - sensor identification;
 - real 64x80 image capture;
 - persistent fprintd template storage;
-- implemented fifteen-stage enrollment with quality, duplicate, and finger-lift gates (live re-enrollment validation pending);
+- implemented fifteen-stage press/release enrollment with image-quality gating (live re-enrollment validation pending);
 - genuine verification;
 - different-finger rejection in the local evaluation set;
 - reboot and suspend/resume recovery;
@@ -162,7 +162,7 @@ See `docs/libfprint-upstream.md` before preparing an upstream merge request.
 
 ## Native matcher
 
-The FT9368 provides only 64x80 imaging data. The current driver retains fifteen individual raw enrollment frames and compares a probe against the stored samples. Near-duplicate captures are rejected during enrollment so stages represent distinct physical presses.
+The FT9368 provides only 64x80 imaging data. The current driver retains fifteen individual raw enrollment frames and compares a probe against the stored samples. Each accepted stage is tied to a confirmed physical press, with finger-release gating between stages.
 
 The matcher applies local background/ridge normalization, a validity mask, bounded rotation and translation search, overlap-aware normalized correlation, and best-of-fifteen scoring. The current threshold is `0.75`; it is explicitly a research threshold and is not security-certified.
 

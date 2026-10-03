@@ -23,24 +23,30 @@ class LibfprintIntegrationTests(unittest.TestCase):
     def test_patch_stores_fifteen_enrollment_samples(self):
         self.assertIn("#define FTE4800_ENROLL_STAGES     15", PATCH)
         self.assertIn("guint8       *enroll_frames", PATCH)
-        self.assertIn('FTE4800_TEMPLATE_MAGIC    "FTE2"', PATCH)
+        self.assertIn('FTE4800_TEMPLATE_MAGIC      "FTE2"', PATCH)
         self.assertIn("sample_count", PATCH)
+
+    def test_patch_uses_ft9368_finger_status(self):
+        self.assertIn("fte4800_read_finger_present", PATCH)
+        self.assertIn("status[2]", PATCH)
+        self.assertIn("FTE4800_FINGER_STATUS_BYTE", PATCH)
+        self.assertIn("0xFF, 0x00, 0x00, 0x00", PATCH)
 
     def test_patch_uses_standard_libfprint_retry_codes(self):
         self.assertIn("FP_DEVICE_RETRY_REMOVE_FINGER", PATCH)
-        self.assertIn("FP_DEVICE_RETRY_CENTER_FINGER", PATCH)
         self.assertIn("FP_DEVICE_RETRY_GENERAL", PATCH)
         self.assertIn("fpi_device_enroll_progress", PATCH)
 
-    def test_patch_requires_confirmed_finger_removal(self):
-        self.assertIn("guint off_count = 0;", PATCH)
-        self.assertIn("off_count >= 3", PATCH)
-        self.assertIn("fte4800_wait_finger_off (self, cancel)", PATCH)
+    def test_patch_has_explicit_press_release_state_gates(self):
+        self.assertIn("want_present", PATCH)
+        self.assertIn("FTE4800_FINGER_ON_CONFIRM", PATCH)
+        self.assertIn("FTE4800_FINGER_OFF_CONFIRM", PATCH)
+        self.assertIn("WAIT_DOWN", PATCH)
+        self.assertIn("WAIT_UP", PATCH)
 
-    def test_patch_rejects_near_duplicate_samples(self):
-        self.assertIn("FTE4800_SAMPLE_DIFF_MIN", PATCH)
-        self.assertIn("fpi_mean_sq_diff_norm", PATCH)
-        self.assertIn("This scan is too similar to an earlier sample", PATCH)
+    def test_patch_does_not_use_image_signal_for_finger_release(self):
+        self.assertNotIn("fte4800_is_finger (tmp", PATCH)
+        self.assertIn("image_has_signal", PATCH)
 
 
 if __name__ == "__main__":

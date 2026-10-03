@@ -47,7 +47,7 @@
 | Address | Size | Description | Status |
 |---------|------|-------------|--------|
 | `0x9180` | 32 | Device info / identity descriptor | ✓ WORKING |
-| `0x9180` | 6 | Finger detection status (POA) | ✗ Returns 0x02 echo |
+| `0x9180` | 6 | Finger detection status (POA); vendor checks response byte 2 | ✓ Parsed in Windows RE |
 | `0x9080` | 5120 | Image data (64×80 8-bit pixels) | ✗ Returns zeros |
 | `0xFF00` | 0 | Wake trigger (write-only) | Sent but effect unverified |
 | `0x90` | 2 | ROM bootloader ID (expect 0x56A2) | ✗ Not yet obtained |
@@ -106,10 +106,9 @@ The Windows driver uses:
    - Windows `CaptureData` checks state machine (state 4 or 9) before reading
    - May need `StartCaptureData` to initiate scanning
 
-2. **Why does `0x9180/6` finger status return 0x02?**
-   - The 6-byte finger-status read may need the wake trigger (`0xFF00`) to work differently
-   - The Windows driver sends wake via `vtable[11]` (read backend with DX=0xFF00), not a write
-   - May need firmware-level initialization before POA detection works
+2. **How should `0x9180/6` finger status be interpreted?**
+   - The vendor routine reads six bytes from `0x9180` after wake and checks response byte 2 for `0x11`.
+   - The image buffer at `0x9080` can remain populated after finger removal, so it must not be used as the release detector.
 
 3. **ROM ID `0x56A2` never obtained**
    - May require very precise timing during the 0-200ms boot window

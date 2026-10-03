@@ -7,12 +7,12 @@ path = sys.argv[1] if len(sys.argv) > 1 else sorted(glob.glob(os.path.join(here,
 z = np.load(path); F = z["frames"]; T = z["t"]; ST = z["st"]; TR = z["trig"]; PH = z["phase"]
 names = json.load(open(path.replace(".npz", ".json")))
 std = F.reshape(len(F), -1).astype(np.float32).std(axis=1)
-on = ST[:, 1] == 0x11
+on = ST[:, 2] == 0x11
 print("file:", os.path.basename(path), " polls:", len(F), " duration %.0fs" % T[-1], " rate %.1f polls/s" % (len(F) / T[-1]))
 print("status byte-pattern histogram:", collections.Counter(bytes(s).hex() for s in ST).most_common(6))
 
 print("\n== 1. status register vs frame content ==")
-print("polls with status[1]==0x11: %d   with frame std>30: %d" % (on.sum(), (std > 30).sum()))
+print("polls with status[2]==0x11: %d   with frame std>30: %d" % (on.sum(), (std > 30).sum()))
 print("  status ON  & std>30: %d     status ON  & std<=30: %d" % ((on & (std > 30)).sum(), (on & (std <= 30)).sum()))
 print("  status OFF & std>30: %d     status OFF & std<=30: %d   <- stale frames if first number large" % ((~on & (std > 30)).sum(), (~on & (std <= 30)).sum()))
 
