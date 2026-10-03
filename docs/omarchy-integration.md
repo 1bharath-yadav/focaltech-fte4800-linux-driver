@@ -65,6 +65,12 @@ The better upstream change is generic:
 
 A FTE4800-only addition to Omarchy would solve one laptop but leave the underlying detection architecture unchanged.
 
+## Stock setup package behavior
+
+The current Omarchy fingerprint setup script installs `libfprint-git` when the fingerprint stack is considered missing. That package conflicts with the dedicated native FTE4800 deployment and can replace the distro userspace library selected by fprintd.
+
+For this target, the FTE4800-aware project wrapper installs only the authentication daemon dependencies it needs and keeps `/opt/fte4800` as the fprintd runtime. The wrapper is a local integration workaround; the long-term fix belongs in Omarchy's package-selection and hardware-detection flow.
+
 ## Lock-screen upstream opportunity
 
 Omarchy's lock screen uses the dedicated omarchy-lock-fingerprint PAM service. Current upstream reports document related robustness problems:

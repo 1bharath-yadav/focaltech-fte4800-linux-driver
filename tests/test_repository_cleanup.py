@@ -25,6 +25,27 @@ class RepositoryCleanupTests(unittest.TestCase):
             f"Repository contains tracked build artifacts: {tracked_binaries}",
         )
 
+    def test_public_tree_excludes_local_artifacts(self):
+        forbidden_paths = (
+            "archive/",
+            "extracted-windows-fw/",
+            "dataset/",
+            "docs/re-dumps/",
+            "docs/superpowers/",
+        )
+        files = subprocess.run(
+            ["git", "ls-files"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=True,
+        ).stdout.splitlines()
+        for prefix in forbidden_paths:
+            self.assertFalse(
+                any(f == prefix.rstrip("/") or f.startswith(prefix) for f in files),
+                f"Private artifact path is tracked: {prefix}",
+            )
+
     def test_gitignore_ignores_build_artifacts(self):
         gitignore = (ROOT / ".gitignore").read_text()
         required_patterns = (

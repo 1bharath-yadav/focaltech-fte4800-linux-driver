@@ -5,7 +5,7 @@ register so freshness/staleness and matcher thresholds can be analysed offline.
 Per poll:  wake -> read 0x9180/6 (status) -> [SFR 0x003B=1 + 60ms if trig] -> read 0x9080/5120
 Schedule:  FIN_A x NA presses (genuine set), FIN_B x NB presses (impostor set).
            odd-numbered presses use the SFR trigger, even ones the plain read.
-Output:    dataset/session_<ts>.npz  (frames[N,5120], t[N], st[N,6], trig[N], phase[N]) + .json
+Output:    archive/biometric-datasets/captures/session_<ts>.npz + .json (override with FTE4800_DATASET_DIR)
 """
 import sys, os, time, json, subprocess
 import numpy as np
@@ -63,7 +63,7 @@ time.sleep(8)
 block("FINGER B (different finger)", NB, "B")
 cue("All done - thank you!", "bell.oga")
 
-out = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "dataset")
+out = os.environ.get("FTE4800_DATASET_DIR", os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "archive", "biometric-datasets", "captures"))
 os.makedirs(out, exist_ok=True)
 base = os.path.join(out, "session_%d" % int(time.time()))
 np.savez_compressed(base + ".npz", frames=np.stack(frames), t=np.array(ts), st=np.stack(sts),

@@ -1,6 +1,8 @@
 .worktrees/
 __pycache__/
 *.pyc
+.pytest_cache/
+.venv/
 
 # Kernel build artifacts
 *.o
@@ -26,5 +28,5 @@ tools/vendor-emulator/*.so
 tools/vendor-emulator/native-e2e
 tools/vendor-emulator/*.out
 
-# Local research/archive data (intentionally untracked)
+# Local research/archive data
 /archive/

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
  * FocalTech FTE4800 / FT9368 SPI transport driver.
+ * Copyright (C) 2026 Bharath Yadav.
  *
  * The misc-device interface mirrors the FocalTech userspace transport ABI.
  * It does not interpret sensor commands except for the already verified
@@ -647,7 +648,7 @@ static void __exit focal_exit(void)
 module_init(focal_init);
 module_exit(focal_exit);
 
-MODULE_AUTHOR("FocalTech / Linux FTE4800 adaptation");
+MODULE_AUTHOR("Bharath Yadav");
 MODULE_DESCRIPTION("FocalTech FTE4800 / FT9368 SPI transport driver");
 MODULE_LICENSE("GPL");
 

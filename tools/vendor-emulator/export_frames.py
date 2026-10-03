@@ -1,9 +1,21 @@
 #!/usr/bin/env python3
 """Export stable raw sensor frames (5120 B each, as read from reg 0x9080) + labels for the emulator."""
-import numpy as np, json, sys
-base = "/home/archer/projects/zerobook-focaltech-driver/.worktrees/fte4800-clean-driver/dataset/session_1791029681"
-z = np.load(base + ".npz"); F = z["frames"]; PH = z["phase"]
-names = json.load(open(base + ".json"))
+import json, sys
+from pathlib import Path
+
+import numpy as np
+
+if len(sys.argv) > 1:
+    base = Path(sys.argv[1])
+else:
+    root = Path(__file__).resolve().parents[2]
+    candidates = sorted((root / "archive" / "biometric-datasets").glob("**/session_*.npz"))
+    if not candidates:
+        raise SystemExit("No archived session found; pass /path/to/session_<ts> explicitly.")
+    base = candidates[-1].with_suffix("")
+
+z = np.load(str(base) + ".npz"); F = z["frames"]; PH = z["phase"]
+names = json.load(open(str(base) + ".json"))
 runs = []
 for i in range(len(F)):
     if runs and np.array_equal(F[i], F[runs[-1][0]]): runs[-1][1] += 1

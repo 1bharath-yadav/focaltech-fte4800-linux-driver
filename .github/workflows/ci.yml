@@ -1,0 +1,17 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  source-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run repository tests
+        run: tests/run-tests.sh
+      - name: Shell syntax
+        run: bash -n install/*.sh tests/run-tests.sh tools/*.sh
+      - name: Check whitespace
+        run: git diff --check

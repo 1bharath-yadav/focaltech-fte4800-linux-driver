@@ -1,21 +1,69 @@
-# ZeroBook FocalTech FTE4800 / FT9368 Linux Driver
+# FocalTech FTE4800 / FT9368 Linux Driver
 
-Hardware target: Infinix ZERO BOOK 13 (ZL513), ACPI device `FTE4800:00`.
-Sensor: FocalTech FTE4800 / FT9368.
-Validated kernel: Linux 7.2.5-3-omarchy x86_64.
+Hardware-backed Linux support for the FocalTech FTE4800 / FT9368 SPI fingerprint sensor found in the Infinix ZERO BOOK 13 (ZL513).
+
+Target ACPI device: `FTE4800:00`
+Target sensor: FocalTech FT9368
+Validated kernel: Linux 7.2.5-3-omarchy x86_64
+Device interface: `/dev/focal_moh_spi`
+
+## Status
+
+The kernel transport and native libfprint integration have been exercised on real hardware.
+
+Verified:
+
+- ACPI/SPI probe and driver lifecycle;
+- FT9368 reset and firmware boot sequence;
+- sensor identification;
+- real 64x80 image capture;
+- five-frame enrollment;
+- persistent fprintd template storage;
+- genuine verification;
+- different-finger rejection in the local evaluation set;
+- reboot and suspend/resume recovery;
+- Omarchy lock-screen fingerprint authentication with password fallback;
+- clean DKMS installation and source-contract tests.
+
+The matching threshold remains an experimental value. The current local biometric dataset is too small to establish production FAR/FRR bounds or security certification.
 
 ## Architecture
 
-The project has two layers:
+```
+FTE4800 / FT9368 sensor
+        |
+        v
+  ACPI + SPI controller
+        |
+        v
+ focal_spi kernel transport
+        |
+        v
+ /dev/focal_moh_spi
+        |
+        v
+ native FTE4800 libfprint driver
+        |
+        v
+       fprintd
+        |
+        v
+     pam_fprintd
+        |
+        +--> sudo / polkit
+        |
+        +--> Omarchy lock screen
+```
 
-1. `focal_spi.c` is a small hardware-backed SPI transport. It does not synthesize fingerprint data or emulate vendor registers.
-2. `libfprint-patches/0001-native-fte4800-ft9368-driver.patch` adds the native FT9368 image driver and research matcher to libfprint.
-
-The transport exposes `/dev/focal_moh_spi`.
+The kernel module is deliberately a transport layer. It does not fabricate fingerprint frames and does not perform biometric matching.
 
 ## Verified FT9368 protocol
 
-Reset is active-low: assert LOW for 10 ms, release HIGH, then allow about 350 ms for application firmware to boot.
+Reset is active-low:
+
+```
+HIGH -> LOW for ~10 ms -> HIGH -> wait ~350 ms
+```
 
 Identity request:
 
@@ -23,24 +71,26 @@ Identity request:
 91 80 00 20 00 00 00
 ```
 
-Verified response identifies chip `0x9368`, firmware date `2022-07-29`, and geometry `64x80`.
+The validated response identifies chip `0x9368`, firmware date `2022-07-29`, and image geometry `64x80`.
 
-Physical image capture is:
+Physical image capture:
 
 ```
-SFR:    70 07 F8 00 3B 00 00 00 01 00 00
-wait:   60 ms
-read:   90 80 14 00 00 00 00
-image:  5120 bytes, 64x80, 8-bit pixels
+SFR write: 70 07 F8 00 3B 00 00 00 01 00 00
+wait:      60 ms
+read:      90 80 14 00 00 00 00
+image:     5120 bytes, 64x80, 8-bit pixels
 ```
 
-A plain `0x9080` read is not sufficient; the FT9368 must first be triggered with the SFR write.
+A plain `0x9080` read is not sufficient; the sensor must first be triggered through the verified SFR write.
 
-## Kernel installation
+Detailed protocol notes are in `docs/`.
 
-Prerequisites are DKMS, matching kernel headers, Python 3, and an ACPI device exposing `FTE4800`.
+## Kernel driver build
 
-Check without changing the system:
+The driver is an out-of-tree DKMS-compatible SPI transport.
+
+Check the system without changing it:
 
 ```bash
 sudo ./install/install.sh --check
@@ -64,9 +114,15 @@ Remove:
 sudo ./install/uninstall.sh
 ```
 
-The installer only installs the kernel transport. It does not overwrite the distro libfprint library or modify PAM.
+Direct build:
 
-## Hardware tests
+```bash
+make
+```
+
+The kernel installer does not replace the distribution libfprint package.
+
+## Hardware diagnostics
 
 ```bash
 python3 -m unittest discover -s tests -v
@@ -76,121 +132,80 @@ sudo python3 tools/fte4800_capture.py --reset --count 10 --raw frame.bin
 sudo python3 tools/live-finger-monitor.py
 ```
 
-## Live native libfprint test
+## libfprint integration
 
-Build the native libfprint tree first, then run:
+The repository contains a downstream patch in `libfprint-patches/`.
 
-```bash
-tools/live-native-test.sh
-```
-
-This test does not replace the package-managed libfprint library. It links against the project build and exercises the real `/dev/focal_moh_spi` device. During enrollment, place the same finger for five stages and lift completely between stages. It then performs three same-finger verification attempts.
-
-## Building native libfprint
-
-The libfprint patch is based on commit:
+Base commit:
 
 ```
 396119347a6947efc6a43edc4708d5581dd13686
 ```
 
-from the upstream libfprint GitLab repository.
-
-Build the matching source:
-
-```bash
-git clone https://gitlab.freedesktop.org/libfprint/libfprint.git libfprint-upstream
-cd libfprint-upstream
-git checkout 396119347a6947efc6a43edc4708d5581dd13686
-git apply /path/to/fte4800-clean-driver/libfprint-patches/0001-native-fte4800-ft9368-driver.patch
-```
-
-The repository helper builds it with documentation disabled, so gtk-doc is not required:
+Build the separate libfprint checkout:
 
 ```bash
 ./install/build-libfprint.sh /path/to/libfprint-upstream
 ```
 
-For the current ZERO BOOK deployment, install the project-built library under a dedicated prefix and make only the fprintd service use it:
+For the validated ZERO BOOK deployment, the native library is installed under:
 
-```bash
-./install/install-native-fte4800.sh
+```
+/opt/fte4800/libfprint/lib/libfprint-2.so.2.0.0
 ```
 
-This leaves the distro `libfprint` package files in `/usr/lib` untouched. The service override uses `LD_LIBRARY_PATH` so the native FTE4800 library is selected by fprintd without replacing the package-managed library.
+Only the fprintd service is directed to this library through a systemd drop-in. The distribution files in `/usr/lib` are retained.
 
-The installed library is still a research build. Complete live enrollment/verification and multi-finger threshold validation before treating it as a production biometric stack.
-
-The build output is placed in the configured build directory.
+See `docs/libfprint-upstream.md` before preparing an upstream merge request.
 
 ## Native matcher
 
-The native driver stores five individual raw enrollment frames. It does not average them into one blurred image.
+The FT9368 provides only 64x80 imaging data. The current driver retains five individual raw enrollment frames and compares a probe against the stored samples.
 
-Matching uses:
+The matcher applies:
 
-- local ridge/background normalisation
-- a validity mask
-- rotation search from -24° to +24° in 4° steps
-- translation search
-- overlap-aware normalized correlation
-- the best score across the five stored samples
+- local background and ridge normalization;
+- a validity mask;
+- rotation search from -24 degrees to +24 degrees in 4-degree steps;
+- translation search with bounded offsets;
+- overlap-aware normalized correlation;
+- best-of-five template scoring.
 
-Current research threshold: `0.75`.
+The current threshold is `0.75`. It is explicitly a research threshold and is not security-certified.
 
-This threshold is not security-certified. The current two-finger replay dataset contains 38 recorded frames. At the current threshold, the native libfprint replay accepted 16/20 held-out genuine frames and 0/13 impostor frames. That dataset is too small to establish production FAR/FRR bounds.
+The matcher specification and reference implementation are in `tools/matcher_ref.py`.
 
-## Native end-to-end test
+## Omarchy integration
 
-`tools/vendor-emulator/` contains a user-space replay harness that feeds recorded real sensor frames to libfprint. It is not a synthetic fingerprint generator.
+Omarchy's normal fingerprint setup is designed around its system package flow. The project includes a FTE4800-aware local wrapper so this laptop can use the native libfprint build without replacing it.
 
-The current replay proves that:
+Important: the stock Omarchy setup command may install or replace libfprint packages. Use the project wrapper when validating this FTE4800 deployment.
 
-- the native FTE4800 driver opens the device;
-- the physical FT9368 capture sequence is represented correctly;
-- five real enrollment frames can be serialized into an `FpPrint`;
-- the rotation/translation-aware matcher runs through libfprint;
-- genuine and impostor decisions are produced without the proprietary vendor blob.
+The long-term upstream work belongs in Omarchy and libfprint rather than in this kernel driver repository. See `docs/omarchy-integration.md`.
 
-## Live validation still required
+## Repository hygiene
 
-Before enabling normal fingerprint login, collect a larger dataset:
+The public Git tree intentionally excludes:
 
-- at least 20–30 separate placements for finger A
-- at least 20–30 placements for finger B
-- preferably a third finger
-- full lift/repress cycles and varied placement
+- generated kernel build artifacts;
+- local biometric captures;
+- proprietary Windows driver packages and extracted firmware;
+- raw ACPI dumps;
+- internal agent instructions;
+- legacy reverse-engineering copies whose redistribution status is not established.
 
-Then measure genuine and impostor score distributions, FAR, FRR, and the operating threshold.
+Those files are preserved locally under the root `archive/` directory.
 
-The current 38-frame, two-finger dataset is an engineering dataset, not a security validation set.
+## License
 
-## Troubleshooting
+The kernel transport is GPL-2.0-only.
 
-No `/dev/focal_moh_spi`:
+The downstream libfprint driver and matcher patch is LGPL-2.1-or-later to match the libfprint component being modified.
 
-```bash
-ls /sys/bus/acpi/devices | grep FTE4800
-lsmod | grep focal_spi
-dmesg | grep -i focal
-```
+License texts are provided under `LICENSES/`, and source files carry SPDX identifiers where applicable.
 
-Identity failure:
+## Security
 
-```bash
-sudo python3 tools/fte4800_selftest.py --reset
-```
+This project is experimental biometric infrastructure. It is not security-certified. Do not treat the current matcher measurements as production biometric guarantees.
 
-Flat image:
-
-Make sure the capture path performs the SFR `0x003B=0x0001` trigger and waits about 60 ms before reading `0x9080`.
-
-Do not load historical driver variants containing `generate_synthetic_frame`, `stage_shifts`, `fp_sqrt`, or other fabricated frame logic.
-
-## Scope and current status
-
-Completed: ACPI/SPI transport, reset sequencing, real FT9368 identification, hardware capture trigger/read, DKMS packaging, source-contract tests, native libfprint compilation, offline matcher integration, fprintd installation/runtime integration, live five-frame enrollment, persistent template storage, and live same-finger verification.
-
-Still required for a release: larger multi-finger biometric validation, explicit different-finger rejection testing, reboot and suspend/resume testing, threshold/score validation, PAM integration for fingerprint login, and clean packaging/reproducible installation.
-
-The clean kernel transport is intentionally independent of the proprietary Windows fingerprint library.
+See `SECURITY.md` for reporting guidance.

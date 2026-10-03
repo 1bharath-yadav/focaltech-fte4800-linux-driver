@@ -1,4 +1,5 @@
 /* SPDX-License-Identifier: GPL-2.0-only */
+/* Copyright (C) 2026 Bharath Yadav */
 #ifndef FTE4800_PROTOCOL_H
 #define FTE4800_PROTOCOL_H
 
