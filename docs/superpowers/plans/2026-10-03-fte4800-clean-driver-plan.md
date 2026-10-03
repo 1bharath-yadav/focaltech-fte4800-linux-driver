@@ -99,14 +99,14 @@ Expected: PASS with no new warnings.
 - Self-test opens /dev/focal_moh_spi, reads native-compatible identity and image data, and validates exact lengths/statistics.
 - Capture tool writes a raw frame and optional PGM output for inspection.
 
-- [ ] Step 1: Write failing tool tests against mocked binary buffers for length and unpacking rules.
-- [ ] Step 2: Run them and confirm RED.
-- [ ] Step 3: Implement the userspace diagnostics using only documented driver commands.
-- [ ] Step 4: Build and install the DKMS module from the clean worktree.
+- [x] Step 1: Write failing tool tests against mocked binary buffers for length and unpacking rules.
+- [x] Step 2: Run them and confirm RED.
+- [x] Step 3: Implement the userspace diagnostics using only documented driver commands.
+- [x] Step 4: Build and install the DKMS module from the clean worktree.
 Expected: loaded module source matches project source hash.
-- [ ] Step 5: Validate hardware reset, FT9368 identity, IRQ, and one complete 64x80 frame.
+- [x] Step 5: Validate hardware reset, FT9368 identity, IRQ, and one complete 64x80 frame.
 Expected: chip ID 0x9368; frame length 5120 native bytes; compatibility buffer length 10240; nonzero image variance.
-- [ ] Step 6: Commit with message: test: add FTE4800 hardware self-tests.
+- [x] Step 6: Commit with message: test: add FTE4800 hardware self-tests.
 
 ## Task 5: Repository simplification and final verification
 
@@ -116,14 +116,14 @@ Expected: chip ID 0x9368; frame length 5120 native bytes; compatibility buffer l
 - Delete: generated build artifacts and obsolete experiment files only after validation.
 - Preserve: FTE4800-Linux-Driver-Research, DSDT.dsl, SSDT*.dsl, extracted-windows-fw, reverse-engineering reports, and known-good backups.
 
-- [ ] Step 1: Generate a candidate cleanup list by file age, duplicate hash, and references from active code/docs.
-- [ ] Step 2: Write a failing cleanup test that detects binaries/objects and obsolete synthetic implementation files still referenced by the active project.
-- [ ] Step 3: Remove only artifacts proven redundant; do not delete research evidence.
-- [ ] Step 4: Run the complete suite and make W=1.
+- [x] Step 1: Generate a candidate cleanup list by file age, duplicate hash, and references from active code/docs.
+- [x] Step 2: Write a failing cleanup test that detects binaries/objects and obsolete synthetic implementation files still referenced by the active project.
+- [x] Step 3: Remove only artifacts proven redundant; do not delete research evidence.
+- [x] Step 4: Run the complete suite and make W=1.
 Expected: all tests PASS and module builds cleanly.
-- [ ] Step 5: Run final source scans for synthetic paths, libfprint patch offsets, and fake register values.
+- [x] Step 5: Run final source scans for synthetic paths, libfprint patch offsets, and fake register values.
 Expected: zero matches in active driver/tools.
-- [ ] Step 6: Commit with message: chore: remove obsolete FTE4800 artifacts.
+- [x] Step 6: Commit with message: chore: remove obsolete FTE4800 artifacts.
 
 ## Security-sensitive validation boundary
 

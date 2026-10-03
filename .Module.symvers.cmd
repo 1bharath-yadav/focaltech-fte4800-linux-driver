@@ -1,1 +1,0 @@
-savedcmd_Module.symvers :=  /usr/lib/modules/7.2.5-3-omarchy/build/scripts/mod/modpost -M    -a    -N -W -o Module.symvers -n -T modules.order -i /usr/lib/modules/7.2.5-3-omarchy/build/Module.symvers -e 

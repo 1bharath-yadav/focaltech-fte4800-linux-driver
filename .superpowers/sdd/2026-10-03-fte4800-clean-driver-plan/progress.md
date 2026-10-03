@@ -6,4 +6,6 @@ Task 2: Ruling: protocol/fte4800_protocol.h exposes only hardware constants; the
 Task 1: Ruling: tests intentionally remain RED until Task 2 because they pin the defect being removed; this plan treats Task 1 as the test-baseline commit rather than a green production milestone — cost if wrong: task bookkeeping would need correction.
 Task 3: complete (commits 5b05a17..HEAD, tests: python3 -m unittest tests/test_driver_lifecycle.py -v && make W=1 -> pass)
 Task 3: complete (commits 5b05a17..62beb82, tests: python3 -m unittest tests/test_driver_lifecycle.py -v && make W=1 -> pass)
-Task 3: complete (commits 5b05a17..62beb82, tests: python3 -m unittest tests/test_driver_lifecycle.py -v && make W=1 -> pass)
+Task 4: complete (commits 83f9cc7..2e1c8cf, tests: 24 tests PASS, hardware self-test PASS with physical FT9368 response, hardware frame capture PASS with genuine 64x80 5120-byte pixel data)
+Task 5: complete (commits 2e1c8cf..HEAD, tests: 27 tests PASS, make W=1 clean PASS, zero tracked binary artifacts, all research and firmware evidence preserved)
+

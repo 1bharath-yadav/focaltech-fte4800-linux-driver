@@ -1,11 +1,19 @@
-
 .worktrees/
-/tests/__pycache__/
+__pycache__/
+*.pyc
+
+# Kernel build artifacts
 *.o
 *.ko
 *.mod
 *.mod.c
+*.mod.o
+*.cmd
+.*.cmd
 Module.symvers
 modules.order
-focal_spi.o
-focal_spi.ko
+.tmp_versions/
+
+# Scratch dumps
+tools/*.pgm
+tools/*.bin
