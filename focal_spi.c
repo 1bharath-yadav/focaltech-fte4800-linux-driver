@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
- * FocalTech FTE4800 / FT9368 SPI fingerprint driver.
+ * FocalTech FTE4800 / FT9368 SPI transport driver.
  *
- * The FTE4800 ACPI device is an SPI client with one reset GPIO and one
- * edge-active-high interrupt. Native image capture follows the Windows
- * FT9368 transport: a single full-duplex transaction beginning with
- * [90 80 len_hi len_lo 00 00 00], followed by len zero clocks.
+ * The misc-device interface mirrors the FocalTech userspace transport ABI.
+ * It does not interpret sensor commands except for the already verified
+ * FT9368 identity diagnostic exposed by the test tool.
  */
 #include <linux/acpi.h>
 #include <linux/delay.h>
+#include <linux/errno.h>
 #include <linux/gpio/consumer.h>
 #include <linux/interrupt.h>
 #include <linux/kernel.h>
-#include <linux/module.h>
 #include <linux/miscdevice.h>
+#include <linux/module.h>
 #include <linux/mutex.h>
 #include <linux/poll.h>
 #include <linux/slab.h>
@@ -23,698 +23,631 @@
 #include "protocol/fte4800_protocol.h"
 
 #define INIT_SUCCESS 0x55AA
-#define MAX_BUFF_SIZE 32768U
-#define TAG "focal: "
+#define MAX_BUFF_SIZE (32U * 1024U)
+#define TAG "focal-fte4800: "
+static bool trace_requests = true;
+module_param(trace_requests, bool, 0644);
+MODULE_PARM_DESC(trace_requests, "Log raw misc-device SPI request payloads");
 
-#define SPI_READ_ONLY  0x5AU
-#define SPI_READ_WRITE 0xA5U
-#define SPI_BACK_DATA  0xB9U
+#define SPI_READ_ONLY  FTE4800_COMPAT_READ_ONLY
+#define SPI_READ_WRITE FTE4800_COMPAT_READ_WRITE
+#define SPI_BACK_DATA  FTE4800_COMPAT_BACK_DATA
 
-enum focal_sensor_state {
-	FOCAL_STATE_IDLE = 0,
-	FOCAL_STATE_TOUCH = 1,
-	FOCAL_STATE_RELEASE = 2,
+#define IOCTL_RESET       0x8086U
+#define IOCTL_POWER_OFF   0x8087U
+#define IOCTL_POWER_ON    0x8088U
+#define IOCTL_IRQ_ENABLE  0x8089U
+#define IOCTL_LOG_ENABLE  0x808AU
+#define IOCTL_RELEASE_POLL 0x808BU
+#define IOCTL_CS_CONTROL  0x808CU
+#define IOCTL_RAW_XFER    0x80A0U
+
+#define FOCAL_RAW_XFER_MAX 16U
+#define FOCAL_RAW_XFER_BUF 16384U
+#define FOCAL_RAW_XFER_NOTX 0x01U
+#define FOCAL_RAW_XFER_NORX 0x02U
+
+enum focal_wake_event {
+    FOCAL_WAKE_EVENT_NONE = 0,
+    FOCAL_WAKE_EVENT_ENABLE = 1,
+    FOCAL_WAKE_EVENT_INT = 2,
+    FOCAL_WAKE_EVENT_RESUME = 4,
+    FOCAL_WAKE_EVENT_SUSPEND = 5,
+    FOCAL_WAKE_EVENT_DISABLE = 6,
 };
 
-struct focal_spi_read_buff {
-	u8 type;
-	__le16 tx_len;
-	__le16 rx_len;
-	u8 txbuff[];
+struct focal_spi_request {
+    u8 type;
+    __le16 tx_len;
+    __le16 rx_len;
+    u8 payload[];
 } __packed;
 
+struct focal_raw_xfer_step {
+    __u32 len;
+    __u16 delay_us;
+    __u8 cs_change;
+    __u8 flags;
+};
+
+struct focal_raw_xfer_request {
+    __u32 n;
+    __u32 mode;
+    __u32 speed_hz;
+    __u32 pre_delay_us;
+    struct focal_raw_xfer_step x[FOCAL_RAW_XFER_MAX];
+    __u8 tx[FOCAL_RAW_XFER_BUF];
+    __u8 rx[FOCAL_RAW_XFER_BUF];
+};
+
 struct focal_fp_data {
-	struct spi_device *spi;
-	struct gpio_desc *reset_gpio;
-	int init;
-	int irq_disabled;
-
-	u8 *wr_buf;
-	u8 *rd_buf;
-	u8 *sensor_init_data;
-	u8 *native_tx;
-	u8 *native_rx;
-	u8 *compat_frame;
-
-	size_t frame_offset;
-	bool frame_valid;
-	bool fdt_scan_active;
-	u8 fdt_up_base[16];
-	size_t fdt_up_base_len;
-	enum focal_sensor_state sensor_state;
-	bool event_pending;
-	unsigned long last_irq_jiffies;
-
-	struct mutex lock;
+    struct spi_device *spi;
+    struct gpio_desc *reset_gpio;
+    int init;
+    int irq_disabled;
+    int wake_event;
+    int log_enabled;
+    u8 *wr_buf;
+    u8 *rd_buf;
+    u8 *sensor_init_data;
+    struct mutex lock;
 };
 
 struct focal_ctl_context {
-	struct miscdevice miscdev;
-	struct focal_fp_data *data;
+    struct miscdevice miscdev;
+    struct focal_fp_data *data;
 };
 
 static struct focal_ctl_context focal_ctl = {
-	.miscdev = {
-		.minor = MISC_DYNAMIC_MINOR,
-		.name = "focal_moh_spi",
-	},
+    .miscdev = {
+        .minor = MISC_DYNAMIC_MINOR,
+        .name = "focal_moh_spi",
+    },
 };
 
 static DEFINE_MUTEX(focal_ctl_lock);
 static DECLARE_WAIT_QUEUE_HEAD(focal_poll_wq);
 
-static void focal_reset_state(struct focal_fp_data *data)
+static long focal_raw_xfer(struct focal_fp_data *data, unsigned long arg);
+
+static int focal_hw_reset(struct focal_fp_data *data)
 {
-	data->frame_offset = 0;
-	data->frame_valid = false;
-	data->fdt_scan_active = false;
-	data->fdt_up_base_len = 0;
-	data->sensor_state = FOCAL_STATE_IDLE;
-	data->event_pending = false;
+    /*
+     * FT9368 reset is active-LOW (BIOS _INI leaves pin HIGH = running).
+     * Pulse: assert LOW for 10ms, then release HIGH and wait for boot.
+     */
+    gpiod_set_value_cansleep(data->reset_gpio, 1);  /* ensure HIGH first */
+    usleep_range(1000, 2000);
+    gpiod_set_value_cansleep(data->reset_gpio, 0);   /* assert reset LOW */
+    msleep(10);
+    gpiod_set_value_cansleep(data->reset_gpio, 1);   /* release HIGH */
+    msleep(50);                                       /* wait for boot */
+    return 0;
 }
 
-static int focal_native_xfer(struct focal_fp_data *data, u8 reg,
-				     u16 flag, u16 len, u8 *payload)
+static int focal_copy_request(struct focal_fp_data *data,
+                              const char __user *user, size_t count)
 {
-	struct spi_transfer xfer = { };
-	struct spi_message message;
-	size_t total = FTE4800_IMAGE_HEADER_BYTES + len;
-	int ret;
+    if (count < sizeof(struct focal_spi_request) ||
+        count > MAX_BUFF_SIZE)
+        return -EINVAL;
 
-	if (!len || len > FTE4800_NATIVE_IMAGE_BYTES)
-		return -EINVAL;
+    if (copy_from_user(data->wr_buf, user, count))
+        return -EFAULT;
 
-	memset(data->native_tx, 0, total);
-	memset(data->native_rx, 0, total);
-	data->native_tx[0] = reg;
-	data->native_tx[1] = (u8)flag;
-	data->native_tx[2] = len >> 8;
-	data->native_tx[3] = len & 0xff;
-
-	xfer.tx_buf = data->native_tx;
-	xfer.rx_buf = data->native_rx;
-	xfer.len = total;
-
-	spi_message_init(&message);
-	spi_message_add_tail(&xfer, &message);
-	ret = spi_sync(data->spi, &message);
-	if (ret)
-		return ret;
-
-	memcpy(payload, data->native_rx + FTE4800_IMAGE_HEADER_BYTES, len);
-	return 0;
+    return 0;
 }
 
-static int focal_native_read8(struct focal_fp_data *data, u8 reg, u8 *value)
+static int focal_validate_request(struct focal_spi_request *req, size_t count,
+                                  u16 *tx_len, u16 *rx_len)
 {
-	u8 tx[5] = { FTE4800_COMPAT_READ8, FTE4800_COMPAT_READ8_TAG, reg, 0, 0 };
-	u8 rx = 0;
-	struct spi_transfer xfers[2] = { };
-	struct spi_message message;
-	int ret;
+    *tx_len = le16_to_cpu(req->tx_len);
+    *rx_len = le16_to_cpu(req->rx_len);
 
-	xfers[0].tx_buf = tx;
-	xfers[0].len = sizeof(tx);
-	xfers[1].rx_buf = &rx;
-	xfers[1].len = 1;
+    if (*rx_len == 0)
+        return -EINVAL;
+    if (*tx_len + *rx_len > MAX_BUFF_SIZE)
+        return -EINVAL;
+    if (sizeof(*req) + *tx_len > count)
+        return -EINVAL;
+    if (*rx_len > count)
+        return -EINVAL;
 
-	spi_message_init(&message);
-	spi_message_add_tail(&xfers[0], &message);
-	spi_message_add_tail(&xfers[1], &message);
-	ret = spi_sync(data->spi, &message);
-	if (ret)
-		return ret;
+    if (req->type != SPI_READ_ONLY &&
+        req->type != SPI_READ_WRITE &&
+        req->type != SPI_BACK_DATA)
+        return -EINVAL;
 
-	*value = rx;
-	return 0;
+    if (req->type == SPI_READ_ONLY && *tx_len != 0)
+        return -EINVAL;
+
+    return 0;
 }
 
-static int focal_native_write8(struct focal_fp_data *data, u8 reg, u8 value)
+static int focal_spi_read_request(struct focal_fp_data *data,
+                                  struct focal_spi_request *req,
+                                  u16 tx_len, u16 rx_len)
 {
-	u8 tx[4] = { FTE4800_COMPAT_WRITE8, FTE4800_COMPAT_WRITE8_TAG, reg, value };
-	struct spi_transfer xfer = {
-		.tx_buf = tx,
-		.len = sizeof(tx),
-	};
-	struct spi_message message;
+    if (trace_requests)
+        dev_info(&data->spi->dev, "REQ read type=0x%02x tx=%u rx=%u\\n",
+                 req->type, tx_len, rx_len);
+    if (trace_requests && tx_len)
+        print_hex_dump(KERN_INFO, "focal-fte4800 TX: ", DUMP_PREFIX_NONE,
+                       16, 1, req->payload, tx_len, false);
 
-	spi_message_init(&message);
-	spi_message_add_tail(&xfer, &message);
-	return spi_sync(data->spi, &message);
+    if (req->type == SPI_BACK_DATA) {
+        if (rx_len > MAX_BUFF_SIZE)
+            return -EINVAL;
+        memcpy(data->rd_buf, data->sensor_init_data, rx_len);
+        return 0;
+    }
+
+    memset(data->rd_buf, 0, rx_len);
+
+    if (req->type == SPI_READ_WRITE) {
+        memcpy(data->wr_buf, req->payload, tx_len);
+        {
+            int ret = spi_write_then_read(data->spi, data->wr_buf, tx_len,
+                                          data->rd_buf, rx_len);
+            if (!ret && trace_requests && rx_len <= 16)
+                print_hex_dump(KERN_INFO, "focal-fte4800 RX: ",
+                               DUMP_PREFIX_NONE, 16, 1,
+                               data->rd_buf, rx_len, false);
+            return ret;
+        }
+    }
+
+    {
+        int ret = spi_read(data->spi, data->rd_buf, rx_len);
+        if (!ret && trace_requests && rx_len <= 16)
+            print_hex_dump(KERN_INFO, "focal-fte4800 RX: ",
+                           DUMP_PREFIX_NONE, 16, 1,
+                           data->rd_buf, rx_len, false);
+        return ret;
+    }
 }
 
-static int focal_native_read16(struct focal_fp_data *data, u16 addr,
-				       size_t len, u8 *payload)
+static int focal_write_request(struct focal_fp_data *data,
+                               struct focal_spi_request *req,
+                               size_t count)
 {
-	u8 tx[6];
-	struct spi_transfer xfers[2] = { };
-	struct spi_message message;
-	int ret;
+    size_t payload_len = count - sizeof(*req);
 
-	if (!len || len > FTE4800_NATIVE_IMAGE_BYTES)
-		return -EINVAL;
+    if (req->type == SPI_BACK_DATA) {
+        memcpy(data->sensor_init_data, data->wr_buf, count);
+        return 0;
+    }
 
-	tx[0] = FTE4800_COMPAT_READ16;
-	tx[1] = FTE4800_COMPAT_READ16_TAG;
-	tx[2] = (addr >> 8) | 0x80;
-	tx[3] = addr & 0xff;
-	tx[4] = len >> 8;
-	tx[5] = len & 0xff;
-
-	xfers[0].tx_buf = tx;
-	xfers[0].len = sizeof(tx);
-	xfers[1].rx_buf = payload;
-	xfers[1].len = len;
-
-	spi_message_init(&message);
-	spi_message_add_tail(&xfers[0], &message);
-	spi_message_add_tail(&xfers[1], &message);
-	ret = spi_sync(data->spi, &message);
-	return ret;
+    return spi_write(data->spi, req->payload, payload_len);
 }
-
-static int focal_capture_native_frame(struct focal_fp_data *data)
-{
-	const u8 *raw = data->native_rx + FTE4800_IMAGE_HEADER_BYTES;
-	size_t i;
-	int ret;
-
-	ret = focal_native_xfer(data, FTE4800_IMAGE_REG, FTE4800_IMAGE_FLAG,
-				FTE4800_NATIVE_IMAGE_BYTES, (u8 *)raw);
-	if (ret)
-		return ret;
-
-	for (i = 0; i < FTE4800_NATIVE_IMAGE_BYTES; i++) {
-		u16 sample = (u16)raw[i] << 4;
-		data->compat_frame[i * 2] = sample >> 8;
-		data->compat_frame[i * 2 + 1] = sample & 0xff;
-	}
-
-	data->frame_offset = 0;
-	data->frame_valid = true;
-	return 0;
-}
-
-static int focal_compat_event_status(struct focal_fp_data *data, u8 *out, size_t len)
-{
-	u16 status = 0;
-
-	if (len < 2)
-		return -EINVAL;
-
-	if (data->fdt_scan_active)
-		status = 0x0008;
-	else if (data->sensor_state == FOCAL_STATE_TOUCH)
-		status = 0x0022;
-	else if (data->sensor_state == FOCAL_STATE_RELEASE)
-		status = 0x0004;
-
-	out[0] = status >> 8;
-	out[1] = status & 0xff;
-	if (len > 2)
-		memset(out + 2, 0, len - 2);
-	return 0;
-}
-
-static int focal_compat_read16(struct focal_fp_data *data, u16 addr,
-				       size_t rx_len, u8 *out)
-{
-	size_t payload_len;
-	int ret;
-
-	memset(out, 0, rx_len);
-
-	if (addr == FTE4800_COMPAT_IMAGE_ADDR) {
-		if (!data->frame_valid || data->frame_offset == 0) {
-			ret = focal_capture_native_frame(data);
-			if (ret)
-				return ret;
-		}
-		payload_len = min_t(size_t, rx_len, FTE4800_COMPAT_IMAGE_BYTES - data->frame_offset);
-		memcpy(out, data->compat_frame + data->frame_offset, payload_len);
-		data->frame_offset += payload_len;
-		if (data->frame_offset >= FTE4800_COMPAT_IMAGE_BYTES) {
-			data->frame_offset = 0;
-			data->frame_valid = false;
-		}
-		return 0;
-	}
-
-	if (addr == FTE4800_COMPAT_INT_STATUS_ADDR)
-		return focal_compat_event_status(data, out, rx_len);
-
-	if (addr == 0x00B8 || addr == 0x00E8) {
-		if (data->fdt_up_base_len)
-			memcpy(out, data->fdt_up_base,
-			       min_t(size_t, data->fdt_up_base_len, rx_len));
-		if (data->sensor_state == FOCAL_STATE_RELEASE)
-			data->sensor_state = FOCAL_STATE_IDLE;
-		return 0;
-	}
-
-	payload_len = min_t(size_t, rx_len, FTE4800_NATIVE_IMAGE_BYTES);
-	return focal_native_read16(data, addr, payload_len, out);
-}
-
-static int focal_compat_read8(struct focal_fp_data *data, u8 reg, u8 *out)
-{
-	return focal_native_read8(data, reg, out);
-}
-
-static int focal_compat_write(struct focal_fp_data *data, const u8 *buf, size_t len)
-{
-	if (len >= 4 && buf[0] == FTE4800_COMPAT_WRITE8 &&
-	    buf[1] == FTE4800_COMPAT_WRITE8_TAG)
-		return focal_native_write8(data, buf[2], buf[3]);
-
-	if (len >= 2 && buf[0] == 0xC4 && buf[1] == 0x3B)
-		return 0;
-
-	if (len >= 2 && buf[0] == 0xC8 && buf[1] == 0x37)
-		return 0;
-
-	if (len >= 2 && buf[0] == 0xC0 && buf[1] == 0x3F) {
-		data->sensor_state = FOCAL_STATE_IDLE;
-		data->frame_offset = 0;
-		data->frame_valid = false;
-		return 0;
-	}
-
-	if (len >= 6 && buf[0] == 0x05 && buf[1] == 0xFA) {
-		u16 addr = ((u16)(buf[2] & 0x7f) << 8) | buf[3];
-
-		if (addr == 0x1885) {
-			data->fdt_scan_active = true;
-			return 0;
-		}
-		if (addr == 0x00B0 || addr == 0x00E0) {
-			data->fdt_up_base_len = min_t(size_t, len - 6, sizeof(data->fdt_up_base));
-			memcpy(data->fdt_up_base, buf + 6, data->fdt_up_base_len);
-			return 0;
-		}
-		if (addr == FTE4800_COMPAT_INT_CLEAR_ADDR && len >= 8) {
-			u16 clear = ((u16)buf[6] << 8) | buf[7];
-			if (clear & 0x0008) {
-				data->fdt_scan_active = false;
-				data->sensor_state = FOCAL_STATE_RELEASE;
-			}
-			if (clear & 0x0020) {
-				data->frame_offset = 0;
-				data->frame_valid = false;
-				data->sensor_state = FOCAL_STATE_IDLE;
-			}
-			return 0;
-		}
-		return 0;
-	}
-
-	return -EOPNOTSUPP;
-}
-
 static irqreturn_t focal_irq_thread(int irq, void *dev_id)
 {
-	struct focal_fp_data *data = dev_id;
-	unsigned long now = jiffies;
+    struct focal_fp_data *data = dev_id;
 
-	mutex_lock(&data->lock);
-	if (time_before(now, data->last_irq_jiffies + msecs_to_jiffies(150))) {
-		mutex_unlock(&data->lock);
-		return IRQ_HANDLED;
-	}
-	data->last_irq_jiffies = now;
-	data->sensor_state = FOCAL_STATE_TOUCH;
-	data->event_pending = true;
-	data->frame_offset = 0;
-	data->frame_valid = false;
-	mutex_unlock(&data->lock);
+    mutex_lock(&data->lock);
+    if (data->wake_event <= FOCAL_WAKE_EVENT_ENABLE)
+        data->wake_event = FOCAL_WAKE_EVENT_INT;
+    mutex_unlock(&data->lock);
 
-	wake_up_interruptible(&focal_poll_wq);
-	return IRQ_HANDLED;
+    wake_up_interruptible(&focal_poll_wq);
+    return IRQ_HANDLED;
 }
 
-static void focal_hw_reset(struct focal_fp_data *data)
+static ssize_t focal_read(struct file *file, char __user *user, size_t count,
+                          loff_t *pos)
 {
-	gpiod_set_value_cansleep(data->reset_gpio, 0);
-	msleep(FTE4800_RESET_ASSERT_MS);
-	gpiod_set_value_cansleep(data->reset_gpio, 1);
-	msleep(FTE4800_RESET_SETTLE_MS);
-	data->sensor_state = FOCAL_STATE_IDLE;
-	data->event_pending = false;
-}
+    struct focal_ctl_context *ctx = container_of(file->private_data,
+                                                   struct focal_ctl_context,
+                                                   miscdev);
+    struct focal_fp_data *data;
+    struct focal_spi_request *req;
+    u16 tx_len;
+    u16 rx_len;
+    int ret;
 
-static ssize_t focal_read(struct file *file, char __user *user,
-			  size_t count, loff_t *pos)
-{
-	struct focal_ctl_context *ctx = container_of(file->private_data,
-						struct focal_ctl_context, miscdev);
-	struct focal_fp_data *data;
-	struct focal_spi_read_buff *req;
-	const u8 *payload;
-	unsigned int tx_len, rx_len;
-	int ret;
+    mutex_lock(&focal_ctl_lock);
+    data = ctx->data;
+    if (!data || data->init != INIT_SUCCESS) {
+        mutex_unlock(&focal_ctl_lock);
+        return -ENODEV;
+    }
 
-	mutex_lock(&focal_ctl_lock);
-	data = ctx->data;
-	if (!data || data->init != INIT_SUCCESS) {
-		mutex_unlock(&focal_ctl_lock);
-		return -ENODEV;
-	}
+    mutex_lock(&data->lock);
 
-	if (count < sizeof(*req) || count > MAX_BUFF_SIZE) {
-		mutex_unlock(&focal_ctl_lock);
-		return -EINVAL;
-	}
+    ret = focal_copy_request(data, user, count);
+    if (ret)
+        goto out;
 
-	mutex_lock(&data->lock);
-	memset(data->wr_buf, 0, MAX_BUFF_SIZE);
-	if (copy_from_user(data->wr_buf, user, count)) {
-		mutex_unlock(&data->lock);
-		mutex_unlock(&focal_ctl_lock);
-		return -EFAULT;
-	}
+    req = (struct focal_spi_request *)data->wr_buf;
 
-	req = (struct focal_spi_read_buff *)data->wr_buf;
-	tx_len = le16_to_cpu(req->tx_len);
-	rx_len = le16_to_cpu(req->rx_len);
-	if (sizeof(*req) + tx_len > count || !rx_len || tx_len + rx_len > MAX_BUFF_SIZE) {
-		ret = -EINVAL;
-		goto out_unlock;
-	}
+    if (req->type == SPI_BACK_DATA) {
+        if (count > MAX_BUFF_SIZE) {
+            ret = -EINVAL;
+            goto out;
+        }
+        if (copy_to_user(user, data->sensor_init_data, count)) {
+            ret = -EFAULT;
+            goto out;
+        }
+        ret = count;
+        goto out;
+    }
 
-	payload = req->txbuff;
-	if (req->type == SPI_BACK_DATA) {
-		if (rx_len > MAX_BUFF_SIZE) {
-			ret = -EINVAL;
-			goto out_unlock;
-		}
-		ret = copy_to_user(user, data->sensor_init_data,
-					min_t(size_t, rx_len, MAX_BUFF_SIZE)) ? -EFAULT : rx_len;
-		goto out_unlock;
-	}
+    ret = focal_validate_request(req, count, &tx_len, &rx_len);
+    if (ret)
+        goto out;
 
-	memset(data->rd_buf, 0, MAX_BUFF_SIZE);
+    ret = focal_spi_read_request(data, req, tx_len, rx_len);
+    if (ret)
+        goto out;
 
-	if (req->type == SPI_READ_ONLY) {
-		if (tx_len) {
-			ret = -EINVAL;
-			goto out_unlock;
-		}
-		ret = 0;
-	} else if (req->type == SPI_READ_WRITE) {
-		if (tx_len == 5 && payload[0] == FTE4800_COMPAT_READ8 &&
-		    payload[1] == FTE4800_COMPAT_READ8_TAG) {
-			ret = focal_compat_read8(data, payload[2], data->rd_buf);
-		} else if (tx_len == 6 && payload[0] == FTE4800_COMPAT_READ16 &&
-			   payload[1] == FTE4800_COMPAT_READ16_TAG) {
-			u16 addr = ((u16)(payload[2] & 0x7f) << 8) | payload[3];
-			ret = focal_compat_read16(data, addr, rx_len, data->rd_buf);
-		} else if (tx_len == 6 && payload[0] == FTE4800_COMPAT_BULK &&
-			   payload[1] == FTE4800_COMPAT_BULK_TAG) {
-			u16 addr = ((u16)(payload[2] & 0x7f) << 8) | payload[3];
-			ret = focal_compat_read16(data, addr, rx_len, data->rd_buf);
-		} else {
-			ret = -EOPNOTSUPP;
-		}
-	} else {
-		ret = -EINVAL;
-	}
+    if (copy_to_user(user, data->rd_buf, rx_len)) {
+        ret = -EFAULT;
+        goto out;
+    }
 
-	if (!ret) {
-		if (copy_to_user(user, data->rd_buf, rx_len))
-			ret = -EFAULT;
-		else
-			ret = count;
-	}
-
-out_unlock:
-	mutex_unlock(&data->lock);
-	mutex_unlock(&focal_ctl_lock);
-	return ret;
+    ret = count;
+out:
+    mutex_unlock(&data->lock);
+    mutex_unlock(&focal_ctl_lock);
+    return ret;
 }
 
 static ssize_t focal_write(struct file *file, const char __user *user,
-			   size_t count, loff_t *pos)
+                           size_t count, loff_t *pos)
 {
-	struct focal_ctl_context *ctx = container_of(file->private_data,
-						struct focal_ctl_context, miscdev);
-	struct focal_fp_data *data;
-	struct focal_spi_read_buff *req;
-	size_t payload_len;
-	int ret;
+    struct focal_ctl_context *ctx = container_of(file->private_data,
+                                                   struct focal_ctl_context,
+                                                   miscdev);
+    struct focal_fp_data *data;
+    struct focal_spi_request *req;
+    int ret;
 
-	mutex_lock(&focal_ctl_lock);
-	data = ctx->data;
-	if (!data || data->init != INIT_SUCCESS) {
-		mutex_unlock(&focal_ctl_lock);
-		return -ENODEV;
-	}
-	if (count < sizeof(*req) || count > MAX_BUFF_SIZE) {
-		mutex_unlock(&focal_ctl_lock);
-		return -EINVAL;
-	}
+    mutex_lock(&focal_ctl_lock);
+    data = ctx->data;
+    if (!data || data->init != INIT_SUCCESS) {
+        mutex_unlock(&focal_ctl_lock);
+        return -ENODEV;
+    }
 
-	mutex_lock(&data->lock);
-	memset(data->wr_buf, 0, MAX_BUFF_SIZE);
-	if (copy_from_user(data->wr_buf, user, count)) {
-		ret = -EFAULT;
-		goto out_unlock;
-	}
+    mutex_lock(&data->lock);
 
-	req = (struct focal_spi_read_buff *)data->wr_buf;
-	payload_len = count - sizeof(*req);
-	if (payload_len && req->type == SPI_BACK_DATA) {
-		memcpy(data->sensor_init_data, req->txbuff, payload_len);
-		ret = count;
-		goto out_unlock;
-	}
+    ret = focal_copy_request(data, user, count);
+    if (ret)
+        goto out;
 
-	ret = focal_compat_write(data, req->txbuff, payload_len);
-	if (!ret)
-		ret = count;
+    req = (struct focal_spi_request *)data->wr_buf;
+    if (trace_requests)
+        dev_info(&data->spi->dev, "REQ write type=0x%02x tx=%u rx=%u\\n",
+                 req->type, le16_to_cpu(req->tx_len),
+                 le16_to_cpu(req->rx_len));
+    if (trace_requests && count > sizeof(*req))
+        print_hex_dump(KERN_INFO, "focal-fte4800 TX: ", DUMP_PREFIX_NONE,
+                       16, 1, req->payload, count - sizeof(*req), false);
+    ret = focal_write_request(data, req, count);
+    if (!ret)
+        ret = count;
 
-out_unlock:
-	mutex_unlock(&data->lock);
-	mutex_unlock(&focal_ctl_lock);
-	return ret;
+out:
+    mutex_unlock(&data->lock);
+    mutex_unlock(&focal_ctl_lock);
+    return ret;
 }
-
 static __poll_t focal_poll(struct file *file, poll_table *wait)
 {
-	struct focal_ctl_context *ctx = container_of(file->private_data,
-						struct focal_ctl_context, miscdev);
-	struct focal_fp_data *data;
-	__poll_t mask = 0;
+    struct focal_ctl_context *ctx = container_of(file->private_data,
+                                                   struct focal_ctl_context,
+                                                   miscdev);
+    struct focal_fp_data *data;
+    __poll_t mask = 0;
+    int event;
 
-	poll_wait(file, &focal_poll_wq, wait);
-	mutex_lock(&focal_ctl_lock);
-	data = ctx->data;
-	if (data) {
-		mutex_lock(&data->lock);
-		if (data->event_pending) {
-			mask = EPOLLIN | EPOLLRDNORM;
-			data->event_pending = false;
-		}
-		mutex_unlock(&data->lock);
-	}
-	mutex_unlock(&focal_ctl_lock);
-	return mask;
+    poll_wait(file, &focal_poll_wq, wait);
+
+    mutex_lock(&focal_ctl_lock);
+    data = ctx->data;
+    if (data) {
+        mutex_lock(&data->lock);
+        event = data->wake_event;
+        data->wake_event = FOCAL_WAKE_EVENT_NONE;
+        mutex_unlock(&data->lock);
+        if (event > FOCAL_WAKE_EVENT_NONE)
+            mask = event;
+    }
+    mutex_unlock(&focal_ctl_lock);
+
+    return mask;
 }
 
-static long focal_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+static long focal_ioctl(struct file *file, unsigned int cmd,
+                        unsigned long arg)
 {
-	struct focal_ctl_context *ctx = container_of(file->private_data,
-						struct focal_ctl_context, miscdev);
-	struct focal_fp_data *data;
-	long ret = 0;
+    struct focal_ctl_context *ctx = container_of(file->private_data,
+                                                   struct focal_ctl_context,
+                                                   miscdev);
+    struct focal_fp_data *data;
+    long ret = 0;
 
-	mutex_lock(&focal_ctl_lock);
-	data = ctx->data;
-	if (!data || data->init != INIT_SUCCESS) {
-		mutex_unlock(&focal_ctl_lock);
-		return -ENODEV;
-	}
-	mutex_lock(&data->lock);
+    mutex_lock(&focal_ctl_lock);
+    data = ctx->data;
+    if (!data || data->init != INIT_SUCCESS) {
+        mutex_unlock(&focal_ctl_lock);
+        return -ENODEV;
+    }
 
-	switch (cmd) {
-	case 0x8086:
-		focal_hw_reset(data);
-		break;
-	case 0x8087:
-		gpiod_set_value_cansleep(data->reset_gpio, 0);
-		break;
-	case 0x8088:
-		gpiod_set_value_cansleep(data->reset_gpio, 1);
-		break;
-	case 0x8089:
-		if (arg && data->irq_disabled) {
-			enable_irq(data->spi->irq);
-			data->irq_disabled = 0;
-		} else if (!arg && !data->irq_disabled) {
-			disable_irq(data->spi->irq);
-			data->irq_disabled = 1;
-		}
-		break;
-	case 0x808A:
-		break;
-	case 0x808B:
-		data->event_pending = !!arg;
-		if (arg)
-			wake_up_interruptible(&focal_poll_wq);
-		break;
-	case 0x808C:
-		break;
-	default:
-		ret = -ENOTTY;
-		break;
-	}
+    mutex_lock(&data->lock);
 
-	mutex_unlock(&data->lock);
-	mutex_unlock(&focal_ctl_lock);
-	return ret;
+    switch (cmd) {
+    case IOCTL_RAW_XFER:
+        ret = focal_raw_xfer(data, arg);
+        break;
+    case IOCTL_RESET:
+        ret = focal_hw_reset(data);
+        break;
+    case IOCTL_POWER_OFF:
+        gpiod_set_value_cansleep(data->reset_gpio, 0);
+        break;
+    case IOCTL_POWER_ON:
+        gpiod_set_value_cansleep(data->reset_gpio, 1);
+        break;
+    case IOCTL_IRQ_ENABLE:
+        if (arg && data->irq_disabled) {
+            enable_irq(data->spi->irq);
+            data->irq_disabled = 0;
+        } else if (!arg && !data->irq_disabled) {
+            disable_irq(data->spi->irq);
+            data->irq_disabled = 1;
+        }
+        break;
+    case IOCTL_LOG_ENABLE:
+        data->log_enabled = !!arg;
+        break;
+    case IOCTL_RELEASE_POLL:
+        data->wake_event = arg;
+        if (arg)
+            wake_up_interruptible(&focal_poll_wq);
+        break;
+    case IOCTL_CS_CONTROL:
+        break;
+    default:
+        ret = -ENOTTY;
+        break;
+    }
+
+    mutex_unlock(&data->lock);
+    mutex_unlock(&focal_ctl_lock);
+    return ret;
 }
 
 static int focal_open(struct inode *inode, struct file *file)
 {
-	struct focal_ctl_context *ctx = &focal_ctl;
+    struct focal_ctl_context *ctx = &focal_ctl;
 
-	mutex_lock(&focal_ctl_lock);
-	if (!ctx->data) {
-		mutex_unlock(&focal_ctl_lock);
-		return -ENODEV;
-	}
-	ctx->data->frame_offset = 0;
-	ctx->data->frame_valid = false;
-	ctx->data->sensor_state = FOCAL_STATE_IDLE;
-	ctx->data->event_pending = false;
-	mutex_unlock(&focal_ctl_lock);
-	return 0;
+    mutex_lock(&focal_ctl_lock);
+    if (!ctx->data) {
+        mutex_unlock(&focal_ctl_lock);
+        return -ENODEV;
+    }
+
+    mutex_lock(&ctx->data->lock);
+    ctx->data->wake_event = FOCAL_WAKE_EVENT_DISABLE;
+    mutex_unlock(&ctx->data->lock);
+    mutex_unlock(&focal_ctl_lock);
+    return 0;
 }
-
 static const struct file_operations focal_fops = {
-	.owner = THIS_MODULE,
-	.open = focal_open,
-	.read = focal_read,
-	.write = focal_write,
-	.poll = focal_poll,
-	.unlocked_ioctl = focal_ioctl,
+    .owner = THIS_MODULE,
+    .open = focal_open,
+    .read = focal_read,
+    .write = focal_write,
+    .poll = focal_poll,
+    .unlocked_ioctl = focal_ioctl,
 #ifdef CONFIG_COMPAT
-	.compat_ioctl = focal_ioctl,
+    .compat_ioctl = focal_ioctl,
 #endif
 };
 
+static long focal_raw_xfer(struct focal_fp_data *data, unsigned long arg)
+{
+    struct focal_raw_xfer_request *req;
+    struct spi_transfer *xf;
+    struct spi_message msg;
+    u32 i, offset = 0;
+    u32 total = 0;
+    u32 old_mode, old_speed;
+    bool changed = false;
+    int ret = 0;
+
+    req = kzalloc(sizeof(*req), GFP_KERNEL);
+    xf = kcalloc(FOCAL_RAW_XFER_MAX, sizeof(*xf), GFP_KERNEL);
+    if (!req || !xf) {
+        ret = -ENOMEM;
+        goto out;
+    }
+
+    if (copy_from_user(req, (void __user *)arg, sizeof(*req))) {
+        ret = -EFAULT;
+        goto out;
+    }
+    if (!req->n || req->n > FOCAL_RAW_XFER_MAX) {
+        ret = -EINVAL;
+        goto out;
+    }
+
+    for (i = 0; i < req->n; i++) {
+        if (!req->x[i].len || req->x[i].len > FOCAL_RAW_XFER_BUF ||
+            total > FOCAL_RAW_XFER_BUF - req->x[i].len) {
+            ret = -EINVAL;
+            goto out;
+        }
+        total += req->x[i].len;
+    }
+
+    old_mode = data->spi->mode;
+    old_speed = data->spi->max_speed_hz;
+    if (req->mode != 0xFFFFFFFFU || req->speed_hz) {
+        if (req->mode != 0xFFFFFFFFU)
+            data->spi->mode = req->mode & 0xFFU;
+        if (req->speed_hz)
+            data->spi->max_speed_hz = req->speed_hz;
+        ret = spi_setup(data->spi);
+        changed = true;
+        if (ret)
+            goto restore;
+    }
+
+    spi_message_init(&msg);
+    for (i = 0; i < req->n; i++) {
+        struct focal_raw_xfer_step *step = &req->x[i];
+
+        xf[i].len = step->len;
+        if (!(step->flags & FOCAL_RAW_XFER_NOTX))
+            xf[i].tx_buf = req->tx + offset;
+        if (!(step->flags & FOCAL_RAW_XFER_NORX))
+            xf[i].rx_buf = req->rx + offset;
+        xf[i].cs_change = !!step->cs_change;
+        xf[i].delay.value = step->delay_us;
+        xf[i].delay.unit = SPI_DELAY_UNIT_USECS;
+        spi_message_add_tail(&xf[i], &msg);
+        offset += step->len;
+    }
+
+    if (req->pre_delay_us)
+        usleep_range(req->pre_delay_us, req->pre_delay_us + 50);
+
+    ret = spi_sync(data->spi, &msg);
+
+restore:
+    if (changed) {
+        data->spi->mode = old_mode;
+        data->spi->max_speed_hz = old_speed;
+        spi_setup(data->spi);
+    }
+
+    if (!ret && copy_to_user((void __user *)arg, req, sizeof(*req)))
+        ret = -EFAULT;
+
+out:
+    kfree(xf);
+    kfree(req);
+    return ret;
+}
+
 static int focal_probe(struct spi_device *spi)
 {
-	struct focal_fp_data *data;
-	int ret;
+    struct focal_fp_data *data;
+    int ret;
 
-	spi->mode = FTE4800_SPI_MODE;
-	spi->bits_per_word = 8;
-	spi->max_speed_hz = FTE4800_SPI_HZ;
-	ret = spi_setup(spi);
-	if (ret)
-		return ret;
+    spi->mode = FTE4800_SPI_MODE;
+    spi->bits_per_word = 8;
+    spi->max_speed_hz = FTE4800_SPI_HZ;
 
-	data = devm_kzalloc(&spi->dev, sizeof(*data), GFP_KERNEL);
-	if (!data)
-		return -ENOMEM;
-	mutex_init(&data->lock);
-	data->spi = spi;
-	data->init = -1;
+    ret = spi_setup(spi);
+    if (ret)
+        return ret;
 
-	data->wr_buf = devm_kzalloc(&spi->dev, MAX_BUFF_SIZE, GFP_KERNEL);
-	data->rd_buf = devm_kzalloc(&spi->dev, MAX_BUFF_SIZE, GFP_KERNEL);
-	data->sensor_init_data = devm_kzalloc(&spi->dev, MAX_BUFF_SIZE, GFP_KERNEL);
-	data->native_tx = devm_kzalloc(&spi->dev,
-				       FTE4800_IMAGE_HEADER_BYTES + FTE4800_NATIVE_IMAGE_BYTES,
-				       GFP_KERNEL);
-	data->native_rx = devm_kzalloc(&spi->dev,
-				       FTE4800_IMAGE_HEADER_BYTES + FTE4800_NATIVE_IMAGE_BYTES,
-				       GFP_KERNEL);
-	data->compat_frame = devm_kzalloc(&spi->dev, FTE4800_COMPAT_IMAGE_BYTES,
-					 GFP_KERNEL);
-	if (!data->wr_buf || !data->rd_buf || !data->sensor_init_data ||
-	    !data->native_tx || !data->native_rx || !data->compat_frame)
-		return -ENOMEM;
+    data = devm_kzalloc(&spi->dev, sizeof(*data), GFP_KERNEL);
+    if (!data)
+        return -ENOMEM;
 
-	data->reset_gpio = devm_gpiod_get_index(&spi->dev, NULL, 0, GPIOD_OUT_HIGH);
-	if (IS_ERR(data->reset_gpio))
-		return PTR_ERR(data->reset_gpio);
+    mutex_init(&data->lock);
+    data->spi = spi;
+    data->init = -1;
+    data->wake_event = FOCAL_WAKE_EVENT_DISABLE;
 
-	spi_set_drvdata(spi, data);
-	focal_reset_state(data);
-	focal_hw_reset(data);
+    data->wr_buf = devm_kzalloc(&spi->dev, MAX_BUFF_SIZE, GFP_KERNEL);
+    data->rd_buf = devm_kzalloc(&spi->dev, MAX_BUFF_SIZE, GFP_KERNEL);
+    data->sensor_init_data = devm_kzalloc(&spi->dev, MAX_BUFF_SIZE, GFP_KERNEL);
+    if (!data->wr_buf || !data->rd_buf || !data->sensor_init_data)
+        return -ENOMEM;
 
-	ret = devm_request_threaded_irq(&spi->dev, spi->irq, NULL,
-					focal_irq_thread,
-					IRQF_TRIGGER_RISING | IRQF_ONESHOT,
-					"focal-irq", data);
-	if (ret)
-		return ret;
+    data->reset_gpio = devm_gpiod_get_index(&spi->dev, NULL, 0,
+                                             GPIOD_OUT_HIGH);
+    if (IS_ERR(data->reset_gpio))
+        return PTR_ERR(data->reset_gpio);
 
-	data->init = INIT_SUCCESS;
-	mutex_lock(&focal_ctl_lock);
-	focal_ctl.data = data;
-	mutex_unlock(&focal_ctl_lock);
+    spi_set_drvdata(spi, data);
 
-	dev_info(&spi->dev, "FTE4800 ready: mode=%u speed=%uHz reset=%s irq=%d\n",
-		 spi->mode, spi->max_speed_hz,
-		 gpiod_is_active_low(data->reset_gpio) ? "active-low" : "active-high",
-		 spi->irq);
-	return 0;
+    ret = focal_hw_reset(data);
+    if (ret)
+        return ret;
+
+    ret = devm_request_threaded_irq(&spi->dev, spi->irq, NULL,
+                                    focal_irq_thread,
+                                    IRQF_TRIGGER_RISING | IRQF_ONESHOT,
+                                    "focal-irq", data);
+    if (ret)
+        return ret;
+
+    disable_irq(spi->irq);
+    data->irq_disabled = 1;
+    data->init = INIT_SUCCESS;
+
+    mutex_lock(&focal_ctl_lock);
+    focal_ctl.data = data;
+    mutex_unlock(&focal_ctl_lock);
+
+    dev_info(&spi->dev,
+             TAG "ready: mode=%u speed=%uHz bits=%u irq=%d reset=%s\n",
+             spi->mode, spi->max_speed_hz, spi->bits_per_word, spi->irq,
+             gpiod_is_active_low(data->reset_gpio) ?
+             "active-low" : "active-high");
+    return 0;
 }
 
 static void focal_remove(struct spi_device *spi)
 {
-	struct focal_fp_data *data = spi_get_drvdata(spi);
+    struct focal_fp_data *data = spi_get_drvdata(spi);
 
-	mutex_lock(&focal_ctl_lock);
-	focal_ctl.data = NULL;
-	if (data)
-		data->init = -1;
-	mutex_unlock(&focal_ctl_lock);
+    mutex_lock(&focal_ctl_lock);
+    focal_ctl.data = NULL;
+    if (data)
+        data->init = -1;
+    mutex_unlock(&focal_ctl_lock);
 }
 
 static const struct acpi_device_id focal_acpi_ids[] = {
-	{ "FTE4800", 0 },
-	{ }
+    { "FTE4800", 0 },
+    { }
 };
 MODULE_DEVICE_TABLE(acpi, focal_acpi_ids);
 
 static struct spi_driver focal_driver = {
-	.driver = {
-		.name = "focal-fte4800",
-		.acpi_match_table = ACPI_PTR(focal_acpi_ids),
-	},
-	.probe = focal_probe,
-	.remove = focal_remove,
+    .driver = {
+        .name = "focal-fte4800",
+        .acpi_match_table = ACPI_PTR(focal_acpi_ids),
+    },
+    .probe = focal_probe,
+    .remove = focal_remove,
 };
-
 static int __init focal_init(void)
 {
-	int ret;
+    int ret;
 
-	focal_ctl.miscdev.fops = &focal_fops;
-	ret = misc_register(&focal_ctl.miscdev);
-	if (ret)
-		return ret;
+    focal_ctl.miscdev.fops = &focal_fops;
+    ret = misc_register(&focal_ctl.miscdev);
+    if (ret)
+        return ret;
 
-	ret = spi_register_driver(&focal_driver);
-	if (ret) {
-		misc_deregister(&focal_ctl.miscdev);
-		return ret;
-	}
-	return 0;
+    ret = spi_register_driver(&focal_driver);
+    if (ret) {
+        misc_deregister(&focal_ctl.miscdev);
+        return ret;
+    }
+
+    return 0;
 }
 
 static void __exit focal_exit(void)
 {
-	spi_unregister_driver(&focal_driver);
-	misc_deregister(&focal_ctl.miscdev);
+    spi_unregister_driver(&focal_driver);
+    misc_deregister(&focal_ctl.miscdev);
 }
 
 module_init(focal_init);
 module_exit(focal_exit);
 
 MODULE_AUTHOR("FocalTech / Linux FTE4800 adaptation");
-MODULE_DESCRIPTION("FocalTech FTE4800 / FT9368 SPI fingerprint driver");
+MODULE_DESCRIPTION("FocalTech FTE4800 / FT9368 SPI transport driver");
 MODULE_LICENSE("GPL");
+

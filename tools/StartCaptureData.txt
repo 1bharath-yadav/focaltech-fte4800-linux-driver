@@ -1,0 +1,28 @@
+┌ 58: fcn.180024709 (int64_t arg1, int64_t arg_28h, int64_t arg_50h);
+│ `- args(rcx, sp[0x0..0x28]) vars(1:sp[0x8..0x8])
+│           0x180024709      4c8d058853..   lea r8, str.clsSpiDev::ft_interface_base_StartCaptureData ; 0x180039a98 ; "clsSpiDev::ft_interface_base_StartCaptureData"
+│           0x180024710      48894c2428     mov qword [arg_28h], rcx   ; arg1
+│           0x180024715      488d154ce1..   lea rdx, str._Driver__E_error_at__s__s:_d_:__s_0x_x ; 0x180032868 ; "[Driver] E error at %s[%s:%d]: %s 0x%x"
+│           0x18002471c      b905000000     mov ecx, 5
+│           0x180024721      c744242018..   mov dword [var_20h], 0x518 ; [0x518:4]=-1 ; 1304
+│           0x180024729      4c8bcf         mov r9, rdi
+│           0x18002472c      e83f42ffff     call fcn.180018970
+│           0x180024731      8bc3           mov eax, ebx
+│       ┌─< 0x180024733      e96a020000     jmp 0x1800249a2
+        │   ; CODE XREF from fcn.1800231ec @ +0x14de(x)
+..
+      │││   ; CODE XREFS from fcn.180024709 @ +0x37(x), +0x3f(x)
+  │││││││   ; CODE XREFS from fcn.180024709 @ +0x73(x), +0x7f(x)
+  │││││││   ; CODE XREFS from fcn.180024709 @ +0x102(x), +0x10b(x)
+  │││││││   ; CODE XREFS from fcn.180024709 @ +0x55(x), +0x5e(x)
+  │││││││   ; CODE XREF from fcn.180024709 @ +0xf6(x)
+  │││││││   ; CODE XREF from fcn.180024709 @ +0x19c(x)
+  │││││││   ; CODE XREF from fcn.180024709 @ +0x16a(x)
+  │││││││   ; XREFS: CODE 0x180024774  CODE 0x180024884  CODE 0x18002488e  
+  │││││││   ; XREFS: CODE 0x18002489e  CODE 0x1800248b1  CODE 0x18002492c  
+  │││││││   ; XREFS: CODE 0x180024941  
+│       │   ; CODE XREF from fcn.180024709 @ 0x180024733(x)
+│       └─> 0x1800249a2      488b5c2450     mov rbx, qword [arg_50h]
+│           0x1800249a7      4883c440       add rsp, 0x40
+│           0x1800249ab      5f             pop rdi
+└           0x1800249ac      c3             ret

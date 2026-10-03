@@ -1,0 +1,111 @@
+┌ 384: fcn.180024a20 (int64_t arg1, int64_t arg2);
+│ `- args(rcx, r8) vars(7:sp[0x10..0x70])
+│           0x180024a20      48895c2408     mov qword [var_8h], rbx
+│           0x180024a25      48896c2410     mov qword [var_10h], rbp
+│           0x180024a2a      4889742418     mov qword [var_18h], rsi
+│           0x180024a2f      57             push rdi
+│           0x180024a30      4154           push r12
+│           0x180024a32      4155           push r13
+│           0x180024a34      4156           push r14
+│           0x180024a36      4157           push r15
+│           0x180024a38      4883ec40       sub rsp, 0x40
+│           0x180024a3c      410fb7f9       movzx edi, r9w
+│           0x180024a40      4533e4         xor r12d, r12d
+│           0x180024a43      4d8bf0         mov r14, r8                ; arg3
+│           0x180024a46      440fb7fa       movzx r15d, dx
+│           0x180024a4a      4c8be9         mov r13, rcx               ; arg1
+│           0x180024a4d      8d6f07         lea ebp, [rdi + 7]
+│           0x180024a50      4d85c0         test r8, r8                ; arg3
+│       ┌─< 0x180024a53      756b           jne 0x180024ac0
+│       │   0x180024a55      0faee8         lfence
+│       │   0x180024a58      bf5c5c0000     mov edi, 0x5c5c            ; '\\\\'
+│       │   0x180024a5d      488d1d6c41..   lea rbx, str.D:workSensorFT9368_ftWbioUmdfDriverV2interface_src_ft_spi.cpp ; 0x180038bd0 ; "D:\\work\\Sensor\\FT9368\\ftWbioUmdfDriverV2\\interface\\src\\ft_spi.cpp"
+│       │   0x180024a64      8bd7           mov edx, edi
+│       │   0x180024a66      488bcb         mov rcx, rbx
+│       │   0x180024a69      e822b30000     call fcn.18002fd90
+│       │   0x180024a6e      4885c0         test rax, rax
+│      ┌──< 0x180024a71      740e           je 0x180024a81
+│      ││   0x180024a73      8bd7           mov edx, edi
+│      ││   0x180024a75      488bcb         mov rcx, rbx
+│      ││   0x180024a78      e813b30000     call fcn.18002fd90
+│      ││   0x180024a7d      488d5801       lea rbx, [rax + 1]
+│      ││   ; CODE XREF from fcn.180024a20 @ 0x180024a71(x)
+│      └──> 0x180024a81      bf1c0022c0     mov edi, 0xc022001c        ; '\x1c'
+│       │   0x180024a86      488d0d5bdd..   lea rcx, str.A_required_pointer_is_null ; 0x1800327e8 ; "A required pointer is null"
+│       │   0x180024a8d      897c2430       mov dword [var_30h], edi
+│       │   0x180024a91      48894c2428     mov qword [var_28h], rcx
+│       │   0x180024a96      c7442420c0..   mov dword [var_20h], 0x3c0 ; [0x3c0:4]=-1 ; 960
+│       │   ; CODE XREF from fcn.180024a20 @ 0x180024b0e(x)
+│      ┌──> 0x180024a9e      4c8bcb         mov r9, rbx
+│      ╎│   0x180024aa1      4c8d05c84d..   lea r8, str.clsSpiDev::ft_interface_base_WriteData ; 0x180039870 ; "clsSpiDev::ft_interface_base_WriteData"
+│      ╎│   0x180024aa8      488d15b9dd..   lea rdx, str._Driver__E_error_at__s__s:_d_:__s_0x_x ; 0x180032868 ; "[Driver] E error at %s[%s:%d]: %s 0x%x"
+│      ╎│   0x180024aaf      b905000000     mov ecx, 5
+│      ╎│   0x180024ab4      e8b73effff     call fcn.180018970
+│      ╎│   0x180024ab9      8bc7           mov eax, edi
+│     ┌───< 0x180024abb      e9c2000000     jmp 0x180024b82
+│     │╎│   ; CODE XREF from fcn.180024a20 @ 0x180024a53(x)
+│     │╎└─> 0x180024ac0      6685ff         test di, di
+│     │╎┌─< 0x180024ac3      754b           jne 0x180024b10
+│     │╎│   0x180024ac5      0faee8         lfence
+│     │╎│   0x180024ac8      bf5c5c0000     mov edi, 0x5c5c            ; '\\\\'
+│     │╎│   0x180024acd      488d1dfc40..   lea rbx, str.D:workSensorFT9368_ftWbioUmdfDriverV2interface_src_ft_spi.cpp ; 0x180038bd0 ; "D:\\work\\Sensor\\FT9368\\ftWbioUmdfDriverV2\\interface\\src\\ft_spi.cpp"
+│     │╎│   0x180024ad4      8bd7           mov edx, edi
+│     │╎│   0x180024ad6      488bcb         mov rcx, rbx
+│     │╎│   0x180024ad9      e8b2b20000     call fcn.18002fd90
+│     │╎│   0x180024ade      4885c0         test rax, rax
+│    ┌────< 0x180024ae1      740e           je 0x180024af1
+│    ││╎│   0x180024ae3      8bd7           mov edx, edi
+│    ││╎│   0x180024ae5      488bcb         mov rcx, rbx
+│    ││╎│   0x180024ae8      e8a3b20000     call fcn.18002fd90
+│    ││╎│   0x180024aed      488d5801       lea rbx, [rax + 1]
+│    ││╎│   ; CODE XREF from fcn.180024a20 @ 0x180024ae1(x)
+│    └────> 0x180024af1      bf060200c0     mov edi, 0xc0000206
+│     │╎│   0x180024af6      488d0d9b4d..   lea rcx, str.A_required_size_is_zero ; 0x180039898 ; "A required size is zero"
+│     │╎│   0x180024afd      897c2430       mov dword [var_30h], edi
+│     │╎│   0x180024b01      48894c2428     mov qword [var_28h], rcx
+│     │╎│   0x180024b06      c7442420c1..   mov dword [var_20h], 0x3c1 ; [0x3c1:4]=-1 ; 961
+│     │└──< 0x180024b0e      eb8e           jmp 0x180024a9e
+│     │ │   ; CODE XREF from fcn.180024a20 @ 0x180024ac3(x)
+│     │ └─> 0x180024b10      0fb7dd         movzx ebx, bp
+│     │     0x180024b13      8bcb           mov ecx, ebx
+│     │     0x180024b15      e8dea00000     call fcn.18002ebf8
+│     │     0x180024b1a      410fb7cf       movzx ecx, r15w
+│     │     0x180024b1e      4c8bc7         mov r8, rdi
+│     │     0x180024b21      66c1e908       shr cx, 8
+│     │     0x180024b25      498bd6         mov rdx, r14
+│     │     0x180024b28      488bf0         mov rsi, rax
+│     │     0x180024b2b      884802         mov byte [rax + 2], cl
+│     │     0x180024b2e      0fb7cf         movzx ecx, di
+│     │     0x180024b31      66c1e908       shr cx, 8
+│     │     0x180024b35      884804         mov byte [rax + 4], cl
+│     │     0x180024b38      488d4806       lea rcx, [rax + 6]
+│     │     0x180024b3c      66c70005fa     mov word [rax], 0xfa05     ; [0xfa05:2]=0xffff
+│     │     0x180024b41      44887803       mov byte [rax + 3], r15b
+│     │     0x180024b45      40887805       mov byte [rax + 5], dil
+│     │     0x180024b49      e8a2b30000     call fcn.18002fef0
+│     │     0x180024b4e      498d4d10       lea rcx, [r13 + 0x10]
+│     │     0x180024b52      44886433ff     mov byte [rbx + rsi - 1], r12b
+│     │     0x180024b57      e8c843ffff     call fcn.180018f24
+│     │     0x180024b5c      440fb7cd       movzx r9d, bp
+│     │     0x180024b60      4c8bc6         mov r8, rsi
+│     │     0x180024b63      b202           mov dl, 2
+│     │     0x180024b65      498bcd         mov rcx, r13
+│     │     0x180024b68      e8bb0a0000     call fcn.180025628
+│     │     0x180024b6d      498d4d10       lea rcx, [r13 + 0x10]
+│     │     0x180024b71      8bd8           mov ebx, eax
+│     │     0x180024b73      e8dc43ffff     call fcn.180018f54
+│     │     0x180024b78      488bce         mov rcx, rsi
+│     │     0x180024b7b      e880a00000     call fcn.18002ec00
+│     │     0x180024b80      8bc3           mov eax, ebx
+│     │     ; CODE XREF from fcn.180024a20 @ 0x180024abb(x)
+│     └───> 0x180024b82      4c8d5c2440     lea r11, [var_40h]
+│           0x180024b87      498b5b30       mov rbx, qword [r11 + 0x30]
+│           0x180024b8b      498b6b38       mov rbp, qword [r11 + 0x38]
+│           0x180024b8f      498b7340       mov rsi, qword [r11 + 0x40]
+│           0x180024b93      498be3         mov rsp, r11
+│           0x180024b96      415f           pop r15
+│           0x180024b98      415e           pop r14
+│           0x180024b9a      415d           pop r13
+│           0x180024b9c      415c           pop r12
+│           0x180024b9e      5f             pop rdi
+└           0x180024b9f      c3             ret

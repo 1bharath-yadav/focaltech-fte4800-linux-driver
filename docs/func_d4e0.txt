@@ -1,0 +1,28 @@
+┌ 97: fcn.18002d4e0 (int64_t arg1);
+│ `- args(rcx) vars(1:sp[0x18..0x18])
+│           0x18002d4e0      4053           push rbx
+│           0x18002d4e2      4883ec30       sub rsp, 0x30
+│           0x18002d4e6      8364244800     and dword [var_48h], 0
+│           0x18002d4eb      833d426913..   cmp dword [0x180163e34], 2 ; [0x180163e34:4]=0
+│       ┌─< 0x18002d4f2      7404           je 0x18002d4f8
+│       │   0x18002d4f4      33c0           xor eax, eax
+│      ┌──< 0x18002d4f6      eb43           jmp 0x18002d53b
+│      ││   ; CODE XREF from fcn.18002d4e0 @ 0x18002d4f2(x)
+│      │└─> 0x18002d4f8      488b4910       mov rcx, qword [rcx + 0x10] ; arg1
+│      │    0x18002d4fc      4c8d442448     lea r8, [var_48h]
+│      │    0x18002d501      ba80f00000     mov edx, 0xf080
+│      │    0x18002d506      41b904000000   mov r9d, 4
+│      │    0x18002d50c      488b01         mov rax, qword [rcx]       ; arg1
+│      │    0x18002d50f      488b4058       mov rax, qword [rax + 0x58]
+│      │    0x18002d513      ff15374e0000   call qword [0x180032350]   ; [0x180032350:8]=0x180031050
+│      │    0x18002d519      41b9d3000000   mov r9d, 0xd3              ; 211
+│      │    0x18002d51f      4c8d05b2f5..   lea r8, str.ft_sensor_sensorbase_EntryPOA ; 0x18003cad8 ; "ft_sensor_sensorbase_EntryPOA"
+│      │    0x18002d526      488d15cbf5..   lea rdx, str._Driver__I__s__d_:_Entry_POA ; 0x18003caf8 ; "[Driver] I %s[%d]: Entry POA"
+│      │    0x18002d52d      b902000000     mov ecx, 2
+│      │    0x18002d532      8bd8           mov ebx, eax
+│      │    0x18002d534      e837b4feff     call fcn.180018970
+│      │    0x18002d539      8bc3           mov eax, ebx
+│      │    ; CODE XREF from fcn.18002d4e0 @ 0x18002d4f6(x)
+│      └──> 0x18002d53b      4883c430       add rsp, 0x30
+│           0x18002d53f      5b             pop rbx
+└           0x18002d540      c3             ret

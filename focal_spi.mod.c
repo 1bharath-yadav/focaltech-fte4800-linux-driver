@@ -17,9 +17,6 @@ __section(".gnu.linkonce.this_module") = {
 
 MODULE_INFO(depends, "");
 
-MODULE_ALIAS("acpi*:FTE3600:*");
 MODULE_ALIAS("acpi*:FTE4800:*");
-MODULE_ALIAS("acpi*:FTE6600:*");
-MODULE_ALIAS("acpi*:FTE6900:*");
 
-MODULE_INFO(srcversion, "05217E3F8A353CE7520D282");
+MODULE_INFO(srcversion, "8D9B81803B4C8ABFB50DE9D");

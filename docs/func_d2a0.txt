@@ -1,0 +1,104 @@
+┌ 425: fcn.18002d2a0 (int64_t arg1, int64_t arg2);
+│ `- args(rcx, rdx) vars(2:sp[0x18..0x20])
+│           0x18002d2a0      48895c2408     mov qword [var_8h], rbx
+│           0x18002d2a5      4889742410     mov qword [var_10h], rsi
+│           0x18002d2aa      57             push rdi
+│           0x18002d2ab      4883ec20       sub rsp, 0x20
+│           0x18002d2af      488b054a82..   mov rax, qword [0x180175500] ; [0x180175500:8]=0
+│           0x18002d2b6      488bd9         mov rbx, rcx               ; arg1
+│           0x18002d2b9      488b0d4882..   mov rcx, qword [0x180175508] ; [0x180175508:8]=0
+│           0x18002d2c0      488bf2         mov rsi, rdx               ; arg2
+│           0x18002d2c3      488b804801..   mov rax, qword [rax + 0x148]
+│           0x18002d2ca      ff1580500000   call qword [0x180032350]   ; [0x180032350:8]=0x180031050
+│           0x18002d2d0      803db96a13..   cmp byte [0x180163d90], 0  ; [0x180163d90:1]=0
+│       ┌─< 0x18002d2d7      0f8424010000   je 0x18002d401
+│       │   0x18002d2dd      833d506b13..   cmp dword [0x180163e34], 2 ; [0x180163e34:4]=0
+│       │   0x18002d2e4      bf01000000     mov edi, 1
+│      ┌──< 0x18002d2e9      0f858b000000   jne 0x18002d37a
+│      ││   0x18002d2ef      83c0fd         add eax, 0xfffffffd
+│      ││   0x18002d2f2      3bc7           cmp eax, edi
+│     ┌───< 0x18002d2f4      7609           jbe 0x18002d2ff
+│     │││   0x18002d2f6      803dbeb913..   cmp byte [0x180168cbb], 0  ; [0x180168cbb:1]=0
+│    ┌────< 0x18002d2fd      747b           je 0x18002d37a
+│    ││││   ; CODE XREF from fcn.18002d2a0 @ 0x18002d2f4(x)
+│    │└───> 0x18002d2ff      488b03         mov rax, qword [rbx]
+│    │ ││   0x18002d302      488bcb         mov rcx, rbx
+│    │ ││   0x18002d305      488b4070       mov rax, qword [rax + 0x70]
+│    │ ││   0x18002d309      ff1541500000   call qword [0x180032350]   ; [0x180032350:8]=0x180031050
+│    │ ││   0x18002d30f      84c0           test al, al
+│    │┌───< 0x18002d311      0f84c5000000   je 0x18002d3dc
+│    ││││   0x18002d317      48833d81b9..   cmp qword [0x180168ca0], 0 ; [0x180168ca0:8]=0
+│   ┌─────< 0x18002d31f      7526           jne 0x18002d347
+│   │││││   0x18002d321      40883d91b9..   mov byte [0x180168cb9], dil ; [0x180168cb9:1]=0
+│   │││││   0x18002d328      488d1591b9..   lea rdx, [0x180168cc0]
+│   │││││   0x18002d32f      488b03         mov rax, qword [rbx]
+│   │││││   0x18002d332      488bcb         mov rcx, rbx
+│   │││││   0x18002d335      488b809800..   mov rax, qword [rax + 0x98]
+│   │││││   0x18002d33c      ff150e500000   call qword [0x180032350]   ; [0x180032350:8]=0x180031050
+│  ┌──────< 0x18002d342      e9a8000000     jmp 0x18002d3ef
+│  ││││││   ; CODE XREF from fcn.18002d2a0 @ 0x18002d31f(x)
+│  │└─────> 0x18002d347      488b4b10       mov rcx, qword [rbx + 0x10]
+│  │ ││││   0x18002d34b      488bd6         mov rdx, rsi
+│  │ ││││   0x18002d34e      488b01         mov rax, qword [rcx]
+│  │ ││││   0x18002d351      488b80b000..   mov rax, qword [rax + 0xb0]
+│  │ ││││   0x18002d358      ff15f24f0000   call qword [0x180032350]   ; [0x180032350:8]=0x180031050
+│  │ ││││   0x18002d35e      803d2b6a13..   cmp byte [0x180163d90], 0  ; [0x180163d90:1]=0
+│  │┌─────< 0x18002d365      0f8484000000   je 0x18002d3ef
+│  ││││││   0x18002d36b      488b0dd66a..   mov rcx, qword [0x180163e48] ; [0x180163e48:8]=0
+│  ││││││   0x18002d372      ff15f04c0000   call qword [sym.imp.KERNEL32.dll_SetEvent] ; [0x180032068:8]=0x63926 reloc.KERNEL32.dll_SetEvent ; "&9\x06" ; BOOL SetEvent(HANDLE hEvent)
+│ ┌───────< 0x18002d378      eb75           jmp 0x18002d3ef
+│ │││││││   ; CODE XREFS from fcn.18002d2a0 @ 0x18002d2e9(x), 0x18002d2fd(x)
+│ │││└─└──> 0x18002d37a      48833d1eb9..   cmp qword [0x180168ca0], 0 ; [0x180168ca0:8]=0
+│ │││ │ │   0x18002d382      40883d2fb9..   mov byte [0x180168cb8], dil ; [0x180168cb8:1]=0
+│ │││ │┌──< 0x18002d389      744a           je 0x18002d3d5
+│ │││ │││   0x18002d38b      488b03         mov rax, qword [rbx]
+│ │││ │││   0x18002d38e      488bcb         mov rcx, rbx
+│ │││ │││   0x18002d391      488b4068       mov rax, qword [rax + 0x68]
+│ │││ │││   0x18002d395      ff15b54f0000   call qword [0x180032350]   ; [0x180032350:8]=0x180031050
+│ │││ │││   0x18002d39b      84c0           test al, al
+│ │││┌────< 0x18002d39d      7436           je 0x18002d3d5
+│ │││││││   0x18002d39f      488b4b10       mov rcx, qword [rbx + 0x10]
+│ │││││││   0x18002d3a3      488bd6         mov rdx, rsi
+│ │││││││   0x18002d3a6      488b01         mov rax, qword [rcx]
+│ │││││││   0x18002d3a9      488b80b000..   mov rax, qword [rax + 0xb0]
+│ │││││││   0x18002d3b0      ff159a4f0000   call qword [0x180032350]   ; [0x180032350:8]=0x180031050
+│ │││││││   0x18002d3b6      803dd36913..   cmp byte [0x180163d90], 0  ; [0x180163d90:1]=0
+│ ────────< 0x18002d3bd      740d           je 0x18002d3cc
+│ │││││││   0x18002d3bf      488b0d826a..   mov rcx, qword [0x180163e48] ; [0x180163e48:8]=0
+│ │││││││   0x18002d3c6      ff159c4c0000   call qword [sym.imp.KERNEL32.dll_SetEvent] ; [0x180032068:8]=0x63926 reloc.KERNEL32.dll_SetEvent ; "&9\x06" ; BOOL SetEvent(HANDLE hEvent)
+│ │││││││   ; CODE XREF from fcn.18002d2a0 @ 0x18002d3bd(x)
+│ ────────> 0x18002d3cc      c605e5b813..   mov byte [0x180168cb8], 0  ; [0x180168cb8:1]=0
+│ ────────< 0x18002d3d3      eb1a           jmp 0x18002d3ef
+│ │││││││   ; CODE XREFS from fcn.18002d2a0 @ 0x18002d389(x), 0x18002d39d(x)
+│ │││└─└──> 0x18002d3d5      c605dcb813..   mov byte [0x180168cb8], 0  ; [0x180168cb8:1]=0
+│ │││ │ │   ; CODE XREFS from fcn.18002d2a0 @ 0x18002d311(x), 0x18002d408(x), 0x18002d414(x), 0x18002d428(x)
+│ ───┌└┌──> 0x18002d3dc      488b03         mov rax, qword [rbx]
+│ │││╎ ╎│   0x18002d3df      488bcb         mov rcx, rbx
+│ │││╎ ╎│   0x18002d3e2      488b808000..   mov rax, qword [rax + 0x80]
+│ │││╎ ╎│   0x18002d3e9      ff15614f0000   call qword [0x180032350]   ; [0x180032350:8]=0x180031050
+│ │││╎ ╎│   ; CODE XREFS from fcn.18002d2a0 @ 0x18002d342(x), 0x18002d365(x), 0x18002d378(x), 0x18002d3d3(x), 0x18002d447(x)
+│ └└└─┌───> 0x18002d3ef      488b5c2430     mov rbx, qword [var_8h]
+│    ╎╎╎│   0x18002d3f4      33c0           xor eax, eax
+│    ╎╎╎│   0x18002d3f6      488b742438     mov rsi, qword [var_10h]
+│    ╎╎╎│   0x18002d3fb      4883c420       add rsp, 0x20
+│    ╎╎╎│   0x18002d3ff      5f             pop rdi
+│    ╎╎╎│   0x18002d400      c3             ret
+│    ╎╎╎│   ; CODE XREF from fcn.18002d2a0 @ 0x18002d2d7(x)
+│    ╎╎╎└─> 0x18002d401      833d2c6a13..   cmp dword [0x180163e34], 2 ; [0x180163e34:4]=0
+│ ────────< 0x18002d408      75d2           jne 0x18002d3dc
+│    ╎╎╎    0x18002d40a      83c0fd         add eax, 0xfffffffd
+│    ╎╎╎    0x18002d40d      bf01000000     mov edi, 1
+│    ╎╎╎    0x18002d412      3bc7           cmp eax, edi
+│    └────< 0x18002d414      77c6           ja 0x18002d3dc
+│     ╎╎    0x18002d416      488b03         mov rax, qword [rbx]
+│     ╎╎    0x18002d419      488bcb         mov rcx, rbx
+│     ╎╎    0x18002d41c      488b4070       mov rax, qword [rax + 0x70]
+│     ╎╎    0x18002d420      ff152a4f0000   call qword [0x180032350]   ; [0x180032350:8]=0x180031050
+│     ╎╎    0x18002d426      84c0           test al, al
+│     ╎└──< 0x18002d428      74b2           je 0x18002d3dc
+│     ╎     0x18002d42a      8b05146a1300   mov eax, dword [0x180163e44] ; [0x180163e44:4]=0
+│     ╎     0x18002d430      833df96913..   cmp dword [0x180163e30], 2 ; [0x180163e30:4]=0
+│     ╎     0x18002d437      40883d7ab8..   mov byte [0x180168cb8], dil ; [0x180168cb8:1]=0
+│     ╎     0x18002d43e      0f44c7         cmove eax, edi
+│     ╎     0x18002d441      8905fd691300   mov dword [0x180163e44], eax ; [0x180163e44:4]=0
+└     └───< 0x18002d447      eba6           jmp 0x18002d3ef

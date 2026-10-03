@@ -1,0 +1,21 @@
+┌ 50: fcn.180023524 (int64_t arg_60h, int64_t arg_68h);
+│ `- args(sp[0x38..0x40])
+│       ╎   0x180023524      4c8d05ad63..   lea r8, str.clsSpiDev::ft_interface_base_9368WriteData ; 0x1800398d8 ; "clsSpiDev::ft_interface_base_9368WriteData"
+│       ╎   0x18002352b      488d1536f3..   lea rdx, str._Driver__E_error_at__s__s:_d_:__s_0x_x ; 0x180032868 ; "[Driver] E error at %s[%s:%d]: %s 0x%x"
+│       ╎   0x180023532      b905000000     mov ecx, 5
+│       ╎   0x180023537      e83454ffff     call fcn.180018970
+│      ┌──< 0x18002353c      e981000000     jmp 0x1800235c2
+       │╎   ; CODE XREF from fcn.18002331e @ +0x1b8(x)
+..
+     │││╎   ; CODE XREF from fcn.180023524 @ +0x3e(x)
+      ││    ; CODE XREF from fcn.180023524 @ +0x20(x)
+│      ││   ; CODE XREF from fcn.180023524 @ 0x18002353c(x)
+│      ││   ; CODE XREF from fcn.180023524 @ +0x75(x)
+│      └└─> 0x1800235c2      488b5c2460     mov rbx, qword [arg_60h]
+│           0x1800235c7      8bc7           mov eax, edi
+│           0x1800235c9      488b6c2468     mov rbp, qword [arg_68h]
+│           0x1800235ce      4883c440       add rsp, 0x40
+│           0x1800235d2      415e           pop r14
+│           0x1800235d4      5f             pop rdi
+│           0x1800235d5      5e             pop rsi
+└           0x1800235d6      c3             ret

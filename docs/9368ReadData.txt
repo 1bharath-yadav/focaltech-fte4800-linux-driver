@@ -1,0 +1,32 @@
+┌ 86: fcn.18002331e (int64_t arg1, int64_t arg_17h, int64_t arg_28h, int64_t arg_e8h);
+│ `- args(rcx, sp[0x0..0xc0]) vars(1:sp[0x8..0x8])
+│           0x18002331e      4c8d05e365..   lea r8, str.clsSpiDev::ft_interface_base_9368ReadData ; 0x180039908 ; "clsSpiDev::ft_interface_base_9368ReadData"
+│           0x180023325      48894c2428     mov qword [arg_28h], rcx   ; arg1
+│           0x18002332a      488d1537f5..   lea rdx, str._Driver__E_error_at__s__s:_d_:__s_0x_x ; 0x180032868 ; "[Driver] E error at %s[%s:%d]: %s 0x%x"
+│           0x180023331      b905000000     mov ecx, 5
+│           0x180023336      c744242013..   mov dword [var_20h], 0x413 ; [0x413:4]=-1 ; 1043
+│           0x18002333e      4c8bcb         mov r9, rbx
+│           0x180023341      e82a56ffff     call fcn.180018970
+│           0x180023346      8bc7           mov eax, edi
+│       ┌─< 0x180023348      e931010000     jmp 0x18002347e
+        │   ; CODE XREF from fcn.1800231ec @ +0xf4(x)
+..
+      │││   ; CODE XREF from fcn.18002331e @ +0x37(x)
+     ││││   ; CODE XREF from fcn.18002331e @ +0x98(x)
+     ││││   ; CODE XREF from fcn.18002331e @ +0x80(x)
+     ││ │   ; CODE XREF from fcn.18002331e @ +0xdf(x)
+      │ │   ; CODE XREF from fcn.18002331e @ +0x61(x)
+│       │   ; CODE XREF from fcn.18002331e @ 0x180023348(x)
+│       └─> 0x18002347e      488b4d17       mov rcx, qword [arg_17h]
+│           0x180023482      4833cc         xor rcx, rsp
+│           0x180023485      e8b6ba0000     call fcn.18002ef40
+│           0x18002348a      488b9c24e8..   mov rbx, qword [arg_e8h]
+│           0x180023492      4881c4a000..   add rsp, 0xa0
+│           0x180023499      415f           pop r15
+│           0x18002349b      415e           pop r14
+│           0x18002349d      415d           pop r13
+│           0x18002349f      415c           pop r12
+│           0x1800234a1      5f             pop rdi
+│           0x1800234a2      5e             pop rsi
+│           0x1800234a3      5d             pop rbp
+└           0x1800234a4      c3             ret

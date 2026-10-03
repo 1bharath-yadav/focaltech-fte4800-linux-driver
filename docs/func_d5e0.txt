@@ -1,0 +1,42 @@
+┌ 150: fcn.18002d5e0 (int64_t arg1);
+│ `- args(rcx) vars(4:sp[0x38..0x40])
+│           0x18002d5e0      4053           push rbx
+│           0x18002d5e2      4883ec30       sub rsp, 0x30
+│           0x18002d5e6      488b05cbb3..   mov rax, qword [0x1800789b8] ; [0x1800789b8:8]=0x2b992ddfa232
+│           0x18002d5ed      4833c4         xor rax, rsp
+│           0x18002d5f0      4889442428     mov qword [var_28h], rax
+│           0x18002d5f5      33c0           xor eax, eax
+│           0x18002d5f7      488bd9         mov rbx, rcx               ; arg1
+│           0x18002d5fa      89442420       mov dword [var_20h], eax
+│           0x18002d5fe      6689442424     mov word [var_24h], ax
+│           0x18002d603      488b01         mov rax, qword [rcx]       ; arg1
+│           0x18002d606      488b4058       mov rax, qword [rax + 0x58]
+│           0x18002d60a      ff15404d0000   call qword [0x180032350]   ; [0x180032350:8]=0x180031050
+│           0x18002d610      41b806000000   mov r8d, 6
+│           0x18002d616      488d542420     lea rdx, [var_20h]
+│           0x18002d61b      488bcb         mov rcx, rbx
+│           0x18002d61e      e8c9010000     call fcn.18002d7ec
+│           0x18002d623      ba06000000     mov edx, 6
+│           0x18002d628      488d4c2420     lea rcx, [var_20h]
+│           0x18002d62d      8bd8           mov ebx, eax
+│           0x18002d62f      e8b4b7feff     call fcn.180018de8
+│           0x18002d634      85db           test ebx, ebx
+│       ┌─< 0x18002d636      7829           js 0x18002d661
+│       │   0x18002d638      807c242211     cmp byte [var_22h], 0x11
+│      ┌──< 0x18002d63d      7522           jne 0x18002d661
+│      ││   0x18002d63f      41b9c1000000   mov r9d, 0xc1              ; 193
+│      ││   0x18002d645      4c8d0524f4..   lea r8, str.ft_sensor_sensorbase_POADetectFingerPress ; 0x18003ca70 ; "ft_sensor_sensorbase_POADetectFingerPress"
+│      ││   0x18002d64c      488d154df4..   lea rdx, str._Driver__I__s__d_:_POA_Detect_finger_press_on_sensor ; 0x18003caa0 ; "[Driver] I %s[%d]: POA Detect finger press on sensor"
+│      ││   0x18002d653      b902000000     mov ecx, 2
+│      ││   0x18002d658      e813b3feff     call fcn.180018970
+│      ││   0x18002d65d      b001           mov al, 1
+│     ┌───< 0x18002d65f      eb02           jmp 0x18002d663
+│     │││   ; CODE XREFS from fcn.18002d5e0 @ 0x18002d636(x), 0x18002d63d(x)
+│     │└└─> 0x18002d661      32c0           xor al, al
+│     │     ; CODE XREF from fcn.18002d5e0 @ 0x18002d65f(x)
+│     └───> 0x18002d663      488b4c2428     mov rcx, qword [var_28h]
+│           0x18002d668      4833cc         xor rcx, rsp
+│           0x18002d66b      e8d0180000     call fcn.18002ef40
+│           0x18002d670      4883c430       add rsp, 0x30
+│           0x18002d674      5b             pop rbx
+└           0x18002d675      c3             ret

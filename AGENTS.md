@@ -436,5 +436,36 @@ Negative results added (do not repeat): wake=[00] single byte; any single-variab
   4. Deleted old synthetic fingerprint template (`fprintd-delete archer`).
   5. Restarted `fprintd.service`. Device detected and ready for physical finger enrollment.
 
-
-
+## Session 2026-10-03 -- Clean Driver Transport Breakthrough
+- **Critical Bug Found and Fixed: Reset sequence held sensor in permanent reset.**
+  - Old `focal_hw_reset()`: set 0 → 5ms → set 1 → 5ms → set 0 → 50ms. Third step re-asserted reset! Sensor was permanently in reset state after every reset ioctl/probe.
+  - Fixed: set 1 (ensure HIGH) → 1ms → set 0 (assert LOW) → 10ms → set 1 (release HIGH) → 50ms.
+  - Also changed `devm_gpiod_get_index()` from `GPIOD_OUT_LOW` to `GPIOD_OUT_HIGH` to match BIOS `_INI` state (sensor already running at probe).
+- **Sensor Identity Read CONFIRMED WORKING:**
+  - `spi_write_then_read` with 7-byte header `[91 80 00 20 00 00 00]` returns the REAL sensor identity:
+    ```
+    00 00 ff 00 00 00 00 00 00 00 00 5f 21 07 00 20 22 07 29 93 68 11 aa 40 50 00 00 00 00 00 00 00
+    ```
+  - Chip ID: `0x9368`, FW date: `2022-07-29`, version `0x11`, signature `0xAA`, 64×80.
+  - Both `spi_write_then_read` and full-duplex `spi_sync` work.
+  - First read after reset returns shift register residue (throwaway). Second read onwards returns valid data.
+- **Sensor Boot Timing:** After reset release (GPIO HIGH), sensor auto-loads firmware from internal flash:
+  - 0-150ms: early boot (`00 00 FF 00...`)
+  - ~200ms: ROM state (`0x02` constant)
+  - ~300ms: application mode (responds to register reads with real data)
+  - The old 50ms post-reset wait was too short.
+- **Windows DLL Transport RE completed (3 subagents):**
+  - `clsSpiDev::ft_interface_spi_RWDevData` uses `WdfIoTargetSendIoctlSynchronously` with IOCTL `0x41814` (SPB full-duplex).
+  - `clsSpiDev::ft_interface_base_9368ReadData` constructs the 7-byte header from 16-bit logical address + 16-bit length.
+  - Bus type 2 (ACPI) makes `state(0)/state(1)` calls NO-OPs — they only act for USB (bus type 1).
+  - SPI0_Wakeup: write `[FF 00 00 00]`, then sleep.
+  - `ft_feature_devinit_9368POADetectFingerPress`: wake `0xFF00` (0 bytes), sleep 5ms, read `0x9180/6`, check for status `0x11`.
+  - `CaptureData`: read `width*height` bytes from `0x9080`, expects states 4 or 9.
+- **Current status:**
+  - Identity read ✓ (repeatable, 100% reliable after throwaway read)
+  - Image read: returns zeros (sensor needs capture trigger / state machine init)
+  - Finger status: returns `0x02` echo (needs firmware-level POA initialization)
+  - ROM ID `0x56A2`: not yet obtained (requires timing within boot window)
+- **Transport protocol documented:** `docs/ft9368-transport.md`
+- **19 unit tests pass, build W=1 clean, srcversion `8D9B81803B4C8ABFB50DE9D`.**
+- **Next:** Determine why image and finger-status reads return non-data. Investigate whether the sensor firmware needs initialization commands (SFR writes, mode configuration) before capture/POA detection work. The PRAMBOOT path may not be needed since the sensor has working application firmware in its internal flash.
