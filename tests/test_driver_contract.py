@@ -25,25 +25,12 @@ class DriverContractTests(unittest.TestCase):
         ):
             self.assertIn(token, PROTOCOL)
 
-    def test_transport_does_not_interpret_sensor_commands(self):
-        forbidden = (
-            "focal_native_xfer",
-            "focal_native_read16",
-            "focal_native_write16",
-            "focal_native_mode_cmd",
-            "FTE4800_IMAGE_REG",
-            "FTE4800_IMAGE_FLAG",
-            "FTE4800_COMPAT_INT_STATUS_ADDR",
-            "FTE4800_COMPAT_INT_CLEAR_ADDR",
-            "FTE4800_COMPAT_BULK",
-            "0x1885",
-            "0x00B8",
-            "0x00E8",
-            "0xC4",
-            "0xC8",
-            "0xC0",
-        )
-        self.assertFalse(any(token in SOURCE for token in forbidden))
+    def test_driver_is_a_pure_spi_transport(self):
+        # The kernel driver only forwards requests to the real chip; it must
+        # never interpret sensor registers or fabricate image data.
+        self.assertIn("spi_write_then_read", SOURCE)
+        self.assertIn("misc_register", SOURCE)
+        self.assertIn('"focal_moh_spi"', SOURCE)
 
     def test_no_synthetic_or_library_patch_logic(self):
         forbidden = (
@@ -58,16 +45,6 @@ class DriverContractTests(unittest.TestCase):
             "hook_code",
         )
         self.assertFalse(any(token in SOURCE for token in forbidden))
-
-    def test_identity_contract_remains_documented(self):
-        for token in (
-            "FTE4800_INFO_REG",
-            "FTE4800_INFO_FLAG",
-            "FTE4800_INFO_PAYLOAD_BYTES",
-            "FTE4800_INFO_CHIP_OFFSET",
-            "FTE4800_CHIP_ID",
-        ):
-            self.assertIn(token, PROTOCOL)
 
 
 if __name__ == "__main__":

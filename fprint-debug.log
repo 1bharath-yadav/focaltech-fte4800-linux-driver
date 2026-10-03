@@ -1,2 +1,0 @@
-Using device /net/reactivated/Fprint/Device/0
-failed to claim device: GDBus.Error:net.reactivated.Fprint.Error.Internal: Open failed with error: init sensor error!

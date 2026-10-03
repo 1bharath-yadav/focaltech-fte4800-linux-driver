@@ -1,6 +1,0 @@
-┌ 5: fcn.1800238e0 ();
-│           0x1800238e0      54             push rsp
-│       ┌─< 0x1800238e1  ~   75ff           jne 0x1800238e2
-│       └─> 0x1800238e2      ff             invalid
-└           0x1800238e3      ff             invalid
-..

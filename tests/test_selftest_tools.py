@@ -54,6 +54,13 @@ class SelftestToolTests(unittest.TestCase):
             bytes((0x91, 0x80, 0x00, 0x20, 0x00, 0x00, 0x00)),
         )
 
+    def test_verified_capture_trigger(self):
+        from tools.fte4800_capture import CAPTURE_TRIGGER
+        self.assertEqual(
+            CAPTURE_TRIGGER,
+            bytes((0x70, 0x07, 0xF8, 0x00, 0x3B, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00)),
+        )
+
     def test_verified_7byte_image_request(self):
         from tools.fte4800_capture import (
             READ_IMAGE_REQUEST,
