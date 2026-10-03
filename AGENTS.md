@@ -668,3 +668,102 @@ Negative results added (do not repeat): wake=[00] single byte; any single-variab
 - **Final Omarchy integration requirement:** add an Omarchy-specific detection/setup path that recognizes this ACPI/SPI FTE4800 through the already-working fprintd stack, preserves the native `/opt/fte4800` library selection, and configures PAM/lock-screen authentication without allowing an Omarchy update to silently replace the working driver.
 - Current Omarchy source/manual confirms fingerprint setup is intended to cover lock-screen unlock, sudo, and system authorization prompts; lid-closed behavior intentionally falls back to password. These behaviors must be tested against the FTE4800 rather than assumed.
 - Current upstream/community Omarchy reports also document suspend/resume races and unbounded fingerprint retry loops on some devices. Our final validation must explicitly test first verify after resume and confirm password fallback/recovery if fprintd is unavailable.
+
+
+## Session 2026-10-03 (cont. 7) -- Omarchy compatibility implementation
+- Omarchy 4.0.4-1 is installed on the target machine.
+- Stock `omarchy-hw-fingerprint` is USB/sysfs-only and returns failure for the ACPI/SPI FTE4800 even while fprintd works.
+- Added project sources:
+  - `install/omarchy-hw-fingerprint-fte4800`
+  - `install/omarchy-setup-security-fingerprint-fte4800`
+  - `install/omarchy-fte4800-root-install.sh`
+- The FTE4800 detector recognizes the actual `/sys/bus/spi/devices/spi-FTE4800:00` / `acpi:FTE4800:` device and also keeps Omarchy's existing USB detection paths.
+- User-level overrides are currently installed at:
+  - `~/.local/bin/omarchy-hw-fingerprint`
+  - `~/.local/bin/omarchy-setup-security-fingerprint`
+  Because `~/.local/bin` precedes `/usr/bin` in this login environment, Omarchy command lookups now select the FTE4800-aware wrappers.
+- The native setup wrapper deliberately does **not** install `libfprint-git` when the project native library and fprintd systemd drop-in are present. It preserves:
+  `/opt/fte4800/libfprint/lib/libfprint-2.so.2.0.0`.
+- The root installer is designed to add:
+  - `pam_fprintd.so` to `sudo` with password fallback.
+  - `pam_fprintd.so` to `polkit-1`.
+  - `/etc/pam.d/omarchy-lock-fingerprint` for the Omarchy lock flow.
+  - A bounded lock-screen fingerprint retry policy.
+  - A pacman PostTransaction hook to reapply the lock patch after Omarchy package upgrades.
+- We intentionally do **not** add fingerprint auth to `system-auth`: doing so would alter every PAM consumer (including services such as SSH/su). Omarchy's supported surfaces are sudo, polkit, and the lock screen.
+- The root portion is **not installed yet** because Desktop Commander blocks privileged shell commands and the user's temporary NOPASSWD rule was removed. The user can run the project root installer locally with sudo once.
+- Current installed user-level detector result: PASS.
+- Current stock Omarchy detector result: FAIL.
+- This is a compatibility layer, not a fork of the FTE4800 kernel transport or native libfprint implementation.
+
+### Core experiment status
+- Clean-boot persistence: PASS.
+- Post-reboot same-finger right-index verification: PASS at aligned score 0.8457.
+- Offline 38-frame replay: still insufficient for production security claims; do not lower threshold below 0.75 based on current evidence.
+- Impostor live run was attempted against the right-index template using right-middle, but no finger was detected before the 15.8s timeout, so it is **not** a valid impostor decision. Repeat with a deliberate right-middle placement.
+- Remaining core experiments:
+  1. Deliberate different-finger rejection with right-middle against right-index.
+  2. At least 5 controlled genuine right-index placements with varied position/angle/pressure.
+  3. Module unload/reload and fprintd restart recovery.
+  4. Suspend/resume recovery and first verification after resume.
+  5. PAM sudo/polkit and Omarchy lock-screen verification after root installation.
+
+
+## Session 2026-10-03 (cont. 8) -- Core experiments completed and Omarchy architecture decision
+
+### Core hardware/biometric experiments
+- Raw FT9368 touch experiment: idle frames were flat; with a real finger the capture changed to genuine high-variance physical data (range 0-255, approximately 255 unique values, std approximately 68).
+- Genuine right-index verification:
+  - normal centered placement: 0.8904 -> MATCH
+  - small position offset: 0.8380 -> MATCH
+  - clockwise rotation: 0.2011 -> NO-MATCH
+  - upward placement offset: 0.4521 -> NO-MATCH
+  - lighter/different placement: 0.6566 -> NO-MATCH
+  - after focal_spi unload/reload: 0.8536 -> MATCH
+- Different-finger test:
+  - right-middle presented against right-index template: 0.6141 -> NO-MATCH.
+- These runs confirm both discrimination and strong placement sensitivity. Do not lower the 0.75 threshold solely to compensate for placement; the earlier 0.55 setting was unsafe in offline evaluation.
+- fprintd restart recovery:
+  - daemon restart succeeded and device remained available;
+  - two subsequent attempts scored 0.6665 and 0.7193, both clean no-match decisions rather than daemon errors.
+- Suspend/resume:
+  - real s2idle suspend and resume completed;
+  - fprintd reported resume completion with no error;
+  - the FTE4800 reopened successfully after resume;
+  - a post-resume identify completed successfully;
+  - a clean post-resume Omarchy lock test subsequently matched at 0.8788 and unlocked.
+- Omarchy lock-screen test:
+  - Quickshell reached secure=true;
+  - PAM service omarchy-lock-fingerprint started;
+  - identify best score 0.8788 -> MATCH;
+  - Quickshell emitted secure=false and unlocked.
+- Polkit:
+  - pkexec authentication path completed successfully with the configured polkit-1 PAM stack.
+- Sudo:
+  - not a meaningful fingerprint-auth experiment on this installation because sudo policy grants the user NOPASSWD: ALL; do not change this policy just to test fingerprint.
+- Repository test suite: 31/31 PASS.
+
+### Pacman protection
+- The project DKMS package is `focaltech-spi-dkms 1.0.3-3`.
+- Added `IgnorePkg = focaltech-spi-dkms` to `/etc/pacman.conf`.
+- The native libfprint under `/opt/fte4800` is not pacman-owned, so it is not the IgnorePkg target.
+
+### Omarchy 4.0.4-1 findings
+- Stock `omarchy-hw-fingerprint` is USB-centric and returns failure for this ACPI/SPI FTE4800 even though fprintd detects and drives it.
+- Current upstream issue #12588 reports the same class of failure for a different SPI fingerprint reader; it also calls out the risk of replacing an already-working alternate libfprint package during setup.
+- Current Omarchy documentation says fingerprint setup should enable lock-screen, sudo and system-authorization authentication through the normal PAM/fprintd stack.
+- The current Quickshell plugin contract explicitly keeps authentication capabilities away from third-party plugins; authentication services are intended to remain in trusted first-party code.
+- Current open Omarchy reports also document unbounded 250ms lock-screen fingerprint retries, transient fprintd availability failures, and post-resume fingerprint races.
+- Therefore the long-term implementation should be upstream PRs, not an FTE4800-specific Omarchy fork:
+  1. Generic fingerprint detection/setup PR: support non-USB readers and avoid replacing an already-working libfprint implementation.
+  2. Generic lock/PAM robustness PR: bounded/backoff retry, transient-service recovery, preserved password fallback, and resume-safe behavior.
+  3. Optional third-party plugin only for non-security-critical status/setup UX.
+- Do not put the FTE4800 kernel driver or native biometric matcher into Omarchy.
+
+### Local Omarchy workaround
+- Current user-level wrappers make `omarchy-hw-fingerprint` and `omarchy-setup-security-fingerprint` recognize this machine.
+- PAM configuration is active for sudo, polkit-1 and omarchy-lock-fingerprint.
+- A local lock-screen workaround bounds retries to five attempts with a one-second interval.
+- A pacman post-transaction hook reapplies the local lock workaround.
+- These are temporary compatibility mechanisms. The target end state is an upstream Omarchy fix with package-managed files left unmodified.
+- Detailed rationale and proposal are documented in `docs/omarchy-integration.md`.

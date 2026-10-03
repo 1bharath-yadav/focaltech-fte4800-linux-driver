@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+# FTE4800-aware replacement for omarchy-hw-fingerprint.
+set -euo pipefail
+
+usb_devices_path="${OMARCHY_USB_DEVICES_PATH:-/sys/bus/usb/devices}"
+fingerprint_vendors=" 27c6 138a 06cb 08ff 1c7a 147e "
+
+has_kernel_driver() {
+  local intf driver
+  for intf in "$1"/*:*; do
+    [[ -e "$intf/driver" ]] || continue
+    driver=$(readlink -f "$intf/driver")
+    [[ "${driver##*/}" == "usbfs" ]] || return 0
+  done
+  return 1
+}
+
+for dev in "$usb_devices_path"/*; do
+  if [[ -r $dev/product ]]; then
+    product=$(<"$dev/product")
+    product=${product,,}
+    [[ $product == *fingerprint* || $product == *biometric* ||
+       $product == *elan:arm-m4* || $product == "fpc "* ]] && exit 0
+  fi
+
+  if [[ -r $dev/idVendor ]]; then
+    vendor=$(<"$dev/idVendor")
+    [[ $fingerprint_vendors == *" $vendor "* ]] &&
+      ! has_kernel_driver "$dev" && exit 0
+  fi
+done
+
+# ACPI/SPI readers are invisible to the USB-only detector.
+for dev in /sys/bus/spi/devices/* /sys/bus/acpi/devices/*; do
+  [[ -r $dev/modalias ]] || continue
+  modalias=$(<"$dev/modalias")
+  driver=""
+  [[ -e $dev/driver ]] && driver=$(basename "$(readlink -f "$dev/driver")")
+  case "$modalias:$driver" in
+    *FTE4800*:*|*FT9368*:*|*:focal-fte4800) exit 0 ;;
+  esac
+done
+
+# Driver-independent fallback once fprintd is installed.
+if command -v fprintd-list >/dev/null 2>&1; then
+  user=${USER:-$(id -un)}
+  if fprintd-list "$user" 2>/dev/null |
+      grep -Eq '^Device at |^Fingerprint.* on '; then
+    exit 0
+  fi
+fi
+
+exit 1
