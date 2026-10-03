@@ -649,3 +649,22 @@ Negative results added (do not repeat): wake=[00] single byte; any single-variab
 5. Produce reproducible packaging/install/recovery for the clean driver + native libfprint stack.
 6. **Final phase: integrate and validate Omarchy fingerprint setup, sudo/polkit authentication, and lock-screen unlock.**
 7. Only after all of the above, declare the project production-ready for this laptop.
+
+
+## Session 2026-10-03 (cont. 6) -- Clean-boot validation and Omarchy 4.0.4 detector finding
+- After a full system power-off/reboot, the core stack recovered without manual repair:
+  - `fprintd-list "$USER"` finds one FocalTech FTE4800 / FT9368 device.
+  - Both enrolled prints persisted: `right-middle-finger` and `right-index-finger`.
+  - `focal_spi` is loaded and `/dev/focal_moh_spi` exists.
+  - The runtime verifier confirms fprintd uses `/opt/fte4800/libfprint/lib/libfprint-2.so.2.0.0`.
+  - All 31 repository unit tests pass after reboot.
+  - A post-reboot live right-index verification matched at aligned score 0.8457 with threshold 0.75.
+- This establishes clean-boot persistence and basic post-reboot functionality. Suspend/resume is still unvalidated.
+- Omarchy installed version is `4.0.4-1`.
+- On this machine, `omarchy-hw-fingerprint` currently returns exit code 1 even though `fprintd-list` detects and uses the working FTE4800 device.
+- Inspection of `/usr/bin/omarchy-hw-fingerprint` shows its current detector iterates `/sys/bus/usb/devices` and identifies readers from USB product strings or a USB vendor allow-list. The FTE4800 reader is an ACPI/SPI device, so this detector cannot see it.
+- `/usr/bin/omarchy-setup-security-fingerprint` calls `omarchy-hw-fingerprint` before enrollment and therefore exits with “No fingerprint sensor detected” on this laptop today.
+- The setup script also attempts to install `libfprint-git` when it considers that package missing. That is incompatible with blindly running the stock setup flow against our current `/opt/fte4800` deployment, which deliberately leaves the Arch `libfprint` package installed as a dependency and selects the native FTE4800 library through the fprintd systemd drop-in.
+- **Final Omarchy integration requirement:** add an Omarchy-specific detection/setup path that recognizes this ACPI/SPI FTE4800 through the already-working fprintd stack, preserves the native `/opt/fte4800` library selection, and configures PAM/lock-screen authentication without allowing an Omarchy update to silently replace the working driver.
+- Current Omarchy source/manual confirms fingerprint setup is intended to cover lock-screen unlock, sudo, and system authorization prompts; lid-closed behavior intentionally falls back to password. These behaviors must be tested against the FTE4800 rather than assumed.
+- Current upstream/community Omarchy reports also document suspend/resume races and unbounded fingerprint retry loops on some devices. Our final validation must explicitly test first verify after resume and confirm password fallback/recovery if fprintd is unavailable.
