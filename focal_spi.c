@@ -25,7 +25,7 @@
 #define INIT_SUCCESS 0x55AA
 #define MAX_BUFF_SIZE (32U * 1024U)
 #define TAG "focal-fte4800: "
-static bool trace_requests = true;
+static bool trace_requests = false;
 module_param(trace_requests, bool, 0644);
 MODULE_PARM_DESC(trace_requests, "Log raw misc-device SPI request payloads");
 
@@ -121,7 +121,7 @@ static int focal_hw_reset(struct focal_fp_data *data)
     gpiod_set_value_cansleep(data->reset_gpio, 0);   /* assert reset LOW */
     msleep(10);
     gpiod_set_value_cansleep(data->reset_gpio, 1);   /* release HIGH */
-    msleep(50);                                       /* wait for boot */
+    msleep(350);                                      /* FT9368 auto-boots from flash in ~300ms (measured) */
     return 0;
 }
 
@@ -169,7 +169,7 @@ static int focal_spi_read_request(struct focal_fp_data *data,
                                   u16 tx_len, u16 rx_len)
 {
     if (trace_requests)
-        dev_info(&data->spi->dev, "REQ read type=0x%02x tx=%u rx=%u\\n",
+        dev_info(&data->spi->dev, "REQ read type=0x%02x tx=%u rx=%u\n",
                  req->type, tx_len, rx_len);
     if (trace_requests && tx_len)
         print_hex_dump(KERN_INFO, "focal-fte4800 TX: ", DUMP_PREFIX_NONE,
@@ -318,7 +318,7 @@ static ssize_t focal_write(struct file *file, const char __user *user,
 
     req = (struct focal_spi_request *)data->wr_buf;
     if (trace_requests)
-        dev_info(&data->spi->dev, "REQ write type=0x%02x tx=%u rx=%u\\n",
+        dev_info(&data->spi->dev, "REQ write type=0x%02x tx=%u rx=%u\n",
                  req->type, le16_to_cpu(req->tx_len),
                  le16_to_cpu(req->rx_len));
     if (trace_requests && count > sizeof(*req))
