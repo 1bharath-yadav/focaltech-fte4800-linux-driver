@@ -166,6 +166,10 @@ The production driver delegates fingerprint enrollment and verification to Focal
 
 The engine is configured for the sensor's native 64x80 image geometry and produces an opaque vendor template stored in `FpPrint` using the `FTV1` container. The old NCC/raw-frame matcher is no longer used by the active driver.
 
+Because the vendor DLL uses the Windows CRT stack-probing path, the Linux bridge refreshes the Windows TEB stack bounds from the current worker thread before vendor-engine calls. This is part of the production compatibility layer, not fingerprint matching logic.
+
+The native deployment has been exercised end-to-end on the physical FT9368: full 12-sample enrollment followed by successful `fprintd-verify` with the persisted `FTV1` template.
+
 The vendor DLL is kept under the local research archive because its redistribution status is not established. The installer copies the exact verified DLL to `/usr/local/lib/fte4800/ftWbioEngineAdapter.dll` after checking its SHA-256.
 
 See `docs/matching.md` for the current architecture and validation evidence.

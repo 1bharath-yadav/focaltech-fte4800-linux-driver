@@ -447,11 +447,9 @@ static int load_pe(void){
     if(cbaddr){ for(u64*cb=(u64*)cbaddr; *cb; cb++){ void(MS *f)(void*,u32,void*)=(void*)*cb; f((void*)g_imagebase,DLL_PROCESS_ATTACH,0);} }
   }
 
-  // fake TEB in %gs
+  // fake TEB in %gs; stack bounds are refreshed from the current Linux thread
   memset(g_teb,0,sizeof g_teb); memset(g_peb,0,sizeof g_peb);
   *(u64*)(g_teb+0x30)=(u64)g_teb;            // NtTib.Self
-  *(u64*)(g_teb+0x08)=(u64)(g_teb+0x2000);   // StackBase (dummy)
-  *(u64*)(g_teb+0x10)=(u64)g_teb;            // StackLimit
   *(u64*)(g_teb+0x58)=(u64)g_tls_array;      // ThreadLocalStoragePointer
   *(u64*)(g_teb+0x60)=(u64)g_peb;            // PEB
   if(arm_teb_for_current_thread()!=0){ perror("arch_prctl SET_GS"); return -1; }

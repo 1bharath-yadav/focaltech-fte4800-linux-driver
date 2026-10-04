@@ -152,17 +152,15 @@ Then verify the live `fprintd` process is actually loading the intended library.
 
 ### 8. Validate the biometric path
 
-Try standard fingerprint matching first.
+Try the standard libfprint image-processing/matching path first, but also determine whether the device has a vendor biometric engine that can be reproduced legitimately.
 
-For this tiny 64x80 sensor, the NBIS/Bozorth3 path did not produce enough useful minutiae to separate the captured fingers. That finding was established experimentally rather than assumed.
+For this FTE4800 / FT9368 target, the production path now delegates enrollment and verification to the exact FocalTech `ftWbioEngineAdapter.dll` through the native Linux PE/WinBio bridge. The old local NCC/raw-frame matcher is retained only as historical research and is not part of the active driver.
 
-The current experimental matcher is therefore a driver-specific image matcher:
+The bridge must treat the vendor runtime as an ABI boundary: preserve the verified WinBio interface slots, storage-record layout, sample format, calling convention, TLS/TEB requirements, and error semantics. In particular, when the vendor engine runs in a Linux worker thread, refresh the Windows TEB stack bounds from that thread before calling vendor code; the vendor CRT's `__chkstk` path depends on those fields.
 
-raw frame -> local normalization -> validity mask -> rotation/translation search -> overlap-aware normalized correlation -> best score across five enrollment samples.
+Use opaque vendor-template storage when the vendor engine owns the template representation. For this driver the persisted format is `FTV1 | uint32_le(template_size) | opaque FocalTech template`.
 
-Keep a Python reference implementation and a matching C implementation. Make the Python version the specification.
-
-Never choose a threshold from a handful of successful demos. Build genuine and impostor datasets, measure FAR/FRR, inspect failure cases, and keep the threshold clearly marked as experimental until the evidence is adequate.
+The physical target has now passed end-to-end enrollment and verification with the native vendor engine. Continue to expand genuine/impostor datasets before making claims about biometric operating characteristics; successful end-to-end functionality is not equivalent to FAR/FRR certification.
 
 ---
 
@@ -314,9 +312,11 @@ The current FTE4800 architecture proves:
 - real 64x80 image capture;
 - native execution of the exact FocalTech WinBio engine on Linux;
 - vendor-engine enrollment and verification on real captured frames;
-- libfprint integration with opaque vendor-template storage;
-- explicit finger-down/finger-up gating between enrollment stages.
+- libfprint integration with opaque `FTV1` vendor-template storage;
+- explicit finger-down/finger-up gating between enrollment stages;
+- worker-thread-safe Windows TEB stack bounds for the native vendor CRT;
+- live end-to-end `fprintd-enroll` and `fprintd-verify` on the physical target.
 
-The final system-level authentication path still requires privileged installation of the built libfprint and vendor DLL under /usr/local/lib/fte4800, followed by one fresh enrollment using the new `FTV1` template format.
+The native deployment uses `/opt/fte4800/libfprint` for the isolated libfprint build and `/usr/local/lib/fte4800/ftWbioEngineAdapter.dll` for the local vendor runtime. Existing enrollment records created by the older format must be deleted and re-enrolled after switching to `FTV1`.
 
 For the current architecture and matching details, see `docs/matching.md` and `docs/omarchy-integration.md`.

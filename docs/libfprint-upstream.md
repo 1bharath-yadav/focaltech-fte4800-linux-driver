@@ -22,23 +22,17 @@ This project currently has one fully validated integrated laptop target. That is
 
 libfprint also states that proprietary driver code will not be accepted upstream. The public submission therefore needs to contain only the free-software implementation and protocol evidence that can legally be shared. Proprietary Windows binaries remain local in `archive/`.
 
-## Custom matching
+## Matching and vendor-engine integration
 
-The current FTE4800 implementation uses a driver-specific host-side matcher because the sensor exposes 64x80 imaging data and the experiments performed here did not produce a usable signal from the standard NBIS/Bozorth3 path.
+The production FTE4800 implementation does not contain a new host-side fingerprint matcher. Enrollment and verification are delegated to FocalTech's native `ftWbioEngineAdapter.dll` through `libfprint/drivers/vendor-engine.c`. The exact vendor DLL remains local because its redistribution status is not established.
 
-The matcher is implemented inside the FTE4800 driver and stores fifteen raw enrollment samples in the `FpPrint` driver data. Enrollment uses libfprint's standard pixel-variance primitive for quality gating, requires confirmed finger removal between accepted stages, and reports standard libfprint retry codes. Verification and identification compare the probe against the stored samples using local ridge/background normalization plus bounded rotation and translation search with normalized correlation.
+The sensor supplies native 64x80, 8-bit grayscale frames. The bridge constructs the WinBio sample envelope, exposes the required storage adapter, and stores the vendor-generated template opaquely in `FpPrint` using the `FTV1` container. The previous local NCC/raw-frame matcher is historical research only and is not compiled into the active driver.
 
-A driver-specific matcher is not categorically prohibited by the contribution guidance. However, this is the part of the patch most likely to receive detailed maintainer review because it affects authentication behaviour. The upstream submission should explain:
+The vendor PE is called from libfprint worker threads. The bridge therefore installs the Windows TEB in `%gs` and refreshes `StackBase`/`StackLimit` from the current Linux pthread before vendor calls. This was required to prevent the vendor CRT `__chkstk` path from faulting on a fixed dummy stack range.
 
-- why the standard image-processing and matching path is unsuitable for this sensor geometry;
-- the exact matching specification and implementation;
-- compatibility and print-data semantics;
-- deterministic tests for genuine and impostor cases;
-- larger independent enrollment and verification measurements;
-- the selected threshold and measured operating characteristics;
-- the absence of proprietary code or proprietary runtime dependencies.
+Live validation on the physical ZERO BOOK 13 now covers full 12-sample enrollment, persistence of the resulting `FTV1` template, and successful `fprintd-verify`. Offline replay also exercises the same vendor engine against real 64x80 captures.
 
-The current two-finger local dataset is an engineering validation set, not a security certification dataset.
+For an upstream submission, the critical review topics are therefore no longer selection of a replacement fingerprint algorithm, but the legality of the proprietary runtime dependency, the native PE/WinBio compatibility layer, protocol documentation, supported hardware scope, and reproducibility of the integration tests.
 
 ## Submission path
 

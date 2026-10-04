@@ -77,6 +77,13 @@ class LibfprintIntegrationTests(unittest.TestCase):
         self.assertIn("BCryptHashData", VENDOR_ENGINE)
         self.assertNotIn("BCryptVerifySignature", VENDOR_ENGINE)
 
+    def test_vendor_teb_refreshes_current_thread_stack_bounds(self):
+        self.assertIn("pthread_getattr_np", VENDOR_ENGINE)
+        self.assertIn("pthread_attr_getstack", VENDOR_ENGINE)
+        self.assertIn("StackBase", VENDOR_ENGINE)
+        self.assertIn("StackLimit", VENDOR_ENGINE)
+        self.assertIn("arm_teb_for_current_thread", VENDOR_ENGINE)
+
     def test_no_old_frame_matcher_remains_active(self):
         self.assertNotIn("fte4800_match_frames", DRIVER)
         self.assertNotIn("FTE4800_MATCH_THRESHOLD", DRIVER)

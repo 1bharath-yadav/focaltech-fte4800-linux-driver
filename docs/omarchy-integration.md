@@ -12,46 +12,23 @@ Omarchy does not need to own the hardware driver. Its role is to discover a usab
 
 ## Verified local state
 
-- Omarchy: 4.0.4-1
-- fprintd: 1.94.5-2
-- libfprint package: 1.94.100-1
-- native FTE4800 libfprint: /opt/fte4800/libfprint/lib/libfprint-2.so.2.0.0
-- enrolled fingers: right-index-finger, right-middle-finger
-- device: /dev/focal_moh_spi
-- Omarchy stock detector: fails for this ACPI/SPI reader
-- FTE4800-aware detector: passes
-- pacman: IgnorePkg = focaltech-spi-dkms
-- PAM: sudo, polkit-1 and omarchy-lock-fingerprint configured
-- Omarchy lock retry workaround: bounded retries with 1 second interval
-## Core experiment results
+The validated local deployment uses the exact FocalTech `ftWbioEngineAdapter.dll` through the native Linux PE/WinBio bridge.
 
-Hardware capture first proved that a real touch changes the FT9368 output from a flat idle frame to a high-variance 64x80 physical image.
+- native FTE4800 libfprint: `/opt/fte4800/libfprint/lib/libfprint-2.so.2.0.0`
+- vendor runtime: `/usr/local/lib/fte4800/ftWbioEngineAdapter.dll`
+- sensor: `/dev/focal_moh_spi`
+- libfprint driver: `fte4800`
+- image geometry: 64x80, 8-bit grayscale
+- template format: `FTV1` opaque FocalTech vendor template
+- enrollment stages: 12
 
-Live genuine verification:
+The native deployment has been exercised end-to-end on the physical ZERO BOOK 13: a fresh 12-sample `fprintd-enroll` completed, the resulting template was persisted by fprintd, and `fprintd-verify` subsequently completed successfully.
 
-| Condition | Result |
-|---|---:|
-| centered / normal placement | MATCH, 0.8904 |
-| small position offset | MATCH, 0.8380 |
-| clockwise rotation | NO-MATCH, 0.2011 |
-| upward placement offset | NO-MATCH, 0.4521 |
-| lighter / different placement | NO-MATCH, 0.6566 |
-| post-module-reload centered | MATCH, 0.8536 |
-| post-resume Omarchy lock | MATCH, 0.8788 |
+The Linux bridge refreshes the Windows TEB stack bounds from the current libfprint worker thread before vendor-engine calls. This is required by the vendor CRT stack-probing path.
 
-Different-finger rejection:
+The previous NCC/raw-frame matcher and its score threshold are historical research only. They are not part of the current production path.
 
-- right-middle presented against right-index template: NO-MATCH, 0.6141.
-
-These results show a functioning matcher with significant placement sensitivity. The 0.75 threshold remains unchanged.
-
-Lifecycle:
-
-- full reboot: enrolled prints persisted and verification worked;
-- focal_spi unload/reload: device recovered and verification worked;
-- fprintd restart: device recovered and remained usable, although two attempts scored below threshold;
-- suspend/resume: fprintd reported successful resume and subsequently completed an identify;
-- post-resume Omarchy lock: fingerprint PAM started and unlocked the session at 0.8788.
+Lifecycle tests already performed during development include fprintd restart and device/module recovery. Additional suspend/resume and lock-screen regression testing should remain part of future packaging validation.
 ## Why the Omarchy change should be upstream
 
 The current Omarchy hardware detector is USB-centric. Current upstream issue #12588 documents the same class of failure for an SPI fingerprint reader that already works through fprintd: the wizard rejects the reader before setup.
