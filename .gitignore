@@ -30,3 +30,7 @@ tools/vendor-emulator/*.out
 
 # Local research/archive data
 /archive/
+
+# Vendor engine test artifacts
+tools/vendor-engine-test
+/tmp/fte4800-vendor-template.bin
