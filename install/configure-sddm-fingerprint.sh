@@ -2,9 +2,8 @@
 set -euo pipefail
 
 # Configure SDDM for fingerprint-first login while keeping password fallback.
-# Omarchy normally uses SDDM autologin. Fingerprint authentication at the
-# display-manager login requires an interactive SDDM PAM transaction, so any
-# active autologin.conf* file under /etc/sddm.conf.d/ must be removed.
+# Omarchy uses a passwordless Default_keyring, so SDDM must not create or
+# attempt to unlock a separate password-protected GNOME "Login" keyring.
 #
 # This helper backs up the changed files and never restarts SDDM automatically.
 #
@@ -27,9 +26,10 @@ usage() {
   cat <<'EOF'
 Usage: configure-sddm-fingerprint.sh --check|--enable|--restore
 
---check    Show SDDM fingerprint/autologin state.
---enable   Back up the current SDDM state, disable autologin, and add
-           fingerprint-first PAM authentication with password fallback.
+--check    Show SDDM fingerprint/keyring/autologin state.
+--enable   Back up the current SDDM state, disable autologin, add
+           fingerprint-first PAM authentication, and align GNOME keyring
+           PAM handling with Omarchy's passwordless Default_keyring model.
 --restore  Restore the most recent backup created by --enable.
 EOF
 }
@@ -47,6 +47,11 @@ check_state() {
     else
       echo "fingerprint PAM: not configured"
     fi
+    if grep -Eq '^[[:space:]-]*auth.*pam_gnome_keyring\.so|^[[:space:]-]*password.*pam_gnome_keyring\.so' "$PAM_FILE"; then
+      echo "GNOME keyring auth/password PAM lines: present"
+    else
+      echo "GNOME keyring auth/password PAM lines: removed (Omarchy mode)"
+    fi
   else
     echo "ERROR: $PAM_FILE is missing"
   fi
@@ -58,6 +63,19 @@ check_state() {
     find "$SDDM_CONF_DIR" -maxdepth 1 -type f -name 'autologin.conf*' -print
   else
     echo "none"
+  fi
+
+  echo
+  echo "=== Omarchy Default_keyring ==="
+  if [[ -f "$HOME/.local/share/keyrings/default" ]]; then
+    echo "default=$(cat "$HOME/.local/share/keyrings/default")"
+  else
+    echo "default file: missing"
+  fi
+  if [[ -f "$HOME/.local/share/keyrings/Default_keyring.keyring" ]]; then
+    echo "Default_keyring.keyring: present"
+  else
+    echo "Default_keyring.keyring: missing"
   fi
 }
 
@@ -73,7 +91,7 @@ enable() {
 
   sudo -v
 
-  local stamp backup
+  local stamp backup tmp
   stamp="$(date +%Y%m%d-%H%M%S)"
   backup="$BACKUP_ROOT/$stamp"
   sudo install -d -m 700 "$backup"
@@ -90,25 +108,29 @@ enable() {
     sudo rm -f -- "$f"
   done < <(find "$SDDM_CONF_DIR" -maxdepth 1 -type f -name 'autologin.conf*' -print0)
 
-  if ! grep -qF "$FPRINT_LINE" "$PAM_FILE"; then
+  tmp="$(mktemp)"
+  sed \
+    -e '/^[[:space:]-]*auth[[:space:]].*pam_gnome_keyring\.so/d' \
+    -e '/^[[:space:]-]*password[[:space:]].*pam_gnome_keyring\.so/d' \
+    "$PAM_FILE" >"$tmp"
+
+  if ! grep -qF "$FPRINT_LINE" "$tmp"; then
+    printf '%s\n' "$FPRINT_LINE" | cat - "$tmp" >"$tmp.with-fp"
+    mv "$tmp.with-fp" "$tmp"
     echo "Adding fingerprint authentication to $PAM_FILE"
-    local tmp
-    tmp="$(mktemp)"
-    printf '%s\n' "$FPRINT_LINE" | cat - "$PAM_FILE" >"$tmp"
-    sudo install -m 644 "$tmp" "$PAM_FILE"
-    rm -f "$tmp"
   else
     echo "Fingerprint authentication is already configured."
   fi
 
+  sudo install -m 644 "$tmp" "$PAM_FILE"
+  rm -f "$tmp"
+
   echo
-  echo "SDDM fingerprint login is configured."
+  echo "SDDM fingerprint login is configured in Omarchy mode."
   echo "No SDDM restart was performed."
-  echo "Changes take effect when the current graphical session reaches the SDDM greeter."
-  echo "At the greeter, submit the empty password field/press Enter to start pam_fprintd."
-  echo
-  echo "GNOME Keyring note: fingerprint authentication does not provide PAM_AUTHTOK."
-  echo "A password-protected Login keyring therefore cannot be unlocked by fingerprint alone."
+  echo "Fingerprint auth succeeds at SDDM without supplying PAM_AUTHTOK;"
+  echo "the passwordless Default_keyring remains the intended secret store."
+  echo "Existing Login keyring data was NOT deleted or modified."
 }
 
 restore() {
