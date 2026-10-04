@@ -1,0 +1,33 @@
+post_install() {
+  udevadm control --reload-rules || true
+  systemctl daemon-reload || true
+  cat <<MSG
+
+FocalTech FTE4800 stack installed.
+
+Native libfprint:
+  /usr/lib/focaltech-fte4800/lib
+
+Vendor engine:
+  /usr/lib/focaltech-fte4800/ftWbioEngineAdapter.dll
+
+DKMS:
+  focaltech-fte4800 / 1.0.3
+
+fprintd:
+  Stock Arch fprintd is used; it is not patched or rebuilt.
+
+To activate the service environment immediately:
+  sudo systemctl restart fprintd
+
+MSG
+}
+
+post_upgrade() {
+  post_install
+}
+
+post_remove() {
+  udevadm control --reload-rules || true
+  systemctl daemon-reload || true
+}

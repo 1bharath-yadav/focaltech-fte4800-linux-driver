@@ -1,32 +1,140 @@
 # Maintainer: Bharath Yadav
-# Local Arch package for the FocalTech FTE4800 / FT9368 SPI transport driver.
 #
-# This package intentionally packages only the reusable DKMS transport layer.
-# The native libfprint vendor-engine integration and proprietary FocalTech DLL
-# remain managed by install/install-native-fte4800.sh.
+# Complete FocalTech FTE4800 / FT9368 Linux fingerprint driver stack.
+#
+# One package contains:
+#   - focal_spi kernel transport via DKMS
+#   - the validated native FTE4800 libfprint driver
+#   - native PE/WinBio vendor-engine bridge
+#   - FocalTech vendor engine DLL
+#   - FTE4800 udev rule
+#   - fprintd systemd drop-in selecting the private libfprint + DLL
+#
+# fprintd itself is NOT patched or rebuilt. The stock Arch fprintd package is
+# used as the D-Bus/PAM daemon.
+#
+# This is intentionally a local package: the vendor DLL is proprietary and
+# is consumed from the preserved driver archive in this repository.
 
-pkgname=focaltech-spi-dkms
+pkgname=focaltech-fte4800
 pkgver=1.0.3
-pkgrel=1
-pkgdesc='FocalTech FTE4800/FT9368 SPI fingerprint transport driver (DKMS)'
+pkgrel=2
+pkgdesc='Complete FocalTech FTE4800/FT9368 Linux fingerprint driver stack'
 arch=('x86_64')
-license=('GPL-2.0-only')
-depends=('dkms')
-optdepends=('linux-headers: build the module for the stock Arch kernel'
-            'fprintd: fingerprint daemon using the FTE4800 libfprint driver')
-install="$pkgname.install"
+url='https://github.com/1bharath-yadav/focaltech-fte4800-linux-driver'
+license=('GPL-2.0-only' 'LGPL-2.1-or-later' 'custom')
+depends=(
+  'dkms'
+  'fprintd'
+  'glib2'
+  'libgudev'
+  'libgusb'
+  'openssl'
+  'pixman'
+)
+makedepends=(
+  'git'
+  'glib2-devel'
+  'gobject-introspection'
+  'gtk-doc'
+  'meson'
+  'ninja'
+  'python-cairo'
+  'python-gobject'
+  'systemd'
+)
+conflicts=('focaltech-spi-dkms')
+replaces=('focaltech-spi-dkms')
+install="${pkgname}.install"
+options=('!debug')
 
-# This is a local-source PKGBUILD for the canonical driver repository.
-# For a distributable/AUR package, replace _source_root with a git/archive source.
-_source_root="$startdir/../.."
+# Bump this to the next upstream release; prepare() reapplies our downstream patch.
+_libfprint_version='1.94.10'
+_vendor_sha256='2af887cb0925a29757b9f217f656a9963246ba7770dcc4c68e689ccc6505f06b'
+
+source=(
+  "git+https://gitlab.freedesktop.org/libfprint/libfprint.git#tag=v${_libfprint_version}"
+  'ftWbioEngineAdapter.dll'
+)
+sha256sums=(
+  'SKIP'
+  "${_vendor_sha256}"
+)
+
+prepare() {
+  cd "${srcdir}/libfprint"
+
+  # Build the current upstream libfprint release first, then apply our
+  # downstream FTE4800 integration on top.
+  patch -p1 < "${startdir}/../../libfprint-patches/0001-native-fte4800-ft9368-driver.patch"
+
+  # Refuse to build if the checked-in production sources and the package patch
+  # ever diverge.
+  for file in fte4800.c vendor-engine.c vendor-engine.h; do
+    cmp -s       "${startdir}/../../libfprint/drivers/${file}"       "${srcdir}/libfprint/libfprint/drivers/${file}" || {
+      echo "ERROR: patched libfprint ${file} differs from canonical source" >&2
+      return 1
+    }
+  done
+
+  local actual_sha
+  actual_sha="$(sha256sum "${srcdir}/ftWbioEngineAdapter.dll" | awk '{print $1}')"
+  [[ "${actual_sha}" == "${_vendor_sha256}" ]] || {
+    echo "ERROR: unexpected vendor DLL SHA256: ${actual_sha}" >&2
+    return 1
+  }
+}
+
+build() {
+  cd "${srcdir}/libfprint"
+
+  meson setup build     --prefix=/usr     -Ddoc=false     -Ddrivers=fte4800
+
+  ninja -C build -j2
+}
 
 package() {
-  local src="$pkgdir/usr/src/$pkgname-$pkgver"
+  local dkms_dir="${pkgdir}/usr/src/${pkgname}-${pkgver}"
+  local libdir="${pkgdir}/usr/lib/${pkgname}/lib"
+  local runtime_dir="${pkgdir}/usr/lib/${pkgname}"
+  local built_lib="${srcdir}/libfprint/build/libfprint/libfprint-2.so.2.0.0"
 
-  install -d "$src/protocol"
-  install -m 0644     "$_source_root/focal_spi.c"     "$_source_root/Makefile"     "$_source_root/dkms.conf"     "$src/"
+  # Kernel transport source for DKMS. dkms itself installs/rebuilds it using
+  # its pacman hook; this package does not invoke dkms from an install hook.
+  install -d "${dkms_dir}/protocol"
+  install -m0644     "${startdir}/../../focal_spi.c"     "${startdir}/../../Makefile"     "${startdir}/../../dkms.conf"     "${dkms_dir}/"
+  install -m0644 "${startdir}/../../protocol/"*.h "${dkms_dir}/protocol/"
 
-  install -m 0644 "$_source_root"/protocol/*.h "$src/protocol/"
+  # Private native libfprint so the distro libfprint is left untouched.
+  install -d "${libdir}"
+  install -m0755 "${built_lib}" "${libdir}/libfprint-2.so.2.0.0"
+  ln -s libfprint-2.so.2.0.0 "${libdir}/libfprint-2.so.2"
+  ln -s libfprint-2.so.2 "${libdir}/libfprint-2.so"
 
-  install -Dm0644     "$_source_root/install/70-focal-spi.rules"     "$pkgdir/usr/lib/udev/rules.d/70-focal-spi.rules"
+  # Proprietary FocalTech engine used by vendor-engine.c.
+  install -Dm0644 "${srcdir}/ftWbioEngineAdapter.dll"     "${runtime_dir}/ftWbioEngineAdapter.dll"
+
+  # Sensor permissions.
+  install -Dm0644 "${startdir}/../../install/70-focal-spi.rules"     "${pkgdir}/usr/lib/udev/rules.d/70-focal-spi.rules"
+
+  # Use stock Arch fprintd, but run it with the private libfprint and vendor DLL.
+  install -d "${pkgdir}/usr/lib/systemd/system/fprintd.service.d"
+  cat > "${pkgdir}/usr/lib/systemd/system/fprintd.service.d/00-fte4800.conf" <<EOF
+[Service]
+Environment="LD_LIBRARY_PATH=/usr/lib/${pkgname}/lib"
+Environment="FTE4800_ENGINE_DLL=/usr/lib/${pkgname}/ftWbioEngineAdapter.dll"
+DeviceAllow=/dev/focal_moh_spi rw
+EOF
+
+  install -Dm0644 "${startdir}/../../LICENSES/GPL-2.0-only.txt"     "${pkgdir}/usr/share/licenses/${pkgname}/GPL-2.0-only.txt"
+  install -Dm0644 "${startdir}/../../LICENSES/LGPL-2.1-or-later.txt"     "${pkgdir}/usr/share/licenses/${pkgname}/LGPL-2.1-or-later.txt"
+
+  cat > "${pkgdir}/usr/share/licenses/${pkgname}/VENDOR-DLL-NOTICE" <<EOF
+This package contains ftWbioEngineAdapter.dll from the original FocalTech
+Windows driver package. Redistribution terms were not established by this
+project. This PKGBUILD is intended as a local package build from the
+preserved research archive.
+
+SHA256: ${_vendor_sha256}
+EOF
 }

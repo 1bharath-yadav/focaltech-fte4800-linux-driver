@@ -1,31 +1,47 @@
-diff --git c/libfprint/drivers/fte4800.c w/libfprint/drivers/fte4800.c
-index 1b20d57..6553b4b 100644
---- c/libfprint/drivers/fte4800.c
-+++ w/libfprint/drivers/fte4800.c
-@@ -15,12 +15,19 @@
-  * You should have received a copy of the GNU Lesser General Public
-  * License along with this library; if not, write to the Free Software
-  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+diff --git c/libfprint/drivers/fte4800.c i/libfprint/drivers/fte4800.c
+new file mode 100644
+index 0000000..6553b4b
+--- /dev/null
++++ i/libfprint/drivers/fte4800.c
+@@ -0,0 +1,869 @@
++/*
++ * FocalTech FTE4800 / FT9368 SPI Image Driver for libfprint
++ * Copyright (C) 2026
++ *
++ * This library is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU Lesser General Public
++ * License as published by the Free Software Foundation; either
++ * version 2.1 of the License, or (at your option) any later version.
++ *
++ * This library is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public
++ * License along with this library; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 + *
 + * Matching strategy:
 + *   Enrollment and verification are delegated to FocalTech's native WinBio
 + *   engine adapter, executed directly on Linux by vendor-engine.c. The engine
 + *   consumes the sensor's native 64×80 grayscale frame and stores an opaque
 + *   vendor template in the FpPrint payload.
-  */
- 
- #define FP_COMPONENT "fte4800"
- 
- #include "drivers_api.h"
- #include "fte4800.h"
++ */
++
++#define FP_COMPONENT "fte4800"
++
++#include "drivers_api.h"
++#include "fte4800.h"
 +#include "vendor-engine.h"
- 
- #include <fcntl.h>
- #include <sys/ioctl.h>
-@@ -29,66 +36,130 @@
- #include <unistd.h>
- #include <errno.h>
- 
++
++#include <fcntl.h>
++#include <sys/ioctl.h>
++#include <sys/types.h>
++#include <sys/stat.h>
++#include <unistd.h>
++#include <errno.h>
++
 +/* --------------------------------------------------------------------------
 + * Parameters
 + * -------------------------------------------------------------------------- */
@@ -41,82 +57,60 @@ index 1b20d57..6553b4b 100644
 +/* --------------------------------------------------------------------------
 + * Device instance data
 + * -------------------------------------------------------------------------- */
- struct _FpiDeviceFte4800
- {
-   FpImageDevice parent;
- 
-   int           spi_fd;
--  guint         poll_timeout_id;
-   gboolean      deactivating;
--  guint8        last_frame[FTE4800_RAW_PIXELS];
--  gboolean      last_frame_valid;
++struct _FpiDeviceFte4800
++{
++  FpImageDevice parent;
++
++  int           spi_fd;
++  gboolean      deactivating;
 +
 +  gint          enroll_count;
- };
- 
- G_DECLARE_FINAL_TYPE (FpiDeviceFte4800, fpi_device_fte4800, FPI, DEVICE_FTE4800, FpImageDevice);
- G_DEFINE_TYPE (FpiDeviceFte4800, fpi_device_fte4800, FP_TYPE_IMAGE_DEVICE);
- 
--#define SPI_READ_WRITE 0xA5
++};
++
++G_DECLARE_FINAL_TYPE (FpiDeviceFte4800, fpi_device_fte4800, FPI, DEVICE_FTE4800, FpImageDevice);
++G_DEFINE_TYPE (FpiDeviceFte4800, fpi_device_fte4800, FP_TYPE_IMAGE_DEVICE);
++
 +/* --------------------------------------------------------------------------
 + * Low-level SPI helpers
 + * -------------------------------------------------------------------------- */
- 
++
 +/*
 + * Send tx_buf / receive rx_len bytes via the focal_spi kernel misc device.
 + * Header format: [0xA5, tx_len_lo, tx_len_hi, rx_len_lo, rx_len_hi, <tx_bytes>]
 + * The kernel driver returns rx_len bytes starting at offset 0 of the same buf.
 + */
- static int
--fte4800_spi_transfer (int fd, const guint8 *tx_buf, gsize tx_len, guint8 *rx_buf, gsize rx_len)
++static int
 +fte4800_spi_transfer (int fd, const guint8 *tx, gsize tx_len,
 +                      guint8 *rx, gsize rx_len)
- {
--  gsize req_len = 5 + tx_len;
--  gsize total_len = (req_len > rx_len) ? req_len : rx_len;
--  g_autofree guint8 *buf = g_malloc0 (total_len);
++{
 +  gsize buf_len = MAX (5 + tx_len, rx_len);
 +  g_autofree guint8 *buf = g_malloc0 (buf_len);
- 
--  buf[0] = SPI_READ_WRITE;
++
 +  buf[0] = 0xA5;
-   buf[1] = (guint8) (tx_len & 0xFF);
-   buf[2] = (guint8) ((tx_len >> 8) & 0xFF);
-   buf[3] = (guint8) (rx_len & 0xFF);
-   buf[4] = (guint8) ((rx_len >> 8) & 0xFF);
--  if (tx_buf && tx_len > 0)
--    memcpy (buf + 5, tx_buf, tx_len);
++  buf[1] = (guint8) (tx_len & 0xFF);
++  buf[2] = (guint8) ((tx_len >> 8) & 0xFF);
++  buf[3] = (guint8) (rx_len & 0xFF);
++  buf[4] = (guint8) ((rx_len >> 8) & 0xFF);
 +  if (tx && tx_len)
 +    memcpy (buf + 5, tx, tx_len);
- 
--  ssize_t n = read (fd, buf, total_len);
++
 +  ssize_t n = read (fd, buf, buf_len);
-   if (n < 0)
-     return -errno;
-   if ((gsize) n < rx_len)
-     return -EIO;
--
--  if (rx_buf && rx_len > 0)
--    memcpy (rx_buf, buf, rx_len);
--
++  if (n < 0)
++    return -errno;
++  if ((gsize) n < rx_len)
++    return -EIO;
 +  if (rx && rx_len)
 +    memcpy (rx, buf, rx_len);
-   return 0;
- }
- 
--static gboolean
--fte4800_read_chip_id (int fd, guint16 *chip_id)
++  return 0;
++}
++
 +/* Read one 64×80 raw grayscale frame. */
 +static int
 +fte4800_write (int fd, const guint8 *tx, gsize tx_len)
- {
--  guint8 tx[7] = { 0x91, 0x80, 0x00, 0x20, 0x00, 0x00, 0x00 };
--  guint8 rx[32];
--  int ret;
++{
 +  gsize buf_len = 5 + tx_len;
 +  guint8 *buf = g_malloc0 (buf_len);
- 
--  for (int retry = 0; retry < 6; retry++)
++
 +  buf[0] = 0xA5;
 +  buf[1] = (guint8) (tx_len & 0xFF);
 +  buf[2] = (guint8) ((tx_len >> 8) & 0xFF);
@@ -165,26 +159,21 @@ index 1b20d57..6553b4b 100644
 +  guint8 rx[32];
 +
 +  for (int i = 0; i < 6; i++)
-     {
--      ret = fte4800_spi_transfer (fd, tx, sizeof (tx), rx, sizeof (rx));
--      if (ret == 0)
++    {
 +      if (fte4800_spi_transfer (fd, tx, sizeof (tx), rx, sizeof (rx)) == 0)
-         {
-           guint16 id = ((guint16) rx[0x13] << 8) | rx[0x14];
-           if (id == 0x9368)
-             {
--              if (chip_id)
--                *chip_id = id;
++        {
++          guint16 id = ((guint16) rx[0x13] << 8) | rx[0x14];
++          if (id == 0x9368)
++            {
 +              if (id_out) *id_out = id;
-               return TRUE;
-             }
-         }
-@@ -97,277 +168,702 @@ fte4800_read_chip_id (int fd, guint16 *chip_id)
-   return FALSE;
- }
- 
--static int
--fte4800_read_frame (int fd, guint8 *frame_buf)
++              return TRUE;
++            }
++        }
++      g_usleep (50 * 1000);
++    }
++  return FALSE;
++}
++
 +/* A freshly triggered FT9368 frame is the reliable signal source for
 + * this implementation.
 + *
@@ -201,19 +190,13 @@ index 1b20d57..6553b4b 100644
 + * pressed. This has been confirmed on the physical FT9368 sensor. */
 +static gboolean
 +fte4800_image_has_signal (const guint8 *px, gsize n)
- {
--  guint8 tx[7] = { 0x90, 0x80, 0x14, 0x00, 0x00, 0x00, 0x00 };
--  return fte4800_spi_transfer (fd, tx, sizeof (tx), frame_buf, FTE4800_RAW_PIXELS);
++{
 +  return fpi_std_sq_dev (px, n) > FTE4800_TOUCH_VAR_THRESH;
- }
- 
- static gboolean
--fte4800_is_finger_present (const guint8 *pixels, gsize len)
++}
++
++static gboolean
 +fte4800_image_is_good (const guint8 *px, gsize n)
- {
--  gint var = fpi_std_sq_dev (pixels, len);
--  /* Idle sensor has variance < 20. Real physical finger contact gives variance > 350. */
--  return var > 350;
++{
 +  /*
 +   * Do not impose generic brightness/saturation heuristics here. Real FTE4800
 +   * captures have a high mean and a large saturated region, while the vendor
@@ -221,8 +204,8 @@ index 1b20d57..6553b4b 100644
 +   * for fingerprint quality; this gate only rejects blank/low-contrast frames.
 +   */
 +  return fpi_std_sq_dev (px, n) >= FTE4800_ENROLL_MIN_VAR;
- }
- 
++}
++
 +/* Forward declaration for the blocking capture helper used by the
 + * finger-edge detectors below. */
 +static gboolean
@@ -234,11 +217,9 @@ index 1b20d57..6553b4b 100644
 + * finger removal — stale data reads as Var>>0 even with no finger present.
 + * After reset the buffer is blank; the next trigger returns Var=0 or Var>thresh
 + * according to actual sensor state. */
- static void
--fte4800_stop_poll (FpiDeviceFte4800 *self)
++static void
 +fte4800_hw_reset (FpiDeviceFte4800 *self)
- {
--  if (self->poll_timeout_id != 0)
++{
 +  guint8 throwaway[2];
 +
 +  if (ioctl (self->spi_fd, FTE4800_IOCTL_RESET, 0) < 0)
@@ -260,9 +241,7 @@ index 1b20d57..6553b4b 100644
 +                          guint8 *frame)
 +{
 +  for (;;)
-     {
--      g_source_remove (self->poll_timeout_id);
--      self->poll_timeout_id = 0;
++    {
 +      if (g_cancellable_is_cancelled (cancel))
 +        return FALSE;
 +
@@ -278,9 +257,9 @@ index 1b20d57..6553b4b 100644
 +        return TRUE;
 +
 +      g_usleep (FTE4800_POLL_MS * 1000);
-     }
- }
- 
++    }
++}
++
 +/* WAIT_UP: reset the hardware buffer, then poll until a fresh capture
 + * returns no signal (Var <= threshold).  The reset is the key step: without
 + * it the FT9368 returns stale finger-image data for an indefinite time after
@@ -352,36 +331,18 @@ index 1b20d57..6553b4b 100644
 +  return path && *path ? path : FTE4800_VENDOR_DLL;
 +}
 +
- static gboolean
--fte4800_poll_finger_on_cb (gpointer user_data)
++static gboolean
 +fte4800_set_print_template (FpPrint *print,
 +                            const guint8 *template,
 +                            gsize template_len)
- {
--  FpImageDevice *dev = FP_IMAGE_DEVICE (user_data);
--  FpiDeviceFte4800 *self = FPI_DEVICE_FTE4800 (dev);
--  guint8 frame[FTE4800_RAW_PIXELS];
++{
 +  gsize payload;
 +  guint8 *buf;
 +  GVariant *data;
- 
--  if (self->deactivating)
--    return G_SOURCE_REMOVE;
++
 +  if (!template || template_len == 0 || template_len > FTE4800_VENDOR_MAX_TEMPLATE)
 +    return FALSE;
- 
--  if (fte4800_read_frame (self->spi_fd, frame) == 0)
--    {
--      if (fte4800_is_finger_present (frame, sizeof (frame)))
--        {
--          fp_dbg ("Finger touch detected!");
--          memcpy (self->last_frame, frame, sizeof (frame));
--          self->last_frame_valid = TRUE;
--          self->poll_timeout_id = 0;
--          fpi_image_device_report_finger_status (dev, TRUE);
--          return G_SOURCE_REMOVE;
--        }
--    }
++
 +  payload = FTE4800_VENDOR_HEADER + template_len;
 +  buf = g_malloc (payload);
 +  memcpy (buf, FTE4800_VENDOR_MAGIC, 4);
@@ -390,16 +351,15 @@ index 1b20d57..6553b4b 100644
 +  buf[6] = (guint8) ((template_len >> 16) & 0xff);
 +  buf[7] = (guint8) ((template_len >> 24) & 0xff);
 +  memcpy (buf + FTE4800_VENDOR_HEADER, template, template_len);
- 
--  return G_SOURCE_CONTINUE;
++
 +  data = g_variant_new_fixed_array (G_VARIANT_TYPE_BYTE,
 +                                     buf, payload, sizeof (guint8));
 +  fpi_print_set_type (print, FPI_PRINT_RAW);
 +  g_object_set (print, "fpi-data", data, NULL);
 +  g_free (buf);
 +  return TRUE;
- }
- 
++}
++
 +static guint8 *
 +fte4800_get_print_template (FpPrint *print, gsize *template_len_out)
 +{
@@ -448,104 +408,43 @@ index 1b20d57..6553b4b 100644
 + * Triggers a physical scan, reads the resulting frame, and accepts it only
 + * when the frame has sufficient contact contrast.
 + * -------------------------------------------------------------------------- */
- static gboolean
--fte4800_poll_finger_off_cb (gpointer user_data)
++static gboolean
 +fte4800_capture_frame_blocking (FpiDeviceFte4800 *self, guint8 *frame)
- {
--  FpImageDevice *dev = FP_IMAGE_DEVICE (user_data);
--  FpiDeviceFte4800 *self = FPI_DEVICE_FTE4800 (dev);
--  guint8 frame[FTE4800_RAW_PIXELS];
++{
 +  if (fte4800_trigger_capture (self->spi_fd) != 0)
 +    return FALSE;
- 
--  if (self->deactivating)
--    return G_SOURCE_REMOVE;
--
--  if (fte4800_read_frame (self->spi_fd, frame) == 0)
--    {
--      if (!fte4800_is_finger_present (frame, sizeof (frame)))
--        {
--          fp_dbg ("Finger release detected!");
--          self->poll_timeout_id = 0;
--          fpi_image_device_report_finger_status (dev, FALSE);
--          return G_SOURCE_REMOVE;
--        }
--    }
--
--  return G_SOURCE_CONTINUE;
++
 +  return fte4800_read_frame (self->spi_fd, frame) == 0;
- }
- 
++}
++
 +/* --------------------------------------------------------------------------
 + * Open / Close / Activate / Deactivate (standard FpImageDevice plumbing)
 + * -------------------------------------------------------------------------- */
- static void
--fte4800_capture_frame (FpImageDevice *dev)
++static void
 +fte4800_open (FpImageDevice *imgdev)
- {
--  FpiDeviceFte4800 *self = FPI_DEVICE_FTE4800 (dev);
--  g_autoptr(FpImage) img = NULL;
--  g_autoptr(FpImage) scaled = NULL;
--
--  if (!self->last_frame_valid)
--    {
--      if (fte4800_read_frame (self->spi_fd, self->last_frame) != 0)
--        {
--          fpi_image_device_session_error (dev,
--            fpi_device_error_new (FP_DEVICE_ERROR_GENERAL));
--          return;
--        }
--    }
--  self->last_frame_valid = FALSE;
--
--  img = fp_image_new (FTE4800_RAW_WIDTH, FTE4800_RAW_HEIGHT);
--  memcpy (img->data, self->last_frame, FTE4800_RAW_PIXELS);
--  img->ppmm = 10.0; /* Native ~254 DPI */
--
--  scaled = fpi_image_resize (img, 2, 2); /* 128x160 at 20 ppmm (~508 DPI for NIST NBIS) */
--  scaled->flags |= FPI_IMAGE_PARTIAL | FPI_IMAGE_COLORS_INVERTED;
--
--  fpi_image_device_image_captured (dev, g_steal_pointer (&scaled));
--}
--
--static void
--fte4800_open (FpImageDevice *dev)
--{
--  FpiDeviceFte4800 *self = FPI_DEVICE_FTE4800 (dev);
--  const gchar *path;
--  GError *error = NULL;
++{
 +  FpiDeviceFte4800 *self = FPI_DEVICE_FTE4800 (imgdev);
-   guint16 chip_id = 0;
++  guint16 chip_id = 0;
 +  GError *err = NULL;
 +  const gchar *path;
-   int fd;
- 
-   G_DEBUG_HERE ();
- 
--  path = fpi_device_get_udev_data (FP_DEVICE (dev), FPI_DEVICE_UDEV_SUBTYPE_MISC);
++  int fd;
++
++  G_DEBUG_HERE ();
++
 +  path = fpi_device_get_udev_data (FP_DEVICE (imgdev), FPI_DEVICE_UDEV_SUBTYPE_MISC);
-   if (!path)
-     path = "/dev/focal_moh_spi";
- 
-   fd = open (path, O_RDWR | O_CLOEXEC);
-   if (fd < 0)
-     {
--      error = fpi_device_error_new_msg (FP_DEVICE_ERROR_GENERAL,
--                                        "Failed to open %s: %s",
--                                        path, g_strerror (errno));
--      fpi_image_device_open_complete (dev, error);
++  if (!path)
++    path = "/dev/focal_moh_spi";
++
++  fd = open (path, O_RDWR | O_CLOEXEC);
++  if (fd < 0)
++    {
 +      err = fpi_device_error_new_msg (FP_DEVICE_ERROR_GENERAL,
 +                                      "open(%s): %s", path, g_strerror (errno));
 +      fpi_image_device_open_complete (imgdev, err);
-       return;
-     }
- 
--  /* Hardware reset via kernel driver */
-   if (ioctl (fd, FTE4800_IOCTL_RESET, 0) < 0)
--    {
--      fp_warn ("Reset ioctl failed: %s", g_strerror (errno));
--    }
--  g_usleep (100 * 1000);
++      return;
++    }
++
++  if (ioctl (fd, FTE4800_IOCTL_RESET, 0) < 0)
 +    fp_warn ("Reset ioctl failed: %s", g_strerror (errno));
 +
 +  /* Discard the first post-reset read: FT9368 can return SPI shift-register
@@ -557,22 +456,16 @@ index 1b20d57..6553b4b 100644
 +                              7, throwaway, sizeof (throwaway)) != 0)
 +      fp_warn ("post-reset throwaway read failed: %s", g_strerror (errno));
 +  }
- 
--  /* Verify sensor identity */
-   if (!fte4800_read_chip_id (fd, &chip_id))
-     {
-       close (fd);
--      error = fpi_device_error_new_msg (FP_DEVICE_ERROR_NOT_SUPPORTED,
--                                        "Device at %s is not an FT9368 sensor",
--                                        path);
--      fpi_image_device_open_complete (dev, error);
++
++  if (!fte4800_read_chip_id (fd, &chip_id))
++    {
++      close (fd);
 +      err = fpi_device_error_new_msg (FP_DEVICE_ERROR_NOT_SUPPORTED,
 +                                      "%s: FT9368 not detected", path);
 +      fpi_image_device_open_complete (imgdev, err);
-       return;
-     }
- 
--  fp_info ("FocalTech FT9368 sensor online (chip ID 0x%04x) on %s", chip_id, path);
++      return;
++    }
++
 +  if (!fte4800_engine_available ())
 +    {
 +      close (fd);
@@ -595,74 +488,50 @@ index 1b20d57..6553b4b 100644
 +    }
 +
 +  fp_info ("FocalTech FT9368 (0x%04x) at %s; vendor engine ready", chip_id, path);
-   self->spi_fd = fd;
--  fpi_image_device_open_complete (dev, NULL);
++  self->spi_fd = fd;
 +
 +  fpi_image_device_open_complete (imgdev, NULL);
- }
- 
- static void
--fte4800_close (FpImageDevice *dev)
++}
++
++static void
 +fte4800_close (FpImageDevice *imgdev)
- {
--  FpiDeviceFte4800 *self = FPI_DEVICE_FTE4800 (dev);
++{
 +  FpiDeviceFte4800 *self = FPI_DEVICE_FTE4800 (imgdev);
- 
-   G_DEBUG_HERE ();
- 
--  fte4800_stop_poll (self);
--
-   if (self->spi_fd >= 0)
-     {
-       close (self->spi_fd);
-       self->spi_fd = -1;
-     }
--
--  fpi_image_device_close_complete (dev, NULL);
++
++  G_DEBUG_HERE ();
++
++  if (self->spi_fd >= 0)
++    {
++      close (self->spi_fd);
++      self->spi_fd = -1;
++    }
 +  fpi_image_device_close_complete (imgdev, NULL);
- }
- 
- static void
--fte4800_activate (FpImageDevice *dev)
++}
++
++static void
 +fte4800_activate (FpImageDevice *imgdev)
- {
--  FpiDeviceFte4800 *self = FPI_DEVICE_FTE4800 (dev);
--
-   G_DEBUG_HERE ();
--
--  self->deactivating = FALSE;
--  fpi_image_device_activate_complete (dev, NULL);
++{
++  G_DEBUG_HERE ();
 +  FPI_DEVICE_FTE4800 (imgdev)->deactivating = FALSE;
 +  fpi_image_device_activate_complete (imgdev, NULL);
- }
- 
- static void
--fte4800_deactivate (FpImageDevice *dev)
++}
++
++static void
 +fte4800_deactivate (FpImageDevice *imgdev)
- {
--  FpiDeviceFte4800 *self = FPI_DEVICE_FTE4800 (dev);
--
-   G_DEBUG_HERE ();
--
--  self->deactivating = TRUE;
--  fte4800_stop_poll (self);
--  fpi_image_device_deactivate_complete (dev, NULL);
++{
++  G_DEBUG_HERE ();
 +  FPI_DEVICE_FTE4800 (imgdev)->deactivating = TRUE;
 +  fpi_image_device_deactivate_complete (imgdev, NULL);
- }
- 
- static void
--fte4800_change_state (FpImageDevice *dev, FpiImageDeviceState state)
++}
++
++static void
 +fte4800_change_state (FpImageDevice *imgdev, FpiImageDeviceState state)
- {
--  FpiDeviceFte4800 *self = FPI_DEVICE_FTE4800 (dev);
--
++{
 +  /* Enrollment and verification are implemented by the driver because the
 +   * FT9368 uses the native FocalTech WinBio engine. */
-   G_DEBUG_HERE ();
++  G_DEBUG_HERE ();
 +}
- 
--  fte4800_stop_poll (self);
++
 +/* --------------------------------------------------------------------------
 + * Custom Enroll
 + * -------------------------------------------------------------------------- */
@@ -670,8 +539,7 @@ index 1b20d57..6553b4b 100644
 +  FpiDeviceFte4800 *self;
 +  FpPrint          *enroll_print;
 +} EnrollData;
- 
--  switch (state)
++
 +static void
 +fte4800_enroll_thread (GTask *task, gpointer src,
 +                       gpointer task_data, GCancellable *cancel)
@@ -687,34 +555,18 @@ index 1b20d57..6553b4b 100644
 +                                   FP_FINGER_STATUS_NONE | FP_FINGER_STATUS_NEEDED);
 +
 +  while (self->enroll_count < FTE4800_ENROLL_STAGES)
-     {
--    case FPI_IMAGE_DEVICE_STATE_AWAIT_FINGER_ON:
--      self->last_frame_valid = FALSE;
--      self->poll_timeout_id = g_timeout_add (50, fte4800_poll_finger_on_cb, dev);
--      break;
++    {
 +      if (g_task_return_error_if_cancelled (task))
 +        return;
- 
--    case FPI_IMAGE_DEVICE_STATE_CAPTURE:
--      fte4800_capture_frame (dev);
--      break;
++
 +      if (!fte4800_wait_finger_down (self, cancel, frame))
 +        {
 +          g_task_return_error_if_cancelled (task);
 +          return;
 +        }
- 
--    case FPI_IMAGE_DEVICE_STATE_AWAIT_FINGER_OFF:
--      self->poll_timeout_id = g_timeout_add (50, fte4800_poll_finger_off_cb, dev);
--      break;
++
 +      fpi_device_report_finger_status (FP_DEVICE (self), FP_FINGER_STATUS_PRESENT);
- 
--    case FPI_IMAGE_DEVICE_STATE_IDLE:
--    case FPI_IMAGE_DEVICE_STATE_INACTIVE:
--    case FPI_IMAGE_DEVICE_STATE_ACTIVATING:
--    case FPI_IMAGE_DEVICE_STATE_DEACTIVATING:
--    default:
--      break;
++
 +      if (!fte4800_image_is_good (frame, FTE4800_RAW_PIXELS))
 +        {
 +          GError *retry = fpi_device_retry_new_msg (
@@ -785,7 +637,7 @@ index 1b20d57..6553b4b 100644
 +          g_task_return_error_if_cancelled (task);
 +          return;
 +        }
-     }
++    }
 +
 +  guint8 *vendor_template = NULL;
 +  size_t vendor_template_len = 0;
@@ -802,8 +654,8 @@ index 1b20d57..6553b4b 100644
 +
 +  g_free (vendor_template);
 +  g_task_return_boolean (task, TRUE);
- }
- 
++}
++
 +static void
 +fte4800_enroll_done (GObject *src, GAsyncResult *res, gpointer task_data)
 +{
@@ -952,63 +804,42 @@ index 1b20d57..6553b4b 100644
 +/* --------------------------------------------------------------------------
 + * GObject lifecycle
 + * -------------------------------------------------------------------------- */
- static void
- fpi_device_fte4800_init (FpiDeviceFte4800 *self)
- {
--  self->spi_fd = -1;
--  self->poll_timeout_id = 0;
++static void
++fpi_device_fte4800_init (FpiDeviceFte4800 *self)
++{
 +  self->spi_fd      = -1;
-   self->deactivating = FALSE;
--  self->last_frame_valid = FALSE;
- }
- 
- static void
--fpi_device_fte4800_finalize (GObject *object)
++  self->deactivating = FALSE;
++}
++
++static void
 +fpi_device_fte4800_finalize (GObject *obj)
- {
--  FpiDeviceFte4800 *self = FPI_DEVICE_FTE4800 (object);
++{
 +  FpiDeviceFte4800 *self = FPI_DEVICE_FTE4800 (obj);
- 
--  fte4800_stop_poll (self);
-   if (self->spi_fd >= 0)
-     {
-       close (self->spi_fd);
-       self->spi_fd = -1;
-     }
--
--  G_OBJECT_CLASS (fpi_device_fte4800_parent_class)->finalize (object);
++
++  if (self->spi_fd >= 0)
++    {
++      close (self->spi_fd);
++      self->spi_fd = -1;
++    }
 +  G_OBJECT_CLASS (fpi_device_fte4800_parent_class)->finalize (obj);
- }
- 
- static void
- fpi_device_fte4800_class_init (FpiDeviceFte4800Class *klass)
- {
--  FpDeviceClass *dev_class = FP_DEVICE_CLASS (klass);
++}
++
++static void
++fpi_device_fte4800_class_init (FpiDeviceFte4800Class *klass)
++{
 +  GObjectClass       *obj_class = G_OBJECT_CLASS (klass);
 +  FpDeviceClass      *dev_class = FP_DEVICE_CLASS (klass);
-   FpImageDeviceClass *img_class = FP_IMAGE_DEVICE_CLASS (klass);
- 
--  dev_class->id = "fte4800";
--  dev_class->full_name = "FocalTech FTE4800 / FT9368 Fingerprint Sensor";
--  dev_class->type = FP_DEVICE_TYPE_UDEV;
--  dev_class->id_table = fte4800_id_table;
--  dev_class->scan_type = FP_SCAN_TYPE_PRESS;
--  dev_class->nr_enroll_stages = 5;
++  FpImageDeviceClass *img_class = FP_IMAGE_DEVICE_CLASS (klass);
++
 +  obj_class->finalize = fpi_device_fte4800_finalize;
- 
--  img_class->bz3_threshold = 24;
--  img_class->img_width = FTE4800_SCALED_WIDTH;
--  img_class->img_height = FTE4800_SCALED_HEIGHT;
++
 +  dev_class->id             = "fte4800";
 +  dev_class->full_name      = "FocalTech FTE4800 / FT9368 Fingerprint Sensor";
 +  dev_class->type           = FP_DEVICE_TYPE_UDEV;
 +  dev_class->id_table       = fte4800_id_table;
 +  dev_class->scan_type      = FP_SCAN_TYPE_PRESS;
 +  dev_class->nr_enroll_stages = FTE4800_ENROLL_STAGES;
- 
--  img_class->img_open = fte4800_open;
--  img_class->activate = fte4800_activate;
--  img_class->deactivate = fte4800_deactivate;
++
 +  /* Driver-specific matching for the FT9368's 64x80 image geometry.
 +   * Identify is intentionally NOT registered here: fprintd uses
 +   * FP_DEVICE_FEATURE_IDENTIFY to run a silent duplicate-check before
@@ -1038,18 +869,69 @@ index 1b20d57..6553b4b 100644
 +  img_class->img_close    = fte4800_close;
 +  img_class->activate     = fte4800_activate;
 +  img_class->deactivate   = fte4800_deactivate;
-   img_class->change_state = fte4800_change_state;
--  img_class->img_close = fte4800_close;
--
--  G_OBJECT_CLASS (klass)->finalize = fpi_device_fte4800_finalize;
++  img_class->change_state = fte4800_change_state;
 +  img_class->img_width    = FTE4800_RAW_WIDTH;
 +  img_class->img_height   = FTE4800_RAW_HEIGHT;
- }
-diff --git c/libfprint/drivers/vendor-engine.c w/libfprint/drivers/vendor-engine.c
++}
+diff --git c/libfprint/drivers/fte4800.h i/libfprint/drivers/fte4800.h
+new file mode 100644
+index 0000000..73f6555
+--- /dev/null
++++ i/libfprint/drivers/fte4800.h
+@@ -0,0 +1,48 @@
++/*
++ * FocalTech FTE4800 / FT9368 Driver for libfprint
++ * Copyright (C) 2026
++ *
++ * This library is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU Lesser General Public
++ * License as published by the Free Software Foundation; either
++ * version 2.1 of the License, or (at your option) any later version.
++ *
++ * This library is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public
++ * License along with this library; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
++ */
++
++#pragma once
++
++#include <config.h>
++
++#ifndef HAVE_UDEV
++#error "fte4800 requires udev"
++#endif
++
++#include <fp-device.h>
++#include <fpi-device.h>
++
++#define FTE4800_RAW_WIDTH      64
++#define FTE4800_RAW_HEIGHT     80
++#define FTE4800_RAW_PIXELS     (FTE4800_RAW_WIDTH * FTE4800_RAW_HEIGHT) /* 5120 */
++
++#define FTE4800_SCALED_WIDTH   (FTE4800_RAW_WIDTH * 2)  /* 128 */
++#define FTE4800_SCALED_HEIGHT  (FTE4800_RAW_HEIGHT * 2) /* 160 */
++
++#define FTE4800_IOCTL_RESET    0x8086
++
++static const FpIdEntry fte4800_id_table[] = {
++  {
++    .udev_types = FPI_DEVICE_UDEV_SUBTYPE_MISC,
++    .spi_acpi_id = "focal_moh_spi",
++  },
++  {
++    .udev_types = 0,
++  }
++};
+diff --git c/libfprint/drivers/vendor-engine.c i/libfprint/drivers/vendor-engine.c
 new file mode 100644
 index 0000000..f6510e1
 --- /dev/null
-+++ w/libfprint/drivers/vendor-engine.c
++++ i/libfprint/drivers/vendor-engine.c
 @@ -0,0 +1,663 @@
 +/* SPDX-License-Identifier: LGPL-2.1-or-later */
 +// loader.c — native in-process loader for ftWbioEngineAdapter.dll, NO WINE.
@@ -1714,11 +1596,11 @@ index 0000000..f6510e1
 +  Verify(pipeline, id, 1, &m, &ps, &plp, &hs, &hp, &vr);
 +  return m?1:0;
 +}
-diff --git c/libfprint/drivers/vendor-engine.h w/libfprint/drivers/vendor-engine.h
+diff --git c/libfprint/drivers/vendor-engine.h i/libfprint/drivers/vendor-engine.h
 new file mode 100644
 index 0000000..0ba4776
 --- /dev/null
-+++ w/libfprint/drivers/vendor-engine.h
++++ i/libfprint/drivers/vendor-engine.h
 @@ -0,0 +1,36 @@
 +/* SPDX-License-Identifier: LGPL-2.1-or-later */
 +/* vendor-engine.h — native wrapper around the FocalTech WinBio matcher DLL.
@@ -1756,19 +1638,157 @@ index 0000000..0ba4776
 +int  ft_engine_verify (const uint8_t *tmpl, size_t tmpllen);
 +
 +#endif
-diff --git c/libfprint/meson.build w/libfprint/meson.build
-index bf23802..b768b22 100644
+diff --git c/libfprint/fp-context.c i/libfprint/fp-context.c
+index 70d4062..018930e 100644
+--- c/libfprint/fp-context.c
++++ i/libfprint/fp-context.c
+@@ -479,6 +479,7 @@ fp_context_enumerate (FpContext *context)
+ 
+     g_autoptr(GList) spidev_devices = g_udev_client_query_by_subsystem (udev_client, "spidev");
+     g_autoptr(GList) hidraw_devices = g_udev_client_query_by_subsystem (udev_client, "hidraw");
++    g_autoptr(GList) misc_devices = g_udev_client_query_by_subsystem (udev_client, "misc");
+ 
+     /* for each potential driver, try to match all requested resources. */
+     for (i = 0; i < priv->drivers->len; i++)
+@@ -492,7 +493,7 @@ fp_context_enumerate (FpContext *context)
+ 
+         for (entry = cls->id_table; entry->udev_types; entry++)
+           {
+-            GList *matched_spidev = NULL, *matched_hidraw = NULL;
++            GList *matched_spidev = NULL, *matched_hidraw = NULL, *matched_misc = NULL;
+ 
+             if (entry->udev_types & FPI_DEVICE_UDEV_SUBTYPE_SPIDEV)
+               {
+@@ -508,6 +509,19 @@ fp_context_enumerate (FpContext *context)
+                 if (matched_spidev == NULL)
+                   continue;
+               }
++            if (entry->udev_types & FPI_DEVICE_UDEV_SUBTYPE_MISC)
++              {
++                for (matched_misc = misc_devices; matched_misc; matched_misc = matched_misc->next)
++                  {
++                    const gchar *sysfs = g_udev_device_get_sysfs_path (matched_misc->data);
++                    if (!sysfs)
++                      continue;
++                    if (strstr (sysfs, entry->spi_acpi_id))
++                      break;
++                  }
++                if (matched_misc == NULL)
++                  continue;
++              }
+             if (entry->udev_types & FPI_DEVICE_UDEV_SUBTYPE_HIDRAW)
+               {
+                 for (matched_hidraw = hidraw_devices; matched_hidraw; matched_hidraw = matched_hidraw->next)
+@@ -531,13 +545,19 @@ fp_context_enumerate (FpContext *context)
+                   continue;
+               }
+             priv->pending_devices++;
++            const gchar *spidev_path = NULL;
++            if (matched_spidev)
++              spidev_path = g_udev_device_get_device_file (matched_spidev->data);
++            else if (matched_misc)
++              spidev_path = g_udev_device_get_device_file (matched_misc->data);
++
+             g_async_initable_new_async (driver,
+                                         G_PRIORITY_LOW,
+                                         priv->cancellable,
+                                         async_device_init_done_cb,
+                                         context,
+                                         "fpi-driver-data", entry->driver_data,
+-                                        "fpi-udev-data-spidev", (matched_spidev ? g_udev_device_get_device_file (matched_spidev->data) : NULL),
++                                        "fpi-udev-data-spidev", spidev_path,
+                                         "fpi-udev-data-hidraw", (matched_hidraw ? g_udev_device_get_device_file (matched_hidraw->data) : NULL),
+                                         NULL);
+             /* remove entries from list to avoid conflicts */
+@@ -546,6 +566,11 @@ fp_context_enumerate (FpContext *context)
+                 g_object_unref (matched_spidev->data);
+                 spidev_devices = g_list_delete_link (spidev_devices, matched_spidev);
+               }
++            if (matched_misc)
++              {
++                g_object_unref (matched_misc->data);
++                misc_devices = g_list_delete_link (misc_devices, matched_misc);
++              }
+             if (matched_hidraw)
+               {
+                 g_object_unref (matched_hidraw->data);
+@@ -557,6 +582,7 @@ fp_context_enumerate (FpContext *context)
+     /* free all unused elemnts in both lists */
+     g_list_foreach (spidev_devices, (GFunc) g_object_unref, NULL);
+     g_list_foreach (hidraw_devices, (GFunc) g_object_unref, NULL);
++    g_list_foreach (misc_devices, (GFunc) g_object_unref, NULL);
+   }
+ #endif
+ 
+diff --git c/libfprint/fpi-device.c i/libfprint/fpi-device.c
+index a1be30c..0accf40 100644
+--- c/libfprint/fpi-device.c
++++ i/libfprint/fpi-device.c
+@@ -437,6 +437,7 @@ fpi_device_get_udev_data (FpDevice *device, FpiDeviceUdevSubtypeFlags subtype)
+       return priv->udev_data.hidraw_path;
+ 
+     case FPI_DEVICE_UDEV_SUBTYPE_SPIDEV:
++    case FPI_DEVICE_UDEV_SUBTYPE_MISC:
+       return priv->udev_data.spidev_path;
+ 
+     default:
+diff --git c/libfprint/fpi-device.h i/libfprint/fpi-device.h
+index ab154bc..26a6373 100644
+--- c/libfprint/fpi-device.h
++++ i/libfprint/fpi-device.h
+@@ -34,6 +34,7 @@
+ typedef enum {
+   FPI_DEVICE_UDEV_SUBTYPE_SPIDEV = 1 << 0,
+   FPI_DEVICE_UDEV_SUBTYPE_HIDRAW = 1 << 1,
++  FPI_DEVICE_UDEV_SUBTYPE_MISC   = 1 << 2,
+ } FpiDeviceUdevSubtypeFlags;
+ 
+ /**
+diff --git c/libfprint/fprint-list-supported-devices.c i/libfprint/fprint-list-supported-devices.c
+index 1b02c0b..b134101 100644
+--- c/libfprint/fprint-list-supported-devices.c
++++ i/libfprint/fprint-list-supported-devices.c
+@@ -70,7 +70,7 @@ insert_drivers (GList **usb_list, GList **spi_list)
+               char *key;
+ 
+               /* Need SPI device */
+-              if ((entry->udev_types & FPI_DEVICE_UDEV_SUBTYPE_SPIDEV) == 0)
++              if ((entry->udev_types & (FPI_DEVICE_UDEV_SUBTYPE_SPIDEV | FPI_DEVICE_UDEV_SUBTYPE_MISC)) == 0)
+                 continue;
+ 
+               key = g_strdup_printf ("SPI:%s:%04x:%04x", entry->spi_acpi_id, entry->hid_id.vid, entry->hid_id.pid);
+diff --git c/libfprint/meson.build i/libfprint/meson.build
+index 3449481..c293942 100644
 --- c/libfprint/meson.build
-+++ w/libfprint/meson.build
-@@ -122,7 +122,10 @@ driver_sources = {
-     'elan' : files('drivers/elan.c'),
-     'elanmoc' : files('drivers/elanmoc/elanmoc.c'),
-     'elanspi' : files('drivers/elanspi.c'),
--    'fte4800' : files('drivers/fte4800.c'),
-+    'fte4800' : files(
-+        'drivers/fte4800.c',
-+        'drivers/vendor-engine.c',
-+    ),
-     'nb1010' : files('drivers/nb1010.c'),
-     'virtual_image' : files('drivers/virtual-image.c'),
-     'virtual_device' : files('drivers/virtual-device.c'),
++++ i/libfprint/meson.build
+@@ -153,6 +153,8 @@ driver_sources = {
+         [ 'drivers/realtek/realtek.c' ],
+     'focaltech_moc' :
+         [ 'drivers/focaltech_moc/focaltech_moc.c' ],
++    'fte4800' :
++        [ 'drivers/fte4800.c', 'drivers/vendor-engine.c' ],
+ }
+ 
+ helper_sources = {
+diff --git c/meson.build i/meson.build
+index 14fb11f..7976025 100644
+--- c/meson.build
++++ i/meson.build
+@@ -147,7 +147,8 @@ default_drivers = [
+ ]
+ 
+ spi_drivers = [
+-    'elanspi'
++    'elanspi',
++    'fte4800'
+ ]
+ 
+ if have_spi
+@@ -211,6 +212,7 @@ driver_helper_mapping = {
+     'aes4000' : [ 'aeslib', 'aes3k' ],
+     'uru4000' : [ 'openssl' ],
+     'elanspi' : [ 'udev' ],
++    'fte4800' : [ 'udev' ],
+     'virtual_image'          : [ 'virtual' ],
+     'virtual_device'         : [ 'virtual' ],
+     'virtual_device_storage' : [ 'virtual' ],
