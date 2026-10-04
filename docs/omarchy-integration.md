@@ -29,6 +29,26 @@ The Linux bridge refreshes the Windows TEB stack bounds from the current libfpri
 The previous NCC/raw-frame matcher and its score threshold are historical research only. They are not part of the current production path.
 
 Lifecycle tests already performed during development include fprintd restart and device/module recovery. Additional suspend/resume and lock-screen regression testing should remain part of future packaging validation.
+
+## SDDM login-manager integration
+
+Omarchy currently uses SDDM as the display manager. Arch's documented SDDM configuration supports fingerprint-first authentication by placing `auth sufficient pam_fprintd.so` at the top of `/etc/pam.d/sddm`; password authentication remains available when the fingerprint module does not succeed. See the ArchWiki SDDM and Fprint pages for the underlying PAM configuration guidance.
+
+The project helper `install/configure-sddm-fingerprint.sh` makes this change reversibly. It backs up `/etc/pam.d/sddm`, removes active `autologin.conf*` files from `/etc/sddm.conf.d/`, and does not restart SDDM automatically. This matters because the installed machine currently has an `autologin.conf.disabled` file that SDDM is nevertheless parsing as an autologin configuration.
+
+The helper is intentionally separate from Omarchy's package-owned `/usr/share/omarchy/` files. Run it from the project checkout with `./install/configure-sddm-fingerprint.sh --enable` when ready; use `--restore` to recover the latest backed-up SDDM state.
+
+### GNOME Keyring interaction
+
+Fingerprint authentication proves possession of the enrolled biometric but does not populate `PAM_AUTHTOK`. GNOME Keyring therefore cannot automatically unlock a password-protected Login keyring from the fingerprint alone. This is a fundamental PAM/keyring limitation, not an FTE4800-specific failure.
+
+This machine currently has an intentionally passwordless Omarchy `Default_keyring` plus a separate `Login` collection containing application credentials. The safe approach is not to delete or silently weaken that collection: first establish the SDDM fingerprint-login path, then migrate any credentials that need unattended access into the intended passwordless/default collection or retain password login when the protected keyring must be unlocked.
+
+## Lock-screen fingerprint investigation
+
+The installed Omarchy lock implementation uses a Quickshell `PamContext` against `/etc/pam.d/omarchy-lock-fingerprint`, with bounded retry logic. Current Omarchy reports document several separate failure classes around the same path: the lock screen deliberately blanks displays about five seconds after locking, DPMS wake can cause the interface to re-blank or lose focus, and fingerprint attempts can race suspend/resume.
+
+On this machine the fprintd/vendor-engine logs show successful `Match!` results and clean verify completion, so the intermittent blank is not currently attributable to a fingerprint-engine failure. A controlled reproduction is still required to distinguish the normal five-second display blank from a Wayland/output-loss condition before changing the lock plugin.
 ## Why the Omarchy change should be upstream
 
 The current Omarchy hardware detector is USB-centric. Current upstream issue #12588 documents the same class of failure for an SPI fingerprint reader that already works through fprintd: the wizard rejects the reader before setup.
