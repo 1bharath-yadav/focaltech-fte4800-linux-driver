@@ -135,6 +135,21 @@ Package-owned runtime:
     /usr/lib/systemd/system/fprintd.service.d/00-fte4800.conf
     /usr/lib/udev/rules.d/70-focal-spi.rules
 
+The proprietary engine is not stored in Git. packaging/arch/PKGBUILD fetches
+the FocalTech Windows driver package from the Microsoft Update Catalog at build
+time, extracts ftWbioEngineAdapter.dll, and verifies the pinned SHA-256.
+
+Source package:
+- FocalTech Electronics(ShenZhen)Co.,Ltd - Biometric - 2.2.3.79
+- Hardware ID: ACPI\\FTE4800
+- Update ID: 7afa06b0-6562-4a5e-87e6-4cd4cc9129c5
+- CAB SHA-256: fd589acfa49cca3a1fde87190e9f84ebfb62dee7ecd282007a1b4b6bbd0a3faf
+- DLL SHA-256: 2af887cb0925a29757b9f217f656a9963246ba7770dcc4c68e689ccc6505f06b
+
+The project does not claim redistribution rights for the proprietary DLL.
+Builds therefore obtain it directly from the vendor's published Windows driver
+package rather than committing the binary to this repository.
+
 ## Updating libfprint
 
 Do not pin to the historical project development commit.

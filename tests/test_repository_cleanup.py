@@ -61,6 +61,15 @@ class RepositoryCleanupTests(unittest.TestCase):
         for pattern in required_patterns:
             self.assertIn(pattern, gitignore)
 
+    def test_vendor_engine_is_fetched_and_verified_at_build_time(self):
+        pkgbuild = (ROOT / "packaging" / "arch" / "PKGBUILD").read_text()
+        self.assertFalse((ROOT / "packaging" / "arch" / "ftWbioEngineAdapter.dll").exists())
+        self.assertIn("catalog.s.download.windowsupdate.com", pkgbuild)
+        self.assertIn("fte4800-windows.cab", pkgbuild)
+        self.assertIn("cabextract", pkgbuild)
+        self.assertIn("fd589acfa49cca3a1fde87190e9f84ebfb62dee7ecd282007a1b4b6bbd0a3faf", pkgbuild)
+        self.assertIn("2af887cb0925a29757b9f217f656a9963246ba7770dcc4c68e689ccc6505f06b", pkgbuild)
+
     def test_active_driver_and_tools_have_no_synthetic_residue(self):
         active_files = [
             ROOT / "focal_spi.c",

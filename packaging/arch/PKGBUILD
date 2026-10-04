@@ -13,12 +13,13 @@
 # fprintd itself is NOT patched or rebuilt. The stock Arch fprintd package is
 # used as the D-Bus/PAM daemon.
 #
-# This is intentionally a local package: the vendor DLL is proprietary and
-# is consumed from the preserved driver archive in this repository.
+# The vendor DLL is proprietary. It is fetched from the public Microsoft
+# Update Catalog package for ACPI\FTE4800 at build time and hash-verified;
+# it is not committed to this repository.
 
 pkgname=focaltech-fte4800
 pkgver=1.0.3
-pkgrel=2
+pkgrel=3
 pkgdesc='Complete FocalTech FTE4800/FT9368 Linux fingerprint driver stack'
 arch=('x86_64')
 url='https://github.com/1bharath-yadav/focaltech-fte4800-linux-driver'
@@ -33,6 +34,7 @@ depends=(
   'pixman'
 )
 makedepends=(
+  'cabextract'
   'git'
   'glib2-devel'
   'gobject-introspection'
@@ -50,19 +52,47 @@ options=('!debug')
 
 # Bump this to the next upstream release; prepare() reapplies our downstream patch.
 _libfprint_version='1.94.10'
+
+# Microsoft Update Catalog:
+#   Driver: FocalTech Electronics(ShenZhen)Co.,Ltd - Biometric - 2.2.3.79
+#   Hardware ID: ACPI\FTE4800
+#   Update ID: 7afa06b0-6562-4a5e-87e6-4cd4cc9129c5
+_vendor_cab_url='https://catalog.s.download.windowsupdate.com/d/msdownload/update/driver/drvs/2023/03/e09de0fb-1dd7-4921-8b47-d78ddee90e1d_fb450d406219a3326ab0703613361b35506a559c.cab'
+_vendor_cab_sha256='fd589acfa49cca3a1fde87190e9f84ebfb62dee7ecd282007a1b4b6bbd0a3faf'
 _vendor_sha256='2af887cb0925a29757b9f217f656a9963246ba7770dcc4c68e689ccc6505f06b'
 
 source=(
   "git+https://gitlab.freedesktop.org/libfprint/libfprint.git#tag=v${_libfprint_version}"
-  'ftWbioEngineAdapter.dll'
+  "fte4800-windows.cab::${_vendor_cab_url}"
 )
 sha256sums=(
   'SKIP'
-  "${_vendor_sha256}"
+  "${_vendor_cab_sha256}"
 )
+noextract=('fte4800-windows.cab')
 
 prepare() {
   cd "${srcdir}/libfprint"
+
+  # Extract only the vendor engine from the Microsoft Catalog CAB.
+  # The CAB and the extracted DLL are both pinned by SHA-256.
+  rm -rf "${srcdir}/fte4800-vendor"
+  mkdir -p "${srcdir}/fte4800-vendor"
+  cabextract -q -d "${srcdir}/fte4800-vendor" "${srcdir}/fte4800-windows.cab"
+
+  local vendor_dll="${srcdir}/fte4800-vendor/ftWbioEngineAdapter.dll"
+  [[ -f "${vendor_dll}" ]] || {
+    echo "ERROR: ftWbioEngineAdapter.dll missing from Microsoft driver CAB" >&2
+    return 1
+  }
+
+  local actual_sha
+  actual_sha="$(sha256sum "${vendor_dll}" | awk '{print $1}')"
+  [[ "${actual_sha}" == "${_vendor_sha256}" ]] || {
+    echo "ERROR: unexpected vendor DLL SHA256: ${actual_sha}" >&2
+    return 1
+  }
+  cp -f "${vendor_dll}" "${srcdir}/ftWbioEngineAdapter.dll"
 
   # Build the current upstream libfprint release first, then apply our
   # downstream FTE4800 integration on top.
@@ -71,24 +101,22 @@ prepare() {
   # Refuse to build if the checked-in production sources and the package patch
   # ever diverge.
   for file in fte4800.c vendor-engine.c vendor-engine.h; do
-    cmp -s       "${startdir}/../../libfprint/drivers/${file}"       "${srcdir}/libfprint/libfprint/drivers/${file}" || {
+    cmp -s \
+      "${startdir}/../../libfprint/drivers/${file}" \
+      "${srcdir}/libfprint/libfprint/drivers/${file}" || {
       echo "ERROR: patched libfprint ${file} differs from canonical source" >&2
       return 1
     }
   done
-
-  local actual_sha
-  actual_sha="$(sha256sum "${srcdir}/ftWbioEngineAdapter.dll" | awk '{print $1}')"
-  [[ "${actual_sha}" == "${_vendor_sha256}" ]] || {
-    echo "ERROR: unexpected vendor DLL SHA256: ${actual_sha}" >&2
-    return 1
-  }
 }
 
 build() {
   cd "${srcdir}/libfprint"
 
-  meson setup build     --prefix=/usr     -Ddoc=false     -Ddrivers=fte4800
+  meson setup build \
+    --prefix=/usr \
+    -Ddoc=false \
+    -Ddrivers=fte4800
 
   ninja -C build -j2
 }
@@ -102,7 +130,11 @@ package() {
   # Kernel transport source for DKMS. dkms itself installs/rebuilds it using
   # its pacman hook; this package does not invoke dkms from an install hook.
   install -d "${dkms_dir}/protocol"
-  install -m0644     "${startdir}/../../focal_spi.c"     "${startdir}/../../Makefile"     "${startdir}/../../dkms.conf"     "${dkms_dir}/"
+  install -m0644 \
+    "${startdir}/../../focal_spi.c" \
+    "${startdir}/../../Makefile" \
+    "${startdir}/../../dkms.conf" \
+    "${dkms_dir}/"
   install -m0644 "${startdir}/../../protocol/"*.h "${dkms_dir}/protocol/"
 
   # Private native libfprint so the distro libfprint is left untouched.
@@ -112,29 +144,40 @@ package() {
   ln -s libfprint-2.so.2 "${libdir}/libfprint-2.so"
 
   # Proprietary FocalTech engine used by vendor-engine.c.
-  install -Dm0644 "${srcdir}/ftWbioEngineAdapter.dll"     "${runtime_dir}/ftWbioEngineAdapter.dll"
+  install -Dm0644 \
+    "${srcdir}/ftWbioEngineAdapter.dll" \
+    "${runtime_dir}/ftWbioEngineAdapter.dll"
 
   # Sensor permissions.
-  install -Dm0644 "${startdir}/../../install/70-focal-spi.rules"     "${pkgdir}/usr/lib/udev/rules.d/70-focal-spi.rules"
+  install -Dm0644 \
+    "${startdir}/../../install/70-focal-spi.rules" \
+    "${pkgdir}/usr/lib/udev/rules.d/70-focal-spi.rules"
 
   # Use stock Arch fprintd, but run it with the private libfprint and vendor DLL.
   install -d "${pkgdir}/usr/lib/systemd/system/fprintd.service.d"
-  cat > "${pkgdir}/usr/lib/systemd/system/fprintd.service.d/00-fte4800.conf" <<EOF
+  cat > "${pkgdir}/usr/lib/systemd/system/fprintd.service.d/00-fte4800.conf" <<EOF2
 [Service]
 Environment="LD_LIBRARY_PATH=/usr/lib/${pkgname}/lib"
 Environment="FTE4800_ENGINE_DLL=/usr/lib/${pkgname}/ftWbioEngineAdapter.dll"
 DeviceAllow=/dev/focal_moh_spi rw
-EOF
+EOF2
 
-  install -Dm0644 "${startdir}/../../LICENSES/GPL-2.0-only.txt"     "${pkgdir}/usr/share/licenses/${pkgname}/GPL-2.0-only.txt"
-  install -Dm0644 "${startdir}/../../LICENSES/LGPL-2.1-or-later.txt"     "${pkgdir}/usr/share/licenses/${pkgname}/LGPL-2.1-or-later.txt"
+  install -Dm0644 \
+    "${startdir}/../../LICENSES/GPL-2.0-only.txt" \
+    "${pkgdir}/usr/share/licenses/${pkgname}/GPL-2.0-only.txt"
+  install -Dm0644 \
+    "${startdir}/../../LICENSES/LGPL-2.1-or-later.txt" \
+    "${pkgdir}/usr/share/licenses/${pkgname}/LGPL-2.1-or-later.txt"
 
-  cat > "${pkgdir}/usr/share/licenses/${pkgname}/VENDOR-DLL-NOTICE" <<EOF
-This package contains ftWbioEngineAdapter.dll from the original FocalTech
-Windows driver package. Redistribution terms were not established by this
-project. This PKGBUILD is intended as a local package build from the
-preserved research archive.
+  cat > "${pkgdir}/usr/share/licenses/${pkgname}/VENDOR-DLL-NOTICE" <<EOF2
+This package obtains ftWbioEngineAdapter.dll from the FocalTech
+Windows driver package published through the Microsoft Update Catalog for
+ACPI\FTE4800, driver version 2.2.3.79.
 
-SHA256: ${_vendor_sha256}
-EOF
+The project does not claim redistribution rights for the proprietary DLL.
+The PKGBUILD fetches it at build time and verifies its SHA256 before packaging.
+
+CAB SHA256: ${_vendor_cab_sha256}
+DLL SHA256: ${_vendor_sha256}
+EOF2
 }
