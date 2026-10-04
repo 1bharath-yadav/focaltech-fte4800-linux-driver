@@ -19,6 +19,7 @@
 #include <sys/mman.h>
 #include <sys/syscall.h>
 #include <asm/prctl.h>
+#include <pthread.h>
 
 typedef uint8_t u8; typedef uint16_t u16; typedef uint32_t u32; typedef uint64_t u64;
 #define MS __attribute__((ms_abi))
@@ -49,6 +50,36 @@ static void *g_tls_array[64];
 static u8  g_tls_block[0x2000];
 
 static int set_gs(void *base){ return syscall(SYS_arch_prctl, ARCH_SET_GS, base); }
+
+/* The vendor CRT uses the Windows TEB stack bounds from %gs:+0x08/+0x10
+ * for __chkstk probing. Those bounds must describe the *current Linux thread*
+ * stack, especially when the engine is called from a GLib worker thread.
+ * Keeping the old dummy bounds causes the vendor's stack probe to fault at
+ * 0x1800493f8 before VerifyFeatureSet can execute. */
+static int arm_teb_for_current_thread(void)
+{
+  pthread_attr_t attr;
+  void *stack_base = NULL;
+  size_t stack_size = 0;
+  size_t guard_size = 0;
+
+  if (pthread_getattr_np(pthread_self(), &attr) == 0)
+    {
+      (void) pthread_attr_getstack(&attr, &stack_base, &stack_size);
+      (void) pthread_attr_getguardsize(&attr, &guard_size);
+      pthread_attr_destroy(&attr);
+
+      if (stack_base && stack_size)
+        {
+          uintptr_t low = (uintptr_t) stack_base + guard_size;
+          uintptr_t high = (uintptr_t) stack_base + stack_size;
+          *(u64*)(g_teb + 0x08) = high; /* NtTib.StackBase */
+          *(u64*)(g_teb + 0x10) = low;  /* NtTib.StackLimit */
+        }
+    }
+
+  return set_gs(g_teb);
+}
 
 // ---------- import shim table ----------
 typedef struct { const char *name; void *fn; } Shim;
@@ -423,7 +454,7 @@ static int load_pe(void){
   *(u64*)(g_teb+0x10)=(u64)g_teb;            // StackLimit
   *(u64*)(g_teb+0x58)=(u64)g_tls_array;      // ThreadLocalStoragePointer
   *(u64*)(g_teb+0x60)=(u64)g_peb;            // PEB
-  if(set_gs(g_teb)!=0){ perror("arch_prctl SET_GS"); return -1; }
+  if(arm_teb_for_current_thread()!=0){ perror("arch_prctl SET_GS"); return -1; }
   fprintf(stderr,"[loader] TEB installed in %%gs\n");
 
   // run entry point (DllMain via CRT startup)
@@ -554,7 +585,7 @@ static int g_loaded = 0;
 int ft_engine_open(const char *dll_path){
   /* Re-arm the %gs TEB on re-open: arch_prctl is per-thread and fprintd
    * re-opens the device (often on a different thread) between operations. */
-  if(g_loaded){ set_gs(g_teb); return 0; }
+  if(g_loaded){ arm_teb_for_current_thread(); return 0; }
   g_dllpath = dll_path ? dll_path : "ftWbioEngineAdapter.dll";
   register_shims();
   if(load_pe()!=0) return -1;
@@ -584,7 +615,7 @@ void ft_engine_close(void){
 }
 
 uint32_t ft_engine_accept(const uint8_t *img,int sw,int sh,uint8_t purpose){
-  set_gs(g_teb);   /* ensure %gs points at our TEB on this thread */
+  arm_teb_for_current_thread();   /* ensure %gs + stack bounds describe this thread */
   prepare_frame((const u8*)img, sw, sh);
   int total=build_bir(small, ENG_W, ENG_H);
   u32 rej=0;
@@ -593,14 +624,14 @@ uint32_t ft_engine_accept(const uint8_t *img,int sw,int sh,uint8_t purpose){
 }
 
 void ft_engine_enroll_begin(void){
-  set_gs(g_teb);
+  arm_teb_for_current_thread();
   g_have_record=0; g_rec_tsize=0;
   u64 (MS *Create)(void*)=*(void**)((u8*)g_iface+32+12*8);
   Create(pipeline);
 }
 
 int ft_engine_enroll_update(void){
-  set_gs(g_teb);
+  arm_teb_for_current_thread();
   u64 (MS *Update)(void*,void*)=*(void**)((u8*)g_iface+32+13*8);
   u64 (MS *Status)(void*,void*)=*(void**)((u8*)g_iface+32+14*8);
   u32 urej=0; u64 uhr=Update(pipeline,&urej);
@@ -612,7 +643,7 @@ int ft_engine_enroll_update(void){
 static void fill_identity(u8 *id){ memset(id,0,76); *(u32*)id=3; for(int i=0;i<16;i++) id[8+i]=0xA0+i; }
 
 int ft_engine_enroll_commit(uint8_t **out,size_t *outlen){
-  set_gs(g_teb);
+  arm_teb_for_current_thread();
   u8 id[76]; fill_identity(id);
   g_have_record=0;
   u64 (MS *Commit)(void*,void*,u8)=*(void**)((u8*)g_iface+32+17*8);
@@ -623,7 +654,7 @@ int ft_engine_enroll_commit(uint8_t **out,size_t *outlen){
 }
 
 int ft_engine_verify(const uint8_t *tmpl,size_t tmpllen){
-  set_gs(g_teb);
+  arm_teb_for_current_thread();
   if(tmpllen==0 || tmpllen>sizeof g_rec_template) return 0;
   memcpy(g_rec_template, tmpl, tmpllen); g_rec_tsize=tmpllen; g_have_record=1;
   u8 id[76]; fill_identity(id);
