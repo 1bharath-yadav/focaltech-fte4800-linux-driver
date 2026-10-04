@@ -35,7 +35,7 @@ fi
 if [ ! -e "/lib/modules/$(uname -r)/build" ]; then
   echo
   echo "Kernel headers for $(uname -r) are missing."
-  echo "Install the headers package matching the running kernel, then rerun install/install.sh --check."
+  echo "Install the headers package matching the running kernel, then rebuild the package."
 fi
 
 echo "Build prerequisites check complete."

@@ -52,7 +52,7 @@ index 0000000..6553b4b
 +#define FTE4800_VENDOR_MAGIC       "FTV1"
 +#define FTE4800_VENDOR_HEADER       8
 +#define FTE4800_VENDOR_MAX_TEMPLATE (1024 * 1024)
-+#define FTE4800_VENDOR_DLL         "/usr/local/lib/fte4800/ftWbioEngineAdapter.dll"
++#define FTE4800_VENDOR_DLL         "/usr/lib/focaltech-fte4800/ftWbioEngineAdapter.dll"
 +
 +/* --------------------------------------------------------------------------
 + * Device instance data

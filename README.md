@@ -181,16 +181,12 @@ Do not rebuild or patch fprintd unless an independently reproduced fprintd defec
 
 The install scripts remain useful for development and recovery.
 
-    install/install.sh
         kernel transport only
 
-    install/build-libfprint.sh
         isolated development libfprint build
 
-    install/install-native-fte4800.sh
         former manual native deployment
 
-    install/build-fprintd.sh
         historical custom fprintd build; not production
 
 Use the package for normal installation.

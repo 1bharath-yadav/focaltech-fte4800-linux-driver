@@ -169,8 +169,6 @@ Fingerprint authentication is userspace PAM. It is not an early-LUKS unlock mech
 
 The old manual deployment used:
 
-    /opt/fte4800
-    /usr/local/lib/fte4800
 
 The package uses:
 

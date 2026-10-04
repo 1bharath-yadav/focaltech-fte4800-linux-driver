@@ -2,17 +2,18 @@
 set -euo pipefail
 
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
-PROJECT_ROOT=$(cd "$ROOT/../.." && pwd)
-SRC="${LIBFPRINT_SRC:-$PROJECT_ROOT/libfprint-upstream}"
-BUILD="${LIBFPRINT_BUILD:-$SRC/build-fte}"
-OUT="${TMPDIR:-/tmp}/fte4800-native-live-test"
+LIBDIR="\${FTE4800_LIBDIR:-/usr/lib/focaltech-fte4800/lib}"
+OUT="\${TMPDIR:-/tmp}/fte4800-native-live-test"
 
-[ -x "$BUILD/libfprint/libfprint-2.so.2.0.0" ] ||
-  { echo "Missing native libfprint build: $BUILD" >&2; echo "Run: $ROOT/install/build-libfprint.sh $SRC" >&2; exit 1; }
+[ -s "$LIBDIR/libfprint-2.so.2.0.0" ] || {
+  echo "Missing packaged native libfprint: $LIBDIR/libfprint-2.so.2.0.0" >&2
+  echo "Build/install focaltech-fte4800 first, or set FTE4800_LIBDIR." >&2
+  exit 1
+}
 
 gcc -O2 -o "$OUT" "$ROOT/tools/native-live-test.c" \
-  -Wl,--allow-shlib-undefined \
-  $(pkg-config --cflags --libs libfprint-2) -ldl -lpthread
+  $(pkg-config --cflags --libs libfprint-2) \
+  -L"$LIBDIR" -Wl,-rpath,"$LIBDIR" -ldl -lpthread
 
-LD_LIBRARY_PATH="$BUILD/libfprint${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+LD_LIBRARY_PATH="$LIBDIR\${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
   exec "$OUT"

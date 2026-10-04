@@ -6,7 +6,6 @@ DRIVER = (ROOT / "libfprint" / "drivers" / "fte4800.c").read_text()
 VENDOR_ENGINE = (ROOT / "libfprint" / "drivers" / "vendor-engine.c").read_text()
 VENDOR_HEADER = (ROOT / "libfprint" / "drivers" / "vendor-engine.h").read_text()
 PATCH = (ROOT / "libfprint-patches" / "0001-native-fte4800-ft9368-driver.patch").read_text()
-SDDM_HELPER = (ROOT / "install" / "configure-sddm-fingerprint.sh").read_text()
 
 
 class LibfprintIntegrationTests(unittest.TestCase):
@@ -34,7 +33,7 @@ class LibfprintIntegrationTests(unittest.TestCase):
         self.assertIn("#define FTE4800_ENROLL_STAGES         12", DRIVER)
         self.assertIn('FTE4800_VENDOR_MAGIC       "FTV1"', DRIVER)
         self.assertIn("FTE4800_VENDOR_MAX_TEMPLATE", DRIVER)
-        self.assertIn("/usr/local/lib/fte4800/ftWbioEngineAdapter.dll", DRIVER)
+        self.assertIn("/usr/lib/focaltech-fte4800/ftWbioEngineAdapter.dll", DRIVER)
         self.assertIn("ft_engine_enroll_commit", DRIVER)
         self.assertIn("fte4800_get_print_template", DRIVER)
 
@@ -85,13 +84,6 @@ class LibfprintIntegrationTests(unittest.TestCase):
         self.assertIn("StackLimit", VENDOR_ENGINE)
         self.assertIn("arm_teb_for_current_thread", VENDOR_ENGINE)
 
-    def test_sddm_helper_is_reversible_and_does_not_restart_display_manager(self):
-        self.assertIn("--enable", SDDM_HELPER)
-        self.assertIn("--restore", SDDM_HELPER)
-        self.assertIn("BACKUP_ROOT=/var/lib/fte4800/sddm-fingerprint", SDDM_HELPER)
-        self.assertIn("autologin.conf*", SDDM_HELPER)
-        self.assertIn("auth        sufficient pam_fprintd.so", SDDM_HELPER)
-        self.assertNotIn("systemctl restart sddm", SDDM_HELPER)
 
     def test_no_old_frame_matcher_remains_active(self):
         self.assertNotIn("fte4800_match_frames", DRIVER)
