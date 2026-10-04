@@ -16,10 +16,30 @@ git -C "$UPSTREAM" rev-parse --is-inside-work-tree >/dev/null 2>&1 || {
   echo "ERROR: libfprint source tree not found: $UPSTREAM" >&2; exit 1;
 }
 
-git -C "$UPSTREAM" worktree add --detach "$TMP" HEAD >/dev/null
-for file in fte4800.c fte4800-match.c fte4800-match.h; do
+git -C "$UPSTREAM" worktree add --detach "$TMP" "$BASE" >/dev/null
+for file in fte4800.c vendor-engine.c vendor-engine.h; do
   cp "$ROOT/libfprint/drivers/$file" "$TMP/libfprint/drivers/$file"
 done
+
+python3 - "$TMP/libfprint/meson.build" <<'PY2'
+from pathlib import Path
+import sys
+p = Path(sys.argv[1])
+s = p.read_text()
+single = "    'fte4800' : files('drivers/fte4800.c'),\n"
+multi = "    'fte4800' : files(\n        'drivers/fte4800.c',\n"
+vendor = "        'drivers/vendor-engine.c',\n"
+if vendor not in s:
+    if single in s:
+        s = s.replace(single, "    'fte4800' : files(\n        'drivers/fte4800.c',\n        'drivers/vendor-engine.c',\n    ),\n", 1)
+    elif multi in s:
+        s = s.replace(multi, multi + vendor, 1)
+    else:
+        raise SystemExit("fte4800 meson source entry not found")
+    p.write_text(s)
+PY2
+
+git -C "$TMP" add -N libfprint/drivers/vendor-engine.c libfprint/drivers/vendor-engine.h
 
 git -C "$TMP" diff --check "$BASE" --
 git -C "$TMP" diff --binary "$BASE" -- > "$PATCH"

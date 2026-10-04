@@ -160,13 +160,15 @@ Only the fprintd service is directed to this library through a systemd drop-in. 
 
 See `docs/libfprint-upstream.md` before preparing an upstream merge request.
 
-## Native matcher
+## Native FocalTech matching
 
-The FT9368 provides only 64x80 imaging data. The current driver retains fifteen individual raw enrollment frames and compares a probe against the stored samples. Each accepted stage is tied to a confirmed physical press, with finger-release gating between stages.
+The production driver delegates fingerprint enrollment and verification to FocalTech's native `ftWbioEngineAdapter.dll`, executed directly on Linux with the in-process PE/WinBio bridge in `libfprint/drivers/vendor-engine.c`.
 
-The matcher applies local background/ridge normalization, a validity mask, bounded rotation and translation search, overlap-aware normalized correlation, and best-of-fifteen scoring. The current threshold is `0.75`; it is explicitly a research threshold and is not security-certified.
+The engine is configured for the sensor's native 64x80 image geometry and produces an opaque vendor template stored in `FpPrint` using the `FTV1` container. The old NCC/raw-frame matcher is no longer used by the active driver.
 
-See `docs/matching.md` for the algorithm, evidence, limitations, and improvement roadmap. The Python reference implementation is `tools/matcher_ref.py`.
+The vendor DLL is kept under the local research archive because its redistribution status is not established. The installer copies the exact verified DLL to `/opt/fte4800/vendor/ftWbioEngineAdapter.dll` after checking its SHA-256.
+
+See `docs/matching.md` for the current architecture and validation evidence.
 
 ## Omarchy integration
 

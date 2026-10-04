@@ -37,7 +37,7 @@ git -C "$SRC" rev-parse --is-inside-work-tree >/dev/null 2>&1 ||
 
 "$ROOT/install/link-libfprint-source.sh" "$SRC"
 
-for file in fte4800.c fte4800-match.c fte4800-match.h; do
+for file in fte4800.c vendor-engine.c vendor-engine.h; do
   link="$SRC/libfprint/drivers/$file"
   [ -L "$link" ] || die "expected source symlink is missing: $link"
 done

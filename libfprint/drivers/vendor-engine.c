@@ -459,13 +459,13 @@ static u8 birbuf[262144];
 
 static u8 small[262144];
 static void resize(u8*src,int sw,int sh,int dw,int dh){ for(int y=0;y<dh;y++)for(int x=0;x<dw;x++) small[y*dw+x]=src[(y*sh/dh)*sw+(x*sw/dw)]; }
-// Prepare an ENG_W x ENG_H frame in `small`. If the source is at least as large,
-// crop the CENTERED window (preserves true ridge geometry — no aspect distortion);
-// otherwise scale. FT9201_SCALE forces the old scale path for A/B testing.
+// Prepare the vendor engine's 64x80 frame. Native FTE4800 captures are a direct
+// copy; larger inputs are centre-cropped and smaller inputs are resized for the
+// standalone harness.
 #define FRAME_W 64
 #define FRAME_H 80
 static void prepare_frame(const u8*src,int sw,int sh){
-  if(sw>=FRAME_W && sh>=FRAME_H && !getenv("FT9201_SCALE")){
+  if(sw>=FRAME_W && sh>=FRAME_H){
     int ox=(sw-FRAME_W)/2, oy=(sh-FRAME_H)/2;
     for(int y=0;y<FRAME_H;y++) for(int x=0;x<FRAME_W;x++) small[y*FRAME_W+x]=src[(oy+y)*sw+(ox+x)];
   } else {

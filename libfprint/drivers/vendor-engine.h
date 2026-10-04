@@ -1,7 +1,7 @@
 /* SPDX-License-Identifier: LGPL-2.1-or-later */
 /* vendor-engine.h — native wrapper around the FocalTech WinBio matcher DLL.
  * Loads ftWbioEngineAdapter.dll in-process (no Wine) and exposes enroll/verify.
- * Single-device (global state); fine for one FT9201 reader. */
+ * Single-device (global state); fine for one FTE4800 reader. */
 #ifndef FT_ENGINE_H
 #define FT_ENGINE_H
 #include <stddef.h>

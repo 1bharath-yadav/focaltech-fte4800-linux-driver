@@ -17,20 +17,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  *
  * Matching strategy:
- *   NBIS/Bozorth3 does not produce a usable signal on this tiny 64×80 sensing
- *   area, so this driver uses a local ridge-normalisation matcher with explicit
- *   rotation/translation search. Enrollment stores fifteen raw frames; verification
- *   compares the probe against all fifteen and uses the best alignment score.
- *
- *   The threshold is deliberately conservative and remains an experimental
- *   value until a larger multi-finger dataset establishes FAR/FRR bounds.
+ *   Enrollment and verification are delegated to FocalTech's native WinBio
+ *   engine adapter, executed directly on Linux by vendor-engine.c. The engine
+ *   consumes the sensor's native 64×80 grayscale frame and stores an opaque
+ *   vendor template in the FpPrint payload.
  */
 
 #define FP_COMPONENT "fte4800"
 
 #include "drivers_api.h"
 #include "fte4800.h"
-#include "fte4800-match.h"
+#include "vendor-engine.h"
 
 #include <fcntl.h>
 #include <sys/ioctl.h>
@@ -42,14 +39,14 @@
 /* --------------------------------------------------------------------------
  * Parameters
  * -------------------------------------------------------------------------- */
-#define FTE4800_MATCH_THRESHOLD    0.64f /* primary single-frame match boundary */
-#define FTE4800_TOP2_THRESHOLD     0.58f /* top-2 cluster consensus boundary */
-#define FTE4800_TOP2_MIN_BEST      0.55f /* consensus requires best to be at least this */
-#define FTE4800_ENROLL_STAGES         15 /* distinct raw samples retained */
-#define FTE4800_TOUCH_VAR_THRESH     350 /* blank-frame boundary */
-#define FTE4800_ENROLL_MIN_VAR      1200 /* minimum usable enrollment contrast */
-#define FTE4800_POLL_MS             1000 /* limit idle capture rate to ~1 Hz */
-#define FTE4800_TEMPLATE_MAGIC      "FTE2"
+#define FTE4800_ENROLL_STAGES         12 /* FocalTech engine maximum enrollment samples */
+#define FTE4800_TOUCH_VAR_THRESH     350
+#define FTE4800_ENROLL_MIN_VAR      1200
+#define FTE4800_POLL_MS             250
+#define FTE4800_VENDOR_MAGIC       "FTV1"
+#define FTE4800_VENDOR_HEADER       8
+#define FTE4800_VENDOR_MAX_TEMPLATE (1024 * 1024)
+#define FTE4800_VENDOR_DLL         "/opt/fte4800/vendor/ftWbioEngineAdapter.dll"
 
 /* --------------------------------------------------------------------------
  * Device instance data
@@ -61,9 +58,6 @@ struct _FpiDeviceFte4800
   int           spi_fd;
   gboolean      deactivating;
 
-  /* Raw enrollment samples are retained individually so finger motion does
-   * not blur the stored ridge pattern. */
-  guint8       *enroll_frames;
   gint          enroll_count;
 };
 
@@ -197,39 +191,17 @@ fte4800_image_has_signal (const guint8 *px, gsize n)
 static gboolean
 fte4800_image_is_good (const guint8 *px, gsize n)
 {
-  gsize sat_count = 0;
-  guint64 sum = 0;
-  FteTemplate t;
-
-  if (fpi_std_sq_dev (px, n) < FTE4800_ENROLL_MIN_VAR)
-    return FALSE;
-
-  for (gsize i = 0; i < n; i++)
-    {
-      if (px[i] >= 250)
-        sat_count++;
-      sum += px[i];
-    }
-
-  /* Reject if more than 15% of pixels are saturated (pressed too hard) */
-  if (sat_count > n * 15 / 100)
-    return FALSE;
-
-  /* Reject if average intensity indicates pressure collapse / flat blowout */
-  if (sum / n > 175)
-    return FALSE;
-
-  /* Check template ridge coverage and contrast */
-  fte_template_init (&t, px);
-  if (t.coverage < 0.60f || t.contrast < 25.0f)
-    return FALSE;
-
-  return TRUE;
+  /*
+   * Do not impose generic brightness/saturation heuristics here. Real FTE4800
+   * captures have a high mean and a large saturated region, while the vendor
+   * engine still classifies them as usable. The vendor engine is authoritative
+   * for fingerprint quality; this gate only rejects blank/low-contrast frames.
+   */
+  return fpi_std_sq_dev (px, n) >= FTE4800_ENROLL_MIN_VAR;
 }
 
-/* Forward declaration — fte4800_capture_frame_blocking is defined below after
- * the template and match helpers but is used by the finger-edge detectors
- * above them. */
+/* Forward declaration for the blocking capture helper used by the
+ * finger-edge detectors below. */
 static gboolean
 fte4800_capture_frame_blocking (FpiDeviceFte4800 *self, guint8 *frame);
 
@@ -328,112 +300,100 @@ fte4800_wait_finger_up (FpiDeviceFte4800 *self,
 }
 
 /* --------------------------------------------------------------------------
- * Template storage in FpPrint (fifteen raw 64x80 frames)
+ * Vendor template storage in FpPrint
  *
- * FTE2 layout: magic[4] + sample_count[1] + sample_count * 5120 bytes.
+ * FTV1 layout:
+ *   magic[4] + vendor_template_size_le32[4] + opaque vendor blob
+ * The vendor engine owns the internal fingerprint representation; libfprint
+ * stores it without interpreting or rewriting the template.
  * -------------------------------------------------------------------------- */
 
-static void
-fte4800_set_print_template (FpPrint *print,
-                            const guint8 *frames)
+static gboolean
+fte4800_engine_available (void)
 {
-  const gsize magic_len = strlen (FTE4800_TEMPLATE_MAGIC);
-  const gsize header = magic_len + 1;
-  const gsize payload = header + FTE4800_ENROLL_STAGES * FTE4800_RAW_PIXELS;
-  guint8 *buf = g_malloc (payload);
-  memcpy (buf, FTE4800_TEMPLATE_MAGIC, magic_len);
-  buf[magic_len] = FTE4800_ENROLL_STAGES;
+  const gchar *path = g_getenv ("FTE4800_ENGINE_DLL");
 
-  for (gint i = 0; i < FTE4800_ENROLL_STAGES; i++)
-    memcpy (buf + header + i * FTE4800_RAW_PIXELS,
-            frames + (gsize) i * FTE4800_RAW_PIXELS,
-            FTE4800_RAW_PIXELS);
+  return path && *path
+         ? g_file_test (path, G_FILE_TEST_IS_REGULAR)
+         : g_file_test (FTE4800_VENDOR_DLL, G_FILE_TEST_IS_REGULAR);
+}
 
-  GVariant *data = g_variant_new_fixed_array (G_VARIANT_TYPE_BYTE,
-                                              buf, payload, sizeof (guint8));
+static const gchar *
+fte4800_engine_path (void)
+{
+  const gchar *path = g_getenv ("FTE4800_ENGINE_DLL");
+  return path && *path ? path : FTE4800_VENDOR_DLL;
+}
+
+static gboolean
+fte4800_set_print_template (FpPrint *print,
+                            const guint8 *template,
+                            gsize template_len)
+{
+  gsize payload;
+  guint8 *buf;
+  GVariant *data;
+
+  if (!template || template_len == 0 || template_len > FTE4800_VENDOR_MAX_TEMPLATE)
+    return FALSE;
+
+  payload = FTE4800_VENDOR_HEADER + template_len;
+  buf = g_malloc (payload);
+  memcpy (buf, FTE4800_VENDOR_MAGIC, 4);
+  buf[4] = (guint8) (template_len & 0xff);
+  buf[5] = (guint8) ((template_len >> 8) & 0xff);
+  buf[6] = (guint8) ((template_len >> 16) & 0xff);
+  buf[7] = (guint8) ((template_len >> 24) & 0xff);
+  memcpy (buf + FTE4800_VENDOR_HEADER, template, template_len);
+
+  data = g_variant_new_fixed_array (G_VARIANT_TYPE_BYTE,
+                                     buf, payload, sizeof (guint8));
   fpi_print_set_type (print, FPI_PRINT_RAW);
   g_object_set (print, "fpi-data", data, NULL);
   g_free (buf);
+  return TRUE;
 }
 
 static guint8 *
-fte4800_get_print_frames (FpPrint *print)
+fte4800_get_print_template (FpPrint *print, gsize *template_len_out)
 {
   GVariant *data = NULL;
+  const guint8 *raw;
   gsize n = 0;
-  const gsize magic_len = strlen (FTE4800_TEMPLATE_MAGIC);
-  const gsize header = magic_len + 1;
-  const gsize expected = header + FTE4800_ENROLL_STAGES * FTE4800_RAW_PIXELS;
+  gsize len;
+
+  if (template_len_out)
+    *template_len_out = 0;
 
   g_object_get (print, "fpi-data", &data, NULL);
   if (!data)
     return NULL;
 
-  const guint8 *raw = g_variant_get_fixed_array (data, &n, sizeof (guint8));
-  guint8 *out = NULL;
-  if (raw && n == expected &&
-      memcmp (raw, FTE4800_TEMPLATE_MAGIC, magic_len) == 0 &&
-      raw[magic_len] == FTE4800_ENROLL_STAGES)
-    out = g_memdup2 (raw + header, n - header);
+  raw = g_variant_get_fixed_array (data, &n, sizeof (guint8));
+  if (!raw || n < FTE4800_VENDOR_HEADER ||
+      memcmp (raw, FTE4800_VENDOR_MAGIC, 4) != 0)
+    {
+      g_variant_unref (data);
+      return NULL;
+    }
 
+  len = (gsize) raw[4] |
+        ((gsize) raw[5] << 8) |
+        ((gsize) raw[6] << 16) |
+        ((gsize) raw[7] << 24);
+
+  if (len == 0 || len > FTE4800_VENDOR_MAX_TEMPLATE ||
+      n != FTE4800_VENDOR_HEADER + len)
+    {
+      g_variant_unref (data);
+      return NULL;
+    }
+
+  guint8 *out = g_memdup2 (raw + FTE4800_VENDOR_HEADER, len);
   g_variant_unref (data);
+  if (template_len_out)
+    *template_len_out = len;
   return out;
-}
-
-/* Score one probe against the fifteen enrolled frames.
- * Returns the highest aligned score, and optionally best index and second-best score. */
-static float
-fte4800_match_frames (const guint8 probe_raw[FTE4800_RAW_PIXELS],
-                      const guint8 *templates,
-                      gint *best_index,
-                      float *second_best_out)
-{
-  FteTemplate probe_t;
-  FteProbe probe;
-  float best = -1.0f;
-  float second = -1.0f;
-  gint best_i = -1;
-
-  fte_template_init (&probe_t, probe_raw);
-  if (probe_t.coverage <= 0.05f || probe_t.contrast <= 2.0f)
-    {
-      if (best_index)
-        *best_index = -1;
-      if (second_best_out)
-        *second_best_out = -1.0f;
-      return -1.0f;
-    }
-
-  fte_probe_init (&probe, &probe_t);
-
-  for (gint i = 0; i < FTE4800_ENROLL_STAGES; i++)
-    {
-      FteTemplate tmpl;
-      float score;
-
-      fte_template_init (&tmpl,
-                         templates + i * FTE4800_RAW_PIXELS);
-      if (tmpl.coverage <= 0.05f || tmpl.contrast <= 2.0f)
-        continue;
-
-      score = fte_match (&tmpl, &probe, NULL, NULL, NULL);
-      if (score > best)
-        {
-          second = best;
-          best = score;
-          best_i = i;
-        }
-      else if (score > second)
-        {
-          second = score;
-        }
-    }
-
-  if (best_index)
-    *best_index = best_i;
-  if (second_best_out)
-    *second_best_out = second;
-  return best;
 }
 
 /* --------------------------------------------------------------------------
@@ -441,7 +401,6 @@ fte4800_match_frames (const guint8 probe_raw[FTE4800_RAW_PIXELS],
  *
  * Triggers a physical scan, reads the resulting frame, and accepts it only
  * when the frame has sufficient contact contrast.
- * Returns TRUE on success; frame is filled with FTE4800_RAW_PIXELS bytes.
  * -------------------------------------------------------------------------- */
 static gboolean
 fte4800_capture_frame_blocking (FpiDeviceFte4800 *self, guint8 *frame)
@@ -501,7 +460,28 @@ fte4800_open (FpImageDevice *imgdev)
       return;
     }
 
-  fp_info ("FocalTech FT9368 (0x%04x) at %s", chip_id, path);
+  if (!fte4800_engine_available ())
+    {
+      close (fd);
+      err = fpi_device_error_new_msg (
+        FP_DEVICE_ERROR_NOT_SUPPORTED,
+        "FocalTech vendor engine not found at %s (set FTE4800_ENGINE_DLL to override)",
+        fte4800_engine_path ());
+      fpi_image_device_open_complete (imgdev, err);
+      return;
+    }
+
+  if (ft_engine_open (fte4800_engine_path ()) != 0)
+    {
+      close (fd);
+      err = fpi_device_error_new_msg (
+        FP_DEVICE_ERROR_GENERAL,
+        "FocalTech vendor engine failed to initialize");
+      fpi_image_device_open_complete (imgdev, err);
+      return;
+    }
+
+  fp_info ("FocalTech FT9368 (0x%04x) at %s; vendor engine ready", chip_id, path);
   self->spi_fd = fd;
 
   fpi_image_device_open_complete (imgdev, NULL);
@@ -541,8 +521,8 @@ fte4800_deactivate (FpImageDevice *imgdev)
 static void
 fte4800_change_state (FpImageDevice *imgdev, FpiImageDeviceState state)
 {
-  /* Enrollment, verification, and identification are implemented by the
-   * driver because the FT9368 image geometry needs its custom matcher. */
+  /* Enrollment and verification are implemented by the driver because the
+   * FT9368 uses the native FocalTech WinBio engine. */
   G_DEBUG_HERE ();
 }
 
@@ -562,17 +542,9 @@ fte4800_enroll_thread (GTask *task, gpointer src,
   FpiDeviceFte4800 *self = ed->self;
   guint8 frame[FTE4800_RAW_PIXELS];
 
-  g_clear_pointer (&self->enroll_frames, g_free);
-  self->enroll_frames = g_malloc0 ((gsize) FTE4800_ENROLL_STAGES *
-                                   FTE4800_RAW_PIXELS);
-  self->enroll_count = 0;
-
-  /* Reset the sensor to clear any stale frame data left from a prior
-   * operation.  After this point the image buffer is blank and every
-   * fte4800_capture_frame_blocking() will return Var≈0 until a real press. */
+  ft_engine_enroll_begin ();
   fte4800_hw_reset (self);
 
-  /* Immediately tell the UI that we are ready for the first scan. */
   fpi_device_report_finger_status (FP_DEVICE (self),
                                    FP_FINGER_STATUS_NONE | FP_FINGER_STATUS_NEEDED);
 
@@ -581,23 +553,19 @@ fte4800_enroll_thread (GTask *task, gpointer src,
       if (g_task_return_error_if_cancelled (task))
         return;
 
-      /* One physical press -> one fresh frame. */
       if (!fte4800_wait_finger_down (self, cancel, frame))
         {
           g_task_return_error_if_cancelled (task);
           return;
         }
 
-      fpi_device_report_finger_status (
-        FP_DEVICE (self), FP_FINGER_STATUS_PRESENT);
+      fpi_device_report_finger_status (FP_DEVICE (self), FP_FINGER_STATUS_PRESENT);
 
-      /* A press with insufficient signal is a retry of this SAME stage.
-       * It cannot increment enroll_count and must be followed by release. */
       if (!fte4800_image_is_good (frame, FTE4800_RAW_PIXELS))
         {
           GError *retry = fpi_device_retry_new_msg (
             FP_DEVICE_RETRY_GENERAL,
-            "Scan poor quality, too partial, or pressed too hard. Keep finger flat and press gently.");
+            "Scan quality is too low. Keep finger flat and press gently.");
           fpi_device_enroll_progress (FP_DEVICE (self),
                                       self->enroll_count, NULL, retry);
 
@@ -606,34 +574,79 @@ fte4800_enroll_thread (GTask *task, gpointer src,
               g_task_return_error_if_cancelled (task);
               return;
             }
-
           continue;
         }
 
-      /* ACCEPT: this is the only place where an enrollment stage advances. */
-      memcpy (self->enroll_frames +
-              (gsize) self->enroll_count * FTE4800_RAW_PIXELS,
-              frame, FTE4800_RAW_PIXELS);
-      self->enroll_count++;
-
-      fp_dbg ("Enroll stage %d/%d", self->enroll_count, FTE4800_ENROLL_STAGES);
-      fpi_device_enroll_progress (FP_DEVICE (self),
-                                  self->enroll_count, NULL, NULL);
-
-      if (self->enroll_count < FTE4800_ENROLL_STAGES)
+      guint32 accept_hr = ft_engine_accept (frame, FTE4800_RAW_WIDTH,
+                                            FTE4800_RAW_HEIGHT, 4);
+      if (accept_hr != 0)
         {
-          /* Do not enter WAIT_DOWN until a fresh capture sequence proves the
-           * finger is actually off the sensor. */
+          fp_warn ("FocalTech engine rejected enrollment capture: 0x%08x",
+                   accept_hr);
+          GError *retry = fpi_device_retry_new_msg (
+            FP_DEVICE_RETRY_GENERAL,
+            "Fingerprint capture rejected. Reposition your finger and try again.");
+          fpi_device_enroll_progress (FP_DEVICE (self),
+                                      self->enroll_count, NULL, retry);
+
           if (!fte4800_wait_finger_up (self, cancel, frame))
             {
               g_task_return_error_if_cancelled (task);
               return;
             }
+          continue;
+        }
+
+      gint update = ft_engine_enroll_update ();
+      if (update == 2)
+        {
+          fp_dbg ("FocalTech engine rejected enrollment sample");
+          GError *retry = fpi_device_retry_new_msg (
+            FP_DEVICE_RETRY_GENERAL,
+            "Fingerprint sample was too similar or unsuitable. Lift and try again.");
+          fpi_device_enroll_progress (FP_DEVICE (self),
+                                      self->enroll_count, NULL, retry);
+        }
+      else
+        {
+          self->enroll_count++;
+          fp_dbg ("Vendor enrollment sample %d/%d",
+                  self->enroll_count, FTE4800_ENROLL_STAGES);
+          fpi_device_enroll_progress (FP_DEVICE (self),
+                                      self->enroll_count, NULL, NULL);
+        }
+
+      if (update == 0)
+        {
+          if (!fte4800_wait_finger_up (self, cancel, frame))
+            {
+              g_task_return_error_if_cancelled (task);
+              return;
+            }
+          break;
+        }
+
+      if (!fte4800_wait_finger_up (self, cancel, frame))
+        {
+          g_task_return_error_if_cancelled (task);
+          return;
         }
     }
 
-  fte4800_set_print_template (ed->enroll_print, self->enroll_frames);
-  g_clear_pointer (&self->enroll_frames, g_free);
+  guint8 *vendor_template = NULL;
+  size_t vendor_template_len = 0;
+  if (ft_engine_enroll_commit (&vendor_template, &vendor_template_len) != 0 ||
+      !fte4800_set_print_template (ed->enroll_print,
+                                    vendor_template, vendor_template_len))
+    {
+      g_free (vendor_template);
+      g_task_return_new_error (
+        task, G_IO_ERROR, G_IO_ERROR_FAILED,
+        "FocalTech vendor enrollment could not be committed");
+      return;
+    }
+
+  g_free (vendor_template);
   g_task_return_boolean (task, TRUE);
 }
 
@@ -645,14 +658,13 @@ fte4800_enroll_done (GObject *src, GAsyncResult *res, gpointer task_data)
   GError     *err = NULL;
 
   if (!g_task_propagate_boolean (G_TASK (res), &err))
-    {
-      fpi_device_enroll_complete (dev, NULL, err);
-    }
+    fpi_device_enroll_complete (dev, NULL, err);
   else
     {
-      fp_info ("Enrollment complete (fifteen raw FT9368 samples stored)");
+      fp_info ("Enrollment complete using native FocalTech vendor template");
       fpi_device_enroll_complete (dev, g_object_ref (ed->enroll_print), NULL);
     }
+
   g_object_unref (ed->enroll_print);
   g_free (ed);
 }
@@ -665,11 +677,14 @@ fte4800_enroll (FpDevice *dev)
 
   fpi_device_get_enroll_data (dev, &enroll_print);
 
+  self->enroll_count = 0;
+
   EnrollData *ed = g_new0 (EnrollData, 1);
-  ed->self         = self;
+  ed->self = self;
   ed->enroll_print = g_object_ref (enroll_print);
 
-  GTask *task = g_task_new (dev, fpi_device_get_cancellable (dev), fte4800_enroll_done, ed);
+  GTask *task = g_task_new (dev, fpi_device_get_cancellable (dev),
+                            fte4800_enroll_done, ed);
   g_task_set_task_data (task, ed, NULL);
   g_task_run_in_thread (task, fte4800_enroll_thread);
   g_object_unref (task);
@@ -690,13 +705,22 @@ fte4800_verify_thread (GTask *task, gpointer src,
   VerifyData *vd = task_data;
   FpiDeviceFte4800 *self = vd->self;
   guint8 frame[FTE4800_RAW_PIXELS];
+  gsize template_len = 0;
+  g_autofree guint8 *vendor_template =
+    fte4800_get_print_template (vd->verify_print, &template_len);
+
+  if (!vendor_template)
+    {
+      g_task_return_new_error (
+        task, G_IO_ERROR, G_IO_ERROR_INVALID_DATA,
+        "Stored print is not an FTE4800 vendor template");
+      return;
+    }
 
   if (g_task_return_error_if_cancelled (task))
     return;
 
-  /* Reset sensor to clear any stale frame residue before waiting for a probe. */
   fte4800_hw_reset (self);
-
   fpi_device_report_finger_status (
     FP_DEVICE (self), FP_FINGER_STATUS_NONE | FP_FINGER_STATUS_NEEDED);
 
@@ -709,23 +733,26 @@ fte4800_verify_thread (GTask *task, gpointer src,
   fpi_device_report_finger_status (
     FP_DEVICE (self), FP_FINGER_STATUS_PRESENT);
 
-  guint8 *templates = fte4800_get_print_frames (vd->verify_print);
-  if (!templates)
+  guint32 accept_hr = ft_engine_accept (frame, FTE4800_RAW_WIDTH,
+                                         FTE4800_RAW_HEIGHT, 1);
+  if (accept_hr != 0)
     {
-      g_task_return_new_error (task, G_IO_ERROR, G_IO_ERROR_INVALID_DATA,
-                               "Stored print has no FT9368 raw templates");
+      fp_warn ("FocalTech engine rejected verification capture: 0x%08x",
+               accept_hr);
+      g_task_return_new_error (
+        task, G_IO_ERROR, G_IO_ERROR_FAILED,
+        "Fingerprint capture rejected by FocalTech engine");
       return;
     }
 
-  float second_score = -1.0f;
-  float score = fte4800_match_frames (frame, templates, NULL, &second_score);
-  g_free (templates);
+  gboolean match = ft_engine_verify (vendor_template, template_len);
+  if (!fte4800_wait_finger_up (self, cancel, frame))
+    {
+      g_task_return_error_if_cancelled (task);
+      return;
+    }
 
-  /* Pass both scores back as a heap-allocated array. */
-  float *result = g_new (float, 2);
-  result[0] = score;
-  result[1] = second_score;
-  g_task_return_pointer (task, result, g_free);
+  g_task_return_boolean (task, match);
 }
 
 static void
@@ -734,43 +761,16 @@ fte4800_verify_done (GObject *src, GAsyncResult *res, gpointer task_data)
   FpDevice   *dev = FP_DEVICE (src);
   VerifyData *vd  = task_data;
   GError     *err = NULL;
+  gboolean match = g_task_propagate_boolean (G_TASK (res), &err);
 
-  float *scores = g_task_propagate_pointer (G_TASK (res), &err);
   if (err)
-    {
-      fpi_device_verify_complete (dev, err);
-    }
+    fpi_device_verify_complete (dev, err);
   else
     {
-      float score = scores[0];
-      float second = scores[1];
-      float top2_avg = (score > 0.0f && second > 0.0f) ? (score + second) / 2.0f : score;
-      g_free (scores);
-
-      gboolean match = FALSE;
-      if (score >= FTE4800_MATCH_THRESHOLD)
-        {
-          fp_info ("Verify MATCH via primary gate (single best %.4f >= %.2f)",
-                   score, FTE4800_MATCH_THRESHOLD);
-          match = TRUE;
-        }
-      else if (score >= FTE4800_TOP2_MIN_BEST && top2_avg >= FTE4800_TOP2_THRESHOLD)
-        {
-          fp_info ("Verify MATCH via consensus gate (top-2 avg %.4f >= %.2f, best %.4f)",
-                   top2_avg, FTE4800_TOP2_THRESHOLD, score);
-          match = TRUE;
-        }
-
-      if (match)
-        {
-          fpi_device_verify_report (dev, FPI_MATCH_SUCCESS, NULL, NULL);
-        }
-      else
-        {
-          fp_info ("Verify NO-MATCH (best %.4f, second %.4f, top-2 avg %.4f)",
-                   score, second, top2_avg);
-          fpi_device_verify_report (dev, FPI_MATCH_FAIL, NULL, NULL);
-        }
+      fp_info ("Verify %s via native FocalTech vendor engine",
+               match ? "MATCH" : "NO-MATCH");
+      fpi_device_verify_report (
+        dev, match ? FPI_MATCH_SUCCESS : FPI_MATCH_FAIL, NULL, NULL);
       fpi_device_verify_complete (dev, NULL);
     }
 
@@ -781,16 +781,15 @@ fte4800_verify_done (GObject *src, GAsyncResult *res, gpointer task_data)
 static void
 fte4800_verify (FpDevice *dev)
 {
-  FpiDeviceFte4800 *self = FPI_DEVICE_FTE4800 (dev);
   FpPrint *print = NULL;
-
   fpi_device_get_verify_data (dev, &print);
 
   VerifyData *vd = g_new0 (VerifyData, 1);
-  vd->self         = self;
+  vd->self = FPI_DEVICE_FTE4800 (dev);
   vd->verify_print = g_object_ref (print);
 
-  GTask *task = g_task_new (dev, fpi_device_get_cancellable (dev), fte4800_verify_done, vd);
+  GTask *task = g_task_new (dev, fpi_device_get_cancellable (dev),
+                            fte4800_verify_done, vd);
   g_task_set_task_data (task, vd, NULL);
   g_task_run_in_thread (task, fte4800_verify_thread);
   g_object_unref (task);
@@ -816,7 +815,6 @@ fpi_device_fte4800_finalize (GObject *obj)
       close (self->spi_fd);
       self->spi_fd = -1;
     }
-  g_clear_pointer (&self->enroll_frames, g_free);
   G_OBJECT_CLASS (fpi_device_fte4800_parent_class)->finalize (obj);
 }
 

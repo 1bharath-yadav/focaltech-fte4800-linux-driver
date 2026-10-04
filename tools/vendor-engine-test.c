@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: LGPL-2.1-or-later */
-#include "vendor-engine.h"
+#include "../libfprint/drivers/vendor-engine.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>

@@ -254,8 +254,8 @@ The most useful project scripts became the reusable toolbox:
 - `tools/fte4800_capture.py` — reproducible real-frame capture.
 - `tools/fte4800_selftest.py` — reset/identity/transport checks.
 - `tools/live-finger-monitor.py` — observe live physical frame changes.
-- `tools/matcher_ref.py` — Python specification for the experimental matcher.
-- `tools/matcher_lab.py` and `tools/offline-biometric-eval.py` — offline matcher/evaluation work.
+- `tools/vendor-engine-test.c` — offline/native vendor-engine replay and enrollment/verification test.
+- `tools/matcher_ref.py`, `tools/matcher_lab.py`, and `tools/offline-biometric-eval.py` — historical matcher research retained for reference only.
 - `tools/native-live-test.c` / `tools/live-native-test.sh` — live native libfprint validation.
 - `tools/diagnose_libfprint.py` — userspace diagnosis.
 - `tools/collect2.py` — guided genuine/impostor capture collection.
@@ -307,15 +307,16 @@ Do not return to:
 
 ## Current baseline
 
-The 2026-10-03 baseline proves:
+The current FTE4800 architecture proves:
 
 - real FT9368 hardware access;
 - verified reset and identity protocol;
 - real 64x80 image capture;
-- fifteen-stage enrollment implementation with image-quality and press/release gates;
-- native libfprint/fprintd operation;
-- same-finger matching and different-finger rejection in the current small evaluation set;
-- module reload, reboot and suspend/resume recovery;
-- working Omarchy lock authentication.
+- native execution of the exact FocalTech WinBio engine on Linux;
+- vendor-engine enrollment and verification on real captured frames;
+- libfprint integration with opaque vendor-template storage;
+- explicit finger-down/finger-up gating between enrollment stages.
 
-For the current architecture and matcher details, see `docs/matching.md` and `docs/omarchy-integration.md`.
+The final system-level authentication path still requires privileged installation of the built libfprint and vendor DLL, followed by one fresh enrollment using the new `FTV1` template format.
+
+For the current architecture and matching details, see `docs/matching.md` and `docs/omarchy-integration.md`.

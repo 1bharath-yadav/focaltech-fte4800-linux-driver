@@ -6,11 +6,16 @@ BUILD="${LIBFPRINT_BUILD:-$ROOT/../libfprint-upstream/build-fte4800}"
 LIB="$BUILD/libfprint/libfprint-2.so.2.0.0"
 PREFIX="/opt/fte4800/libfprint"
 LIBDIR="$PREFIX/lib"
+VENDOR_DIR="/opt/fte4800/vendor"
+VENDOR_DLL_SRC="$ROOT/archive/research/windows-package/package/ftWbioEngineAdapter.dll"
+VENDOR_DLL="$VENDOR_DIR/ftWbioEngineAdapter.dll"
 DROPIN="/etc/systemd/system/fprintd.service.d/00-native-fte4800.conf"
+EXPECTED_VENDOR_SHA256="2af887cb0925a29757b9f217f656a9963246ba7770dcc4c68e689ccc6505f06b"
 
 die() { echo "ERROR: $*" >&2; exit 1; }
 
 [ -f "$LIB" ] || die "native libfprint build not found: $LIB"
+[ -f "$VENDOR_DLL_SRC" ] || die "FocalTech vendor engine DLL not found: $VENDOR_DLL_SRC"
 command -v sudo >/dev/null || die "sudo is required"
 sudo -n true || die "sudo -n failed; passwordless sudo is required for this scripted operation"
 
@@ -33,6 +38,11 @@ fi
 
 sudo install -m755 "$LIB" "$DEST"
 sudo ln -sfn libfprint-2.so.2.0.0 "$LIBDIR/libfprint-2.so.2"
+sudo install -d -m755 "$VENDOR_DIR"
+VENDOR_SHA256="$(sha256sum "$VENDOR_DLL_SRC" | awk '{print $1}')"
+[ "$VENDOR_SHA256" = "$EXPECTED_VENDOR_SHA256" ] ||
+  die "unexpected FocalTech vendor DLL SHA256: $VENDOR_SHA256"
+sudo install -m644 "$VENDOR_DLL_SRC" "$VENDOR_DLL"
 sudo ln -sfn libfprint-2.so.2 "$LIBDIR/libfprint-2.so"
 
 sudo install -d -m755 /etc/systemd/system/fprintd.service.d
@@ -67,6 +77,10 @@ journalctl -u fprintd -n 80 --no-pager -l |
   grep -E 'Initializing FpContext|libfprint version|fte4800|FocalTech FTE4800|find support dev|Device reported probe' |
   tail -40 || true
 
+echo
+echo "Vendor engine identity:"
+echo "  $VENDOR_DLL"
+echo "  SHA256: $(sha256sum "$VENDOR_DLL" | awk '{print $1}')"
 echo
 echo "Project library identity:"
 SYMS="$(mktemp)"
