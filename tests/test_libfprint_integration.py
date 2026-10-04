@@ -33,6 +33,7 @@ class LibfprintIntegrationTests(unittest.TestCase):
         self.assertIn("#define FTE4800_ENROLL_STAGES         12", DRIVER)
         self.assertIn('FTE4800_VENDOR_MAGIC       "FTV1"', DRIVER)
         self.assertIn("FTE4800_VENDOR_MAX_TEMPLATE", DRIVER)
+        self.assertIn("/usr/local/lib/fte4800/ftWbioEngineAdapter.dll", DRIVER)
         self.assertIn("ft_engine_enroll_commit", DRIVER)
         self.assertIn("fte4800_get_print_template", DRIVER)
 

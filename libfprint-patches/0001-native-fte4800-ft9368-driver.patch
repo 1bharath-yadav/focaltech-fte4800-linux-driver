@@ -1,5 +1,5 @@
 diff --git c/libfprint/drivers/fte4800.c w/libfprint/drivers/fte4800.c
-index 1b20d57..ab63327 100644
+index 1b20d57..6553b4b 100644
 --- c/libfprint/drivers/fte4800.c
 +++ w/libfprint/drivers/fte4800.c
 @@ -15,12 +15,19 @@
@@ -36,7 +36,7 @@ index 1b20d57..ab63327 100644
 +#define FTE4800_VENDOR_MAGIC       "FTV1"
 +#define FTE4800_VENDOR_HEADER       8
 +#define FTE4800_VENDOR_MAX_TEMPLATE (1024 * 1024)
-+#define FTE4800_VENDOR_DLL         "/opt/fte4800/vendor/ftWbioEngineAdapter.dll"
++#define FTE4800_VENDOR_DLL         "/usr/local/lib/fte4800/ftWbioEngineAdapter.dll"
 +
 +/* --------------------------------------------------------------------------
 + * Device instance data

@@ -28,4 +28,6 @@ An offline replay using real 64x80 FTE4800 BMP captures produced:
 
 These measurements validate the vendor-engine integration path; they do not by themselves establish production FAR/FRR.
 
+The vendor DLL is installed to `/usr/local/lib/fte4800/ftWbioEngineAdapter.dll`. A system fprintd service should not use `~/.local/bin` for this library: the service runs outside the login user directory permissions, and bin is intended for executable programs rather than loadable library/data files.
+
 The old local NCC matcher research remains in `tools/matcher_ref.py`, `tools/matcher_lab.py`, and related evaluation tooling as historical research only. It is no longer part of the active driver or template format.

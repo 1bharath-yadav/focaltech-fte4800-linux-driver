@@ -46,7 +46,7 @@
 #define FTE4800_VENDOR_MAGIC       "FTV1"
 #define FTE4800_VENDOR_HEADER       8
 #define FTE4800_VENDOR_MAX_TEMPLATE (1024 * 1024)
-#define FTE4800_VENDOR_DLL         "/opt/fte4800/vendor/ftWbioEngineAdapter.dll"
+#define FTE4800_VENDOR_DLL         "/usr/local/lib/fte4800/ftWbioEngineAdapter.dll"
 
 /* --------------------------------------------------------------------------
  * Device instance data

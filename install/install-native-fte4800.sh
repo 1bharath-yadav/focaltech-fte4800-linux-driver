@@ -6,7 +6,7 @@ BUILD="${LIBFPRINT_BUILD:-$ROOT/../libfprint-upstream/build-fte4800}"
 LIB="$BUILD/libfprint/libfprint-2.so.2.0.0"
 PREFIX="/opt/fte4800/libfprint"
 LIBDIR="$PREFIX/lib"
-VENDOR_DIR="/opt/fte4800/vendor"
+VENDOR_DIR="/usr/local/lib/fte4800"
 VENDOR_DLL_SRC="$ROOT/archive/research/windows-package/package/ftWbioEngineAdapter.dll"
 VENDOR_DLL="$VENDOR_DIR/ftWbioEngineAdapter.dll"
 DROPIN="/etc/systemd/system/fprintd.service.d/00-native-fte4800.conf"
@@ -17,7 +17,7 @@ die() { echo "ERROR: $*" >&2; exit 1; }
 [ -f "$LIB" ] || die "native libfprint build not found: $LIB"
 [ -f "$VENDOR_DLL_SRC" ] || die "FocalTech vendor engine DLL not found: $VENDOR_DLL_SRC"
 command -v sudo >/dev/null || die "sudo is required"
-sudo -n true || die "sudo -n failed; passwordless sudo is required for this scripted operation"
+sudo -v || die "sudo authorization failed"
 
 echo "Installing native FTE4800 libfprint from:"
 echo "  $LIB"
@@ -49,6 +49,7 @@ sudo install -d -m755 /etc/systemd/system/fprintd.service.d
 cat <<EOF | sudo tee "$DROPIN" >/dev/null
 [Service]
 Environment="LD_LIBRARY_PATH=$LIBDIR"
+Environment="FTE4800_ENGINE_DLL=$VENDOR_DLL"
 EOF
 
 sudo systemctl daemon-reload

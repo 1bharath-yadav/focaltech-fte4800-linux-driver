@@ -166,7 +166,7 @@ The production driver delegates fingerprint enrollment and verification to Focal
 
 The engine is configured for the sensor's native 64x80 image geometry and produces an opaque vendor template stored in `FpPrint` using the `FTV1` container. The old NCC/raw-frame matcher is no longer used by the active driver.
 
-The vendor DLL is kept under the local research archive because its redistribution status is not established. The installer copies the exact verified DLL to `/opt/fte4800/vendor/ftWbioEngineAdapter.dll` after checking its SHA-256.
+The vendor DLL is kept under the local research archive because its redistribution status is not established. The installer copies the exact verified DLL to `/usr/local/lib/fte4800/ftWbioEngineAdapter.dll` after checking its SHA-256.
 
 See `docs/matching.md` for the current architecture and validation evidence.
 

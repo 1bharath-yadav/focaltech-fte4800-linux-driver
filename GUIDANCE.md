@@ -317,6 +317,6 @@ The current FTE4800 architecture proves:
 - libfprint integration with opaque vendor-template storage;
 - explicit finger-down/finger-up gating between enrollment stages.
 
-The final system-level authentication path still requires privileged installation of the built libfprint and vendor DLL, followed by one fresh enrollment using the new `FTV1` template format.
+The final system-level authentication path still requires privileged installation of the built libfprint and vendor DLL under /usr/local/lib/fte4800, followed by one fresh enrollment using the new `FTV1` template format.
 
 For the current architecture and matching details, see `docs/matching.md` and `docs/omarchy-integration.md`.
