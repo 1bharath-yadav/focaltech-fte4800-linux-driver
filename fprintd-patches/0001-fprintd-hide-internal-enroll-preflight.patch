@@ -1,0 +1,15 @@
+--- a/src/device.c
++++ b/src/device.c
+@@ -2159,9 +2159,9 @@
+         }
+     }
+ 
+-  g_signal_emit (rdev, signals[SIGNAL_ENROLL_STATUS], 0, "enroll-stage-passed", FALSE);
+-
+-  /* We are good and can start to enroll. */
++  /* Duplicate identification is an internal preflight operation.
++   * Do not expose it as an enrollment-stage result: the user has not scanned
++   * a finger and no device enrollment stage has completed yet. */
+   enroll_start (rdev);
+ }
+ 

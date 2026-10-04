@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
-BUILD="${LIBFPRINT_BUILD:-$ROOT/../libfprint-upstream/build-fte}"
+BUILD="${LIBFPRINT_BUILD:-$ROOT/../libfprint-upstream/build-fte4800}"
 LIB="$BUILD/libfprint/libfprint-2.so.2.0.0"
 PREFIX="/opt/fte4800/libfprint"
 LIBDIR="$PREFIX/lib"
@@ -18,7 +18,20 @@ echo "Installing native FTE4800 libfprint from:"
 echo "  $LIB"
 
 sudo install -d -m755 "$LIBDIR"
-sudo install -m755 "$LIB" "$LIBDIR/libfprint-2.so.2.0.0"
+
+DEST="$LIBDIR/libfprint-2.so.2.0.0"
+if [ -f "$DEST" ]; then
+  CURRENT_SHA="$(sha256sum "$DEST" | awk '{print $1}')"
+  NEW_SHA="$(sha256sum "$LIB" | awk '{print $1}')"
+  if [ "$CURRENT_SHA" != "$NEW_SHA" ]; then
+    BACKUP="$DEST.pre-fte4800-$(date +%Y%m%d-%H%M%S)"
+    sudo cp -a "$DEST" "$BACKUP"
+    echo "Backed up previous native library to:"
+    echo "  $BACKUP"
+  fi
+fi
+
+sudo install -m755 "$LIB" "$DEST"
 sudo ln -sfn libfprint-2.so.2.0.0 "$LIBDIR/libfprint-2.so.2"
 sudo ln -sfn libfprint-2.so.2 "$LIBDIR/libfprint-2.so"
 

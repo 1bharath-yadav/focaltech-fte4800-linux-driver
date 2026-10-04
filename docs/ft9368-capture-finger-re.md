@@ -1,8 +1,10 @@
 # FT9368 Capture and Finger Detection Protocol Analysis
 
-This document details the reverse-engineered protocol for the FocalTech FT9368 fingerprint sensor, based on static analysis of `ftWbioUmdfDriverV2.dll`.
+This document separates Windows-driver reverse-engineering observations from the Linux-native path validated on the physical FT9368. The Windows observations are evidence about the vendor implementation; they are not assumptions about the current Linux driver's live state machine.
 
-## 1. Finger Detection (`ft_feature_devinit_9368POADetectFingerPress`)
+## 1. Vendor Finger Detection (`ft_feature_devinit_9368POADetectFingerPress`)
+
+The vendor Windows routine was found to wake the device and read six bytes from `0x9180`, then compare response byte 2 with `0x11`. This is retained as reverse-engineering evidence only. Direct live Linux status reads did not provide a sufficiently stable contract to use this path for the native enrollment state machine.
 
 **Wake Operation:**
 - The driver wakes the sensor by executing a 0-byte write to the logical address `0xFF00`.

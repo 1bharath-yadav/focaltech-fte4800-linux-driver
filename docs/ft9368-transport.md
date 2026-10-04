@@ -47,8 +47,8 @@
 | Address | Size | Description | Status |
 |---------|------|-------------|--------|
 | `0x9180` | 32 | Device info / identity descriptor | ✓ WORKING |
-| `0x9180` | 6 | Finger detection status (POA); vendor checks response byte 2 | ✓ Parsed in Windows RE |
-| `0x9080` | 5120 | Image data (64×80 8-bit pixels) | ✗ Returns zeros |
+| `0x9180` | 6 | Vendor POA finger-status read; response-byte interpretation from Windows RE | ✓ Reverse-engineered; not used by current native enrollment |
+| `0x9080` | 5120 | Image data (64×80 8-bit pixels) after verified SFR trigger | ✓ Verified on physical FT9368 |
 | `0xFF00` | 0 | Wake trigger (write-only) | Sent but effect unverified |
 | `0x90` | 2 | ROM bootloader ID (expect 0x56A2) | ✗ Not yet obtained |
 
@@ -101,14 +101,14 @@ The Windows driver uses:
 
 ## Remaining Unknowns
 
-1. **Why does `0x9080` image read return zeros?**
-   - Sensor may need a capture trigger/start command before image data is available
-   - Windows `CaptureData` checks state machine (state 4 or 9) before reading
-   - May need `StartCaptureData` to initiate scanning
+1. **What is the exact hardware-level finger status contract?**
+   - The Windows implementation exposes a status path around `0x9180`, but live Linux reads were not sufficiently stable to make it the native enrollment gate.
+   - The current Linux implementation therefore uses a fresh triggered frame as the empirical image-signal boundary.
+   - This does not prove the vendor status contract is unavailable; it remains an open reverse-engineering question.
 
-2. **How should `0x9180/6` finger status be interpreted?**
-   - The vendor routine reads six bytes from `0x9180` after wake and checks response byte 2 for `0x11`.
-   - The image buffer at `0x9080` can remain populated after finger removal, so it must not be used as the release detector.
+2. **Can the physical interrupt be mapped to a stable libfprint finger event?**
+   - The kernel transport can receive the sensor interrupt, but its current userspace `poll()` ABI carries driver-specific event values rather than a verified standard finger-present/finger-up contract.
+   - The native enrollment path therefore does not depend on that unproven mapping.
 
 3. **ROM ID `0x56A2` never obtained**
    - May require very precise timing during the 0-200ms boot window
