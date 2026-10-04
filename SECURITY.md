@@ -1,9 +1,69 @@
 # Security
 
-Fingerprint authentication is security-sensitive software. This project has not been security-certified and the current FTE4800 matcher has not been evaluated on a production-scale biometric dataset.
+Fingerprint authentication is security-sensitive software.
 
-In the current local evaluation at threshold 0.75, 0 of 13 impostor trials were accepted (observed FPR: 0%), but this is a result for a small test set and must not be interpreted as proof of a zero production FAR or a fully secure biometric system. Do not rely on the current research threshold or the small local evaluation dataset as a measured FAR/FRR guarantee.
+## Current posture
 
-For suspected vulnerabilities, authentication bypasses, template-handling issues, kernel memory-safety bugs, or device-access problems, do not publish exploit details in a normal issue. Contact the project maintainer privately first and include the affected commit, kernel version, hardware identifier, and a minimal reproduction where safe.
+The production FTE4800 stack uses FocalTech's native biometric engine instead of the former experimental NCC and raw-frame matcher.
 
-The repository intentionally keeps proprietary driver packages, raw biometric captures, and other sensitive reverse-engineering artifacts outside the public source tree under `archive/`.
+This is a substantial algorithmic and compatibility improvement.
+
+It does not establish a 100 percent secure system.
+
+## Security boundary
+
+The boundary includes:
+
+    FTE4800 sensor
+    focal_spi kernel transport
+    native libfprint driver
+    native PE and WinBio compatibility bridge
+    proprietary FocalTech vendor DLL
+    fprintd
+    PAM policy
+    template persistence
+    desktop and session integration
+
+The proprietary DLL is not independently auditable by this project. The native compatibility bridge is additional security-sensitive native code.
+
+## Biometric claims
+
+Validated:
+
+    real sensor capture
+    vendor-engine enrollment
+    opaque FTV1 persistence
+    vendor-engine verification
+    live fprintd enrollment and verification
+
+Not established:
+
+    production-scale FAR and FRR
+    zero false accepts
+    zero false rejects
+    security certification
+    immunity from implementation vulnerabilities
+
+Do not describe the system as 100 percent secure, 100 percent accurate or security certified.
+
+## Why the vendor engine is preferred
+
+The vendor engine is preferable to the historical local matcher because it preserves the vendor's intended enrollment and verification implementation instead of relying on an experimental replacement.
+
+Correct claim:
+
+    The active Linux driver uses FocalTech's native biometric engine and has been validated end-to-end on the target hardware.
+
+## Authentication policy
+
+Keep password fallback available.
+
+Do not lower matcher or verification thresholds solely for convenience.
+
+Do not treat fingerprint authentication as a substitute for the LUKS disk-unlock key.
+
+## Proprietary runtime
+
+The vendor DLL is kept local because redistribution terms have not been established.
+
+Do not publish the vendor DLL, Windows driver package, raw biometric captures or sensitive reverse-engineering artifacts without establishing the legal and security constraints.

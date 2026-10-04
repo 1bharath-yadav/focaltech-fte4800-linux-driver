@@ -1,322 +1,230 @@
 # Development Guidance
 
-## Timeline
+## Current baseline
 
-This project started on 2026-10-01 as an attempt to make the FocalTech fingerprint reader on an Infinix ZERO BOOK 13 work on Linux.
+The FTE4800 project is a complete downstream Linux driver stack.
 
-Focused hardware and Windows-driver investigation started on 2026-10-02. The working baseline was completed on 2026-10-03: real FT9368 capture, a clean SPI transport driver, native libfprint/fprintd integration, experimental matching, reboot and suspend/resume recovery, and working Omarchy lock-screen authentication.
+    FT9368
+      -> focal_spi DKMS
+      -> /dev/focal_moh_spi
+      -> native FTE4800 libfprint
+      -> FocalTech native WinBio engine
+      -> stock fprintd
+      -> PAM
+      -> SDDM / Omarchy
 
-The baseline is functional, but it is not production-certified; the matching algorithm still needs improvement.
+The production packaging entry point is:
 
+    packaging/arch/PKGBUILD
 
-| Actual \ Predicted |    No Match |       Match |
-| ------------------ | ----------: | ----------: |
-| **Impostor**       | **TN = 13** |  **FP = 0** |
-| **Genuine**        |  **FN = 4** | **TP = 16** |
+It builds the selected upstream libfprint release, applies our patch, builds native libfprint, packages focal_spi as DKMS, includes the vendor engine, and installs udev plus fprintd system integration.
 
-| Metric            |    Result |
-| ----------------- | --------: |
-| Accuracy          | **87.9%** |
-| Precision         |  **100%** |
-| Recall / TPR      | **80.0%** |
-| Specificity / TNR |  **100%** |
+## Package policy
 
-Experimental dataset: **38 frames total, with 33 held-out evaluation trials, at threshold 0.75**.
+Use one package for the complete stack:
 
-The evaluation observed **0 false positives in 13 impostor trials**, giving an observed false-positive rate (FPR) of **0% for this test set**. This is evidence of no observed false accepts in the tested sample, not proof that the system is fully secure or that its production FAR is zero. The dataset is too small to establish a reliable biometric security guarantee.
+    cd ~/projects/focaltech-fte4800-linux-driver/packaging/arch
+    makepkg -Cfs
+    sudo pacman -U ./focaltech-fte4800-*.pkg.tar.zst
 
-The work started without a clear Linux implementation plan. The practical path was discovery first, then evidence collection, then a minimal transport driver, then userspace, then matching, and finally desktop integration. That order matters: each layer was proved before the next layer was trusted.
+The package owns all FTE4800-specific runtime files.
 
-## Core rule
+Arch DKMS guidance expects module source under /usr/src and has pacman hooks for DKMS installation and removal. Do not put manual dkms install or dkms remove operations in the package lifecycle.
 
-Always separate facts from guesses.
+## Upstream libfprint policy
 
-Keep the kernel driver small and hardware-backed. It should transport commands, handle reset/power/IRQ/lifecycle, and expose the device. Do not put biometric matching, synthetic frames, vendor-library emulation, or desktop integration into the kernel.
+Never make the old project development commit the permanent package base.
 
-Preserve every useful Windows/ACPI artifact locally. Public source should contain reproducible code and documentation; proprietary Windows binaries, raw captures, registry dumps, and large research data stay in the local `archive/`.
+Use:
 
-## The workflow
+    current upstream release
+            +
+    FTE4800 downstream patch
 
-### 1. Identify the hardware
+The current selected release is v1.94.10.
 
-Start on the working Windows installation.
+For every upstream update:
 
-Record:
+    1. bump _libfprint_version;
+    2. build from a clean upstream tree;
+    3. apply the downstream patch;
+    4. rebase the patch when APIs or files move;
+    5. verify the FTE4800 discovery path;
+    6. run tests;
+    7. perform live enrollment and verification.
 
-- Device name and hardware IDs.
-- ACPI instance and parent controller.
-- Bus type, IRQ, reset/power resources.
-- Driver provider, version, INF name, service and package contents.
+A successful compile is not enough. The sensor must still be discoverable and usable through fprintd.
 
-For this project the important identity was:
+## Why libfprint core changes are in the patch
 
-- `ACPI\VEN_FTE&DEV_4800`
-- `ACPI\FTE4800`
-- `\_SB.PC00.SPI2.FPNT`
-- FocalTech FTE4800 / FT9368
+The ZERO BOOK exposes the reader as /dev/focal_moh_spi through the misc subsystem rather than a normal spidev node.
 
-Do not start coding until the device identity is reproducible.
+The downstream patch therefore adds the small libfprint core plumbing needed for:
 
-### 2. Extract the Windows driver safely
+    MISC-backed udev resource identification
+    ACPI/SPI discovery
+    device-path handoff
+    SPI data accessor support
+    supported-device listing
+    FTE4800 driver registration and udev dependency registration
 
-Use a read-only Windows collection workflow.
+This is libfprint plumbing, not fprintd plumbing.
 
-First enumerate the device and its drivers with `pnputil`, then locate the package in the Windows DriverStore. Record the original INF, published `oem*.inf`, DLLs and CAT file. Copy the relevant files into a timestamped research directory and calculate SHA-256 hashes.
+## Native vendor engine
 
-Also collect:
+The production biometric path uses FocalTech's native WinBio engine.
 
-- device properties;
-- `LogConf`, `BootConfig`, `BasicConfigVector`, and `FilteredConfigVector`;
-- registry state;
-- PnP resources, stack, services, drivers and interfaces;
-- ACPI tables;
-- SMBIOS information;
-- runtime DLL information and loaded-module evidence.
+vendor-engine.c provides:
 
-The archived Windows scripts in `archive/research/windows-package/scripts/` implement this collection. They were designed to collect evidence without installing, removing, resetting, or modifying the Windows driver.
+    native PE loading
+    Windows runtime compatibility
+    x64 Windows TEB setup
+    current pthread stack bounds
+    WinBio sample construction
+    vendor storage ABI
+    enrollment and verification calls
 
-Do not treat a proprietary DLL as an implementation dependency. Use it only as a reference for protocol, resource and algorithm investigation unless its license explicitly permits redistribution.
+The TEB handling is required because the vendor CRT can execute __chkstk. The current Linux pthread stack bounds are installed before vendor calls.
 
-### 3. Reverse-engineer before guessing
+The active vendor template format is:
 
-For binaries and firmware:
+    FTV1
+    uint32 little-endian size
+    opaque FocalTech template
 
-1. Record hashes and versions.
-2. Inspect strings, imports, exports and symbols.
-3. Find device IDs, register addresses, SPI transactions, timing constants and status values.
-4. Map the call path from the Windows biometric stack into the FocalTech code.
-5. Identify image capture, touch detection and enrollment/matching functions.
-6. Keep a table of confirmed facts, strong hypotheses and unknowns.
+## Biometric validation
 
-When reverse engineering produces a new fact, add it to `docs/` immediately.
+Keep three concepts separate.
 
-### 4. Decode ACPI and the transport
+Functional:
 
-Inspect the DSDT/SSDT and map the fingerprint device to its SPI controller, chip-select, GPIOs, IRQ and power resources.
+    device discovery
+    real capture
+    enrollment
+    persistence
+    verification
+    finger release
+    cancellation
+    recovery
 
-Then verify the Linux transport independently:
+Integration:
 
-- reset sequence;
-- wake/read/write behavior;
-- chip identity;
-- IRQ/poll behavior;
-- exact SPI packet format;
-- required delays;
-- capture trigger and image readout.
+    fprintd uses intended libfprint
+    vendor DLL loads
+    PAM works
+    password fallback works
+    Omarchy uses the same backend
 
-Prefer small one-purpose tools over a large all-in-one experiment.
+Security characterization:
 
-### 5. Build the kernel driver as a transport layer
+    FAR and FRR require a sufficiently large evaluation set
+    successful enrollment is not biometric certification
+    successful vendor verification is not proof of zero false accepts
 
-Implement in this order:
+## Security interpretation
 
-1. module registration and ACPI match;
-2. SPI configuration;
-3. reset/power sequencing;
-4. basic I/O;
-5. identity read;
-6. IRQ/lifecycle handling;
-7. raw frame transfer;
-8. cleanup and suspend/resume recovery.
+Using the native FocalTech engine is a major algorithmic compatibility improvement over the old experimental matcher.
 
-Test after every layer.
+It does not prove:
 
-The kernel must use real sensor data. Never add synthetic frames just to satisfy libfprint or a test harness.
+    100 percent security
+    100 percent efficiency
+    zero false accepts
+    zero false rejects
+    security certification
 
-### 6. Prove real capture
+The vendor DLL is proprietary and not independently auditable. The native PE and WinBio bridge is another security-sensitive component.
 
-A capture is not proven merely because bytes changed.
+Use this wording:
 
-Use three checks:
+    The active Linux driver uses FocalTech's native biometric engine and has been validated end-to-end on the target hardware.
 
-- idle frames should be stable;
-- a real finger should create a large, repeatable signal change;
-- the captured geometry and byte count must match the physical sensor.
+Do not claim more without new evidence.
 
-For FT9368 the validated frame is 64x80, 5120 bytes.
+## fprintd policy
 
-Save representative captures locally and keep the raw protocol trace with the capture procedure.
+fprintd remains stock Arch software.
 
-### 7. Integrate with libfprint separately
+Do not:
 
-Keep the kernel driver and libfprint development trees separate.
+    rebuild fprintd for normal installation
+    apply the old preflight-status patch
+    maintain a custom fprintd binary without a reproducible bug
 
-For this project:
+## Desktop integration
 
-- kernel project: `focaltech-fte4800-linux-driver`;
-- libfprint development tree: `libfprint-upstream`.
+Desktop integration comes after hardware and userspace validation.
 
-Build libfprint from an isolated checkout/branch. Test and install the native build under a separate prefix rather than replacing the distribution library globally.
+Keep hardware code below:
 
-Then verify the live `fprintd` process is actually loading the intended library.
+    PAM
+    SDDM
+    sudo
+    polkit
+    Omarchy lock screen
 
-### 8. Validate the biometric path
+Fingerprint authentication is userspace PAM. It is not an early-LUKS unlock mechanism.
 
-Try the standard libfprint image-processing/matching path first, but also determine whether the device has a vendor biometric engine that can be reproduced legitimately.
+## Legacy paths
 
-For this FTE4800 / FT9368 target, the production path now delegates enrollment and verification to the exact FocalTech `ftWbioEngineAdapter.dll` through the native Linux PE/WinBio bridge. The old local NCC/raw-frame matcher is retained only as historical research and is not part of the active driver.
+The old manual deployment used:
 
-The bridge must treat the vendor runtime as an ABI boundary: preserve the verified WinBio interface slots, storage-record layout, sample format, calling convention, TLS/TEB requirements, and error semantics. In particular, when the vendor engine runs in a Linux worker thread, refresh the Windows TEB stack bounds from that thread before calling vendor code; the vendor CRT's `__chkstk` path depends on those fields.
+    /opt/fte4800
+    /usr/local/lib/fte4800
 
-Use opaque vendor-template storage when the vendor engine owns the template representation. For this driver the persisted format is `FTV1 | uint32_le(template_size) | opaque FocalTech template`.
+The package uses:
 
-The physical target has now passed end-to-end enrollment and verification with the native vendor engine. Continue to expand genuine/impostor datasets before making claims about biometric operating characteristics; successful end-to-end functionality is not equivalent to FAR/FRR certification.
+    /usr/lib/focaltech-fte4800
 
----
+Do not document the old paths as the production architecture.
 
-### 9. Integrate desktop authentication last
+## AI-assisted engineering
 
-Only after hardware and matching work:
+AI is an engineering multiplier, not an authority.
 
-- fprintd;
-- PAM;
-- sudo/polkit;
-- lock screen;
-- suspend/resume;
-- password fallback;
-- package-update behavior.
+Require exact evidence, exact file locations and reproducible commands.
 
-Desktop integration must not hide sensor bugs.
+Use:
 
-For Omarchy, prefer upstream generic fixes. Do not fork the hardware driver into the desktop shell.
+    observe
+      -> record
+      -> reproduce
+      -> implement
+      -> test
+      -> document
+      -> commit
 
-### 10. Validate failure modes
+System-wide changes should remain centrally controlled.
 
-Repeat tests after:
+## Release checklist
 
-- module unload/reload;
-- fprintd restart;
-- reboot;
-- suspend/resume;
-- poor fingerprint placement;
-- different fingers;
-- repeated failed verification;
-- unavailable sensor;
-- package upgrade.
+    tests/run-tests.sh
+    bash -n install/*.sh
+    bash -n tests/run-tests.sh
+    git diff --check
+    cd packaging/arch
+    makepkg -Cfs
+    pacman -Qp ./focaltech-fte4800-*.pkg.tar.zst
+    tar -tf ./focaltech-fte4800-*.pkg.tar.zst
 
-Record both successful and failed cases. A failure with a clean error is useful evidence; silently masking it is not.
+Then perform live:
 
-### 11. Use AI as a controlled engineering system
-
-The project used no paid development tools.
-
-The working setup used:
-
-- ChatGPT + the tunnel/desktop connection as the control plane for research, planning, evidence review, debugging and orchestration;
-- Claude Desktop for interactive investigation and remote computer work;
-- Agy CLI for parallel agent work, including research, kernel engineering, libfprint work and QA;
-- ordinary Linux/Windows tooling for building, tracing, disassembly, testing and archival.
-
-The effective pattern is:
-
-1. Give each agent one narrow question.
-2. Require commands, evidence and exact file locations.
-3. Do not accept an agent conclusion without reproducing the key observation.
-4. Keep one source of truth for the current protocol and architecture.
-5. Commit working changes in small logical steps.
-6. Run tests after each major change.
-7. Archive dead ends instead of deleting useful evidence.
-8. Do not let an agent silently replace working system packages or introduce synthetic behavior.
-9. Review the final diff for accidental paths, credentials, proprietary files and generated artifacts.
-
-For future driver projects, use multiple agents for parallel investigation, but keep hardware writes and system-wide changes centrally controlled.
-
-## The actual investigation pattern
-
-The project used two parallel tracks: an evidence track and an implementation track.
-
-The evidence track answered “what does the hardware actually do?” using Windows PnP/DriverStore data, ACPI tables, registry/resource blobs, DLL/INF inspection, disassembly, SPI traces, real captures, and archived failed experiments.
-
-The implementation track converted only verified facts into small Linux components. This prevented guesses from becoming driver behavior.
-
-A useful loop for future drivers is:
-
-`observe -> record -> reproduce -> implement -> test -> document -> commit`
-
-When stuck, stop changing the driver and collect another fact. When an experiment fails, keep the failure and write down what it ruled out.
-
-## Main tools and repeated scripts
-
-The core Linux tools used repeatedly were `make`, DKMS, `modprobe`, `dmesg`/`journalctl`, `spi`, `udev`, `fprintd`, `systemctl`, `readelf`, `strings`, `r2`, `objdump`, Python, shell scripts, Git, and normal `/sys` and `/proc` inspection.
-
-The most useful project scripts became the reusable toolbox:
-
-- `install/install.sh` — prerequisites, DKMS installation, and basic validation.
-- `install/build-libfprint.sh` — build the isolated native libfprint tree.
-- `install/install-native-fte4800.sh` — install the native libfprint build without replacing the distro library.
-- `install/verify-fprintd-runtime.sh` — prove which libfprint the running fprintd process actually loads.
-- `install/restore-fprintd-packages.sh` — recover the distribution fprintd/libfprint stack after package changes.
-- `install/omarchy-hw-fingerprint-fte4800` — detect ACPI/SPI FTE4800 hardware alongside USB readers.
-- `install/omarchy-setup-security-fingerprint-fte4800` — safe setup wrapper that preserves the native stack.
-- `tools/ft9368.py` — low-level FT9368 protocol operations used during hardware experiments.
-- `tools/fte4800_capture.py` — reproducible real-frame capture.
-- `tools/fte4800_selftest.py` — reset/identity/transport checks.
-- `tools/live-finger-monitor.py` — observe live physical frame changes.
-- `tools/vendor-engine-test.c` — offline/native vendor-engine replay and enrollment/verification test.
-- `tools/matcher_ref.py`, `tools/matcher_lab.py`, and `tools/offline-biometric-eval.py` — historical matcher research retained for reference only.
-- `tools/native-live-test.c` / `tools/live-native-test.sh` — live native libfprint validation.
-- `tools/diagnose_libfprint.py` — userspace diagnosis.
-- `tools/collect2.py` — guided genuine/impostor capture collection.
-
-Windows evidence collection was kept separately under `archive/research/windows-package/scripts/`, including the final evidence-gate and resource-extraction scripts. The important Windows sequence was: boot Windows, identify the exact ACPI device, locate its DriverStore package, collect INF/DLL/CAT/package hashes, inspect PnP resources and registry state, extract ACPI/SMBIOS evidence, and copy the useful evidence into the timestamped research archive before returning to Linux.
-
-## AI-assisted strategy
-
-AI was used as an engineering force multiplier, not as an authority.
-
-The practical split was:
-
-- ChatGPT: control plane, architecture decisions, evidence synthesis, command planning, review, and cross-agent coordination through the tunnel/desktop connection.
-- Agy CLI: parallel specialist work and agent swarms for research, kernel engineering, libfprint, tooling, QA, and documentation.
-- Claude Desktop: used selectively for complex or critical interactive investigation.
-
-## Reusable driver-development checklist
-
-For another Linux hardware driver, start with identity and topology, then obtain the working vendor environment, collect a complete evidence bundle, map resources and lifecycle, reproduce raw I/O in small tools, build the smallest possible kernel transport, prove real hardware data, integrate the proper userspace subsystem, test normal and failure paths, package it reproducibly, and only then integrate desktop-specific behavior.
-
-For a sensor with a vendor algorithm, treat the vendor implementation as evidence. First establish whether the upstream algorithm works. If it does not, document why with measurements and keep the replacement matcher isolated, deterministic, auditable, and clearly marked as experimental.
-
-### 12. Keep the repository portable
-
-Before every public commit:
-
-- search for personal usernames and absolute home paths;
-- search for secrets and tokens;
-- confirm proprietary binaries are not tracked;
-- confirm build output is ignored;
-- run shell syntax checks;
-- run unit tests;
-- build the kernel module;
-- test the install/check path;
-- run `git diff --check`.
-
-Use `$HOME`, `$USER`, or environment variables in examples. Use repository-relative paths in scripts. Never encode the developer account name into code, docs, tests, examples, or service helpers.
+    fresh enrollment
+    persistent-template verification
+    same-finger verification
+    different-finger rejection
+    fprintd restart
+    module reload
+    reboot
+    suspend/resume
+    lock-screen authentication
 
 ## What not to repeat
 
-Do not return to:
-
-- synthetic fingerprint frames;
-- kernel-side vendor matcher emulation;
-- undocumented shadow-register tricks;
-- lowering the matcher threshold just to improve demo success;
-- replacing the system libfprint package during experiments;
-- deleting raw reverse-engineering evidence because it looks old.
-
-## Current baseline
-
-The current FTE4800 architecture proves:
-
-- real FT9368 hardware access;
-- verified reset and identity protocol;
-- real 64x80 image capture;
-- native execution of the exact FocalTech WinBio engine on Linux;
-- vendor-engine enrollment and verification on real captured frames;
-- libfprint integration with opaque `FTV1` vendor-template storage;
-- explicit finger-down/finger-up gating between enrollment stages;
-- worker-thread-safe Windows TEB stack bounds for the native vendor CRT;
-- live end-to-end `fprintd-enroll` and `fprintd-verify` on the physical target.
-
-The native deployment uses `/opt/fte4800/libfprint` for the isolated libfprint build and `/usr/local/lib/fte4800/ftWbioEngineAdapter.dll` for the local vendor runtime. Existing enrollment records created by the older format must be deleted and re-enrolled after switching to `FTV1`.
-
-For the current architecture and matching details, see `docs/matching.md` and `docs/omarchy-integration.md`.
+    synthetic fingerprint frames
+    kernel-side biometric matching
+    lowering thresholds for demo success
+    replacing system libfprint during package use
+    rebuilding fprintd without a proven defect
+    calling a small biometric dataset a security guarantee
+    uncontrolled retry loops

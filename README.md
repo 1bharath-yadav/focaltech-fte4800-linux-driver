@@ -1,223 +1,217 @@
 # FocalTech FTE4800 / FT9368 Linux Driver
 
-Hardware-backed Linux support for FocalTech FTE4800 / FT9368 SPI fingerprint sensors. The implementation is currently validated on the Infinix ZERO BOOK 13 (ZL513).
+Complete Linux support for the FocalTech FTE4800 / FT9368 SPI fingerprint reader in the Infinix ZERO BOOK 13.
 
-Target ACPI device: `FTE4800:00`
-Target sensor: FocalTech FT9368
-Validated kernel: Linux 7.2.5-3-omarchy x86_64
-Device interface: `/dev/focal_moh_spi`
+## Current state
 
-## Status
+The project now has one complete downstream Arch package:
 
-The kernel transport and native libfprint integration have been exercised on real hardware.
+    focaltech-fte4800
 
-Verified:
+A successful package build has been verified as:
 
-- ACPI/SPI probe and driver lifecycle;
-- FT9368 reset and firmware boot sequence;
-- sensor identification;
-- real 64x80 image capture;
-- persistent fprintd template storage;
-- implemented fifteen-stage press/release enrollment with image-quality gating (live re-enrollment validation pending);
-- genuine verification;
-- different-finger rejection in the local evaluation set;
-- reboot and suspend/resume recovery;
-- Omarchy lock-screen fingerprint authentication with password fallback;
-- clean DKMS installation and source-contract tests.
+    focaltech-fte4800-1.0.3-2-x86_64.pkg.tar.zst
 
-The matching threshold remains an experimental value. In the current local evaluation, 0 of 13 impostor trials were accepted (observed FPR: 0%), while 16 of 20 held-out genuine trials were accepted (observed TPR: 80%). The 38-frame dataset is too small to establish production FAR/FRR bounds or a security certification.
+The package contains the full FTE4800 stack:
 
-For the complete development workflow, timeline, Windows-driver extraction process, AI-assisted workflow, and future-driver checklist, see `GUIDANCE.md`.
+    focal_spi DKMS kernel transport
+    native FTE4800 libfprint driver
+    vendor-engine PE/WinBio bridge
+    FocalTech vendor biometric DLL
+    FTE4800 udev rule
+    fprintd systemd drop-in
+
+The system uses the normal Arch fprintd package. fprintd is not patched or rebuilt.
+
+The current package builds upstream libfprint v1.94.10 and then applies the FTE4800 downstream patch. Future upstream updates must follow the same model.
 
 ## Architecture
 
-```
-FTE4800 / FT9368 sensor
-        |
-        v
-  ACPI + SPI controller
-        |
-        v
- focal_spi kernel transport
-        |
-        v
- /dev/focal_moh_spi
-        |
-        v
- native FTE4800 libfprint driver
-        |
-        v
-       fprintd
-        |
-        v
-     pam_fprintd
-        |
-        +--> sudo / polkit
-        |
-        +--> Omarchy lock screen
-```
+    FTE4800 / FT9368
+            |
+            v
+    focal_spi DKMS
+            |
+            v
+    /dev/focal_moh_spi
+            |
+            v
+    native FTE4800 libfprint
+            |
+            +---- vendor-engine.c
+            |          |
+            |          v
+            |    FocalTech WinBio engine DLL
+            |
+            v
+        stock fprintd
+            |
+            v
+        pam_fprintd
+            |
+            +---- SDDM
+            +---- sudo / polkit
+            +---- Omarchy lock screen
 
-The kernel module is deliberately a transport layer. It does not fabricate fingerprint frames and does not perform biometric matching.
+The kernel driver is transport only. It does not perform biometric matching and does not fabricate frames.
 
-## Verified FT9368 protocol
+## Native FocalTech algorithm
 
-Reset is active-low:
+The production verification path uses FocalTech's native WinBio engine through the native Linux PE and WinBio bridge.
 
-```
-HIGH -> LOW for ~10 ms -> HIGH -> wait ~350 ms
-```
+Observed vendor-engine processing includes Gaussian and DoG pyramids, scale-space extrema, feature scales and orientations, descriptors, RANSAC, overlap checks and vendor template verification. The exact implementation remains proprietary.
+
+The former experimental NCC and raw-frame matcher is not part of the production path.
+
+The vendor template is stored opaquely:
+
+    FTV1
+    uint32 little-endian template size
+    opaque FocalTech template
+
+## What using the Windows engine means
+
+Using FocalTech's own engine is a significant improvement over the former experimental matcher because Linux uses the vendor's intended biometric enrollment and verification implementation instead of an independently designed replacement.
+
+It does not prove that the system is 100 percent secure or 100 percent efficient.
+
+Security still depends on the complete chain: sensor, kernel transport, libfprint, native PE and WinBio bridge, proprietary DLL, fprintd, PAM, templates and the desktop session. The proprietary DLL is not independently auditable, and the project does not have production-scale biometric FAR and FRR measurements or a security certification.
+
+Correct claim:
+
+    The active Linux driver uses FocalTech's native biometric engine and has been validated end-to-end on the target hardware.
+
+Do not turn that into a claim of zero FAR, zero FRR or security certification.
+
+## Hardware
+
+    ACPI FTE4800:00
+    ACPI device FTE4800
+    controller path _SB.PC00.SPI2.FPNT
+    sensor FocalTech FT9368
+    image 64x80
+    pixels 8-bit grayscale
+    Linux node /dev/focal_moh_spi
+
+## Capture protocol
+
+Reset:
+
+    HIGH -> LOW for about 10 ms -> HIGH -> wait about 350 ms
 
 Identity request:
 
-```
-91 80 00 20 00 00 00
-```
+    91 80 00 20 00 00 00
 
-The validated response identifies chip `0x9368`, firmware date `2022-07-29`, and image geometry `64x80`.
+Validated identity:
 
-Physical image capture:
+    chip 0x9368
+    firmware date 2022-07-29
+    geometry 64x80
 
-```
-SFR write: 70 07 F8 00 3B 00 00 00 01 00 00
-wait:      60 ms
-read:      90 80 14 00 00 00 00
-image:     5120 bytes, 64x80, 8-bit pixels
-```
+Capture:
 
-A plain `0x9080` read is not sufficient; the sensor must first be triggered through the verified SFR write.
+    trigger 70 07 F8 00 3B 00 00 00 01 00 00
+    wait about 60 ms
+    read 90 80 14 00 00 00 00
 
-Detailed protocol notes are in `docs/`.
+Frame size is 5120 bytes.
 
-## Kernel driver build
+## Complete package installation
 
-The driver is an out-of-tree DKMS-compatible SPI transport.
+The package is the normal installation mechanism.
 
-Check the system without changing it:
+    cd ~/projects/focaltech-fte4800-linux-driver/packaging/arch
+    makepkg -Cfs
+    sudo pacman -U ./focaltech-fte4800-*.pkg.tar.zst
+    sudo systemctl daemon-reload
+    sudo systemctl restart fprintd
 
-```bash
-sudo ./install/install.sh --check
-```
+Package-owned runtime:
 
-Install:
+    /usr/src/focaltech-fte4800-1.0.3/
+    /usr/lib/focaltech-fte4800/lib/
+    /usr/lib/focaltech-fte4800/ftWbioEngineAdapter.dll
+    /usr/lib/systemd/system/fprintd.service.d/00-fte4800.conf
+    /usr/lib/udev/rules.d/70-focal-spi.rules
 
-```bash
-sudo ./install/install.sh
-```
+## Updating libfprint
 
-Skip the hardware self-test:
+Do not pin to the historical project development commit.
 
-```bash
-sudo ./install/install.sh --no-test
-```
+The update model is:
 
-Remove:
+    upstream libfprint release
+            |
+            v
+    FTE4800 downstream patch
+            |
+            v
+    native libfprint build
+            |
+            v
+    focaltech-fte4800 package
 
-```bash
-sudo ./install/uninstall.sh
-```
+Update procedure:
 
-Direct build:
+    1. Change _libfprint_version in packaging/arch/PKGBUILD.
+    2. Build against the new upstream release.
+    3. Rebase or regenerate the FTE4800 patch if needed.
+    4. Verify the custom MISC-backed SPI discovery path.
+    5. Build and test.
+    6. Perform live enrollment and verification.
 
-```bash
-make
-```
+## fprintd policy
 
-The kernel installer does not replace the distribution libfprint package.
+Stock Arch fprintd is used.
 
-## Hardware diagnostics
+The historical fprintd preflight-status patch is not part of the production stack.
 
-```bash
-python3 -m unittest discover -s tests -v
-sudo python3 tools/fte4800_selftest.py --reset
-sudo python3 tools/fte4800_capture.py --reset --pgm frame.pgm
-sudo python3 tools/fte4800_capture.py --reset --count 10 --raw frame.bin
-sudo python3 tools/live-finger-monitor.py
-```
+Do not rebuild or patch fprintd unless an independently reproduced fprintd defect requires it.
 
-## libfprint integration
+## Removal
 
-The repository contains a downstream patch in `libfprint-patches/`.
+    sudo systemctl stop fprintd
+    sudo pacman -Rns focaltech-fte4800
+    sudo systemctl daemon-reload
+    sudo udevadm control --reload-rules
+    sudo udevadm trigger
 
-Base commit:
+## Legacy installers
 
-```
-396119347a6947efc6a43edc4708d5581dd13686
-```
+The install scripts remain useful for development and recovery.
 
-Build the separate libfprint checkout:
+    install/install.sh
+        kernel transport only
 
-```bash
-./install/build-libfprint.sh /path/to/libfprint-upstream
-```
+    install/build-libfprint.sh
+        isolated development libfprint build
 
-For the validated ZERO BOOK deployment, the native library is installed under:
+    install/install-native-fte4800.sh
+        former manual native deployment
 
-```
-/opt/fte4800/libfprint/lib/libfprint-2.so.2.0.0
-```
+    install/build-fprintd.sh
+        historical custom fprintd build; not production
 
-Only the fprintd service is directed to this library through a systemd drop-in. The distribution files in `/usr/lib` are retained.
+Use the package for normal installation.
 
-See `docs/libfprint-upstream.md` before preparing an upstream merge request.
+## Validation
 
-## Native FocalTech matching
+    python3 -m unittest discover -s tests -v
+    sudo python3 tools/fte4800_selftest.py --reset
+    fprintd-list "$USER"
+    fprintd-enroll
+    fprintd-verify
+    journalctl -u fprintd -n 100 --no-pager
 
-The production driver delegates fingerprint enrollment and verification to FocalTech's native `ftWbioEngineAdapter.dll`, executed directly on Linux with the in-process PE/WinBio bridge in `libfprint/drivers/vendor-engine.c`.
+## Omarchy
 
-The engine is configured for the sensor's native 64x80 image geometry and produces an opaque vendor template stored in `FpPrint` using the `FTV1` container. The old NCC/raw-frame matcher is no longer used by the active driver.
+Omarchy provides desktop authentication surfaces. It does not own FTE4800 protocol or biometric matching.
 
-Because the vendor DLL uses the Windows CRT stack-probing path, the Linux bridge refreshes the Windows TEB stack bounds from the current worker thread before vendor-engine calls. This is part of the production compatibility layer, not fingerprint matching logic.
-
-The native deployment has been exercised end-to-end on the physical FT9368: full 12-sample enrollment followed by successful `fprintd-verify` with the persisted `FTV1` template.
-
-The vendor DLL is kept under the local research archive because its redistribution status is not established. The installer copies the exact verified DLL to `/usr/local/lib/fte4800/ftWbioEngineAdapter.dll` after checking its SHA-256.
-
-See `docs/matching.md` for the current architecture and validation evidence.
-
-## Omarchy integration
-
-Omarchy's normal fingerprint setup is designed around its system package flow. The project includes a FTE4800-aware local wrapper so this laptop can use the native libfprint build without replacing it.
-
-Important: the stock Omarchy setup command may install or replace libfprint packages. Use the project wrapper when validating this FTE4800 deployment.
-
-The long-term upstream work belongs in Omarchy and libfprint rather than in this kernel driver repository. See `docs/omarchy-integration.md`.
-
-## Repository hygiene
-
-The public Git tree intentionally excludes generated build artifacts, local biometric captures, proprietary Windows driver packages and extracted firmware, raw ACPI dumps, internal agent material, and legacy reverse-engineering copies whose redistribution status is not established.
-
-These files are preserved locally under the root `archive/` directory for future development. The archive is valuable research material and is not disposable cache data.
-
-## Acknowledgements and references
-
-This project was informed by the Linux kernel SPI/driver model, libfprint and fprintd, the public `FTEXX00-Ubuntu` community implementation, Omarchy hardware-authentication work, and public FocalTech/Infinix device information.
-
-Useful references:
-
-- Linux kernel: https://kernel.org/
-- libfprint: https://gitlab.freedesktop.org/libfprint/libfprint
-- fprintd: https://fprint.freedesktop.org/fprintd/
-- FTEXX00-Ubuntu: https://github.com/vobademi/FTEXX00-Ubuntu
-- Omarchy: https://github.com/omacom/omarchy
-- Infinix ZERO BOOK 13 specifications: https://infinixmobiles.in/pages/zero-book-13-specs
-
-These references are research inputs or upstream components, not a claim of code ownership by those projects.
-
-## License
-
-Keep both licenses because the repository contains two distinct source contexts:
-
-- kernel transport: GPL-2.0-only;
-- downstream libfprint driver/matcher patch: LGPL-2.1-or-later.
-
-The `LICENSES/` directory contains both texts, and source files carry SPDX identifiers where applicable.
+See docs/omarchy-integration.md.
 
 ## Security
 
-This project is experimental biometric infrastructure. It is not security-certified. Do not treat the current matcher measurements as production biometric guarantees.
+The vendor engine improves algorithmic compatibility and removes the experimental matcher from the production path. It is not a security certification.
 
-See `SECURITY.md` for reporting guidance.
-
-## Development guidance
-
-Start with `GUIDANCE.md`. It is the practical playbook for repeating this process on another Linux device or driver.
+See SECURITY.md.

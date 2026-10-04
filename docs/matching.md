@@ -1,37 +1,88 @@
 # FTE4800 Fingerprint Matching
 
-The production FTE4800 driver does not implement a new generic matcher. It uses FocalTech's own `ftWbioEngineAdapter.dll` through the native Linux PE/WinBio bridge in `libfprint/drivers/vendor-engine.c`.
+## Production path
 
-The sensor supplies native 64x80, 8-bit grayscale frames. The vendor engine is configured for 64x80 and performs its own feature extraction, quality checks, enrollment, template construction, and verification. Static analysis identified a multi-scale feature pipeline including Gaussian/DoG pyramids, scale-space extrema, feature orientation calculation, descriptors, RANSAC, overlap checks, and template verification.
+The active FTE4800 driver does not implement a replacement host-side matcher.
 
-Enrollment uses the vendor engine's enrollment state machine. The engine reports a maximum of 12 enrollment samples and creates an opaque vendor template. The driver stores that blob inside `FpPrint` using the `FTV1` wrapper:
+Enrollment and verification are delegated to FocalTech's native ftWbioEngineAdapter.dll through libfprint/drivers/vendor-engine.c.
 
-```text
-FTV1 | uint32_le(template_size) | opaque FocalTech template
-```
+    64x80 FT9368 frame
+            |
+            v
+    vendor-engine.c
+            |
+            v
+    FocalTech WinBio engine
+            |
+            +-- feature processing
+            +-- quality handling
+            +-- enrollment
+            +-- template construction
+            +-- verification
+            |
+            v
+    FTV1 opaque template
 
-Verification feeds the captured 64x80 frame to the same vendor engine and verifies the stored opaque template. No NBIS/Bozorth3 minutiae matching or local NCC score is used in the production path.
+Static analysis identified Gaussian/DoG pyramids, scale-space extrema, feature scale/orientation processing, descriptors, RANSAC, overlap checks and vendor verification.
 
-The Linux-side state machine remains responsible for hardware interaction and user interaction: it waits for a real finger signal, accepts the frame into the vendor engine, waits for confirmed finger release between enrollment stages, and reports libfprint retry/match states.
+That describes observed behavior. The exact proprietary implementation remains unknown.
 
-## Proven engine path
+## Template
 
-The exact FTE4800 Windows engine package was executed natively on Linux without Wine. The loader maps the PE at its preferred base, installs the required x64 Windows TEB in `%gs`, resolves the required Windows API shims, initializes the DLL, and calls the exported WinBio engine interface.
+    FTV1
+    uint32 little-endian template size
+    opaque FocalTech template
 
-The vendor engine is called from libfprint operation worker threads. The bridge therefore re-arms the Windows TEB for the current Linux pthread before each engine operation and derives `StackBase`/`StackLimit` from that thread's real pthread stack. This is required by the vendor CRT's `__chkstk` path; a fixed dummy stack range caused a reproducible SIGSEGV before `VerifyFeatureSet` could run.
+The driver does not reinterpret the vendor template as an image or NBIS minutiae record.
 
-An offline replay using real 64x80 FTE4800 BMP captures produced:
+## Linux state machine
 
-- engine open: success
-- geometry: 64x80
-- five enrollment samples accepted
-- committed opaque template: 458,800 bytes
-- same-finger verification: 5/5 matches
+Linux handles:
 
-These measurements validate the vendor-engine integration path; they do not by themselves establish production FAR/FRR.
+    real finger-down detection
+    image-quality gate
+    vendor-engine acceptance
+    enrollment update
+    confirmed finger release
+    cancellation
+    final result reporting
 
-After deployment to the ZERO BOOK 13, live `fprintd-enroll` completed a full 12-sample enrollment and live `fprintd-verify` completed successfully using the resulting `FTV1` record. The production path therefore has now been exercised end-to-end on the physical FT9368, including sensor capture, vendor enrollment, persistent template storage, vendor verification, and libfprint/fprintd integration.
+The vendor engine handles biometric feature extraction, template construction and verification.
 
-The vendor DLL is installed to `/usr/local/lib/fte4800/ftWbioEngineAdapter.dll`. A system fprintd service should not use `~/.local/bin` for this library: the service runs outside the login user directory permissions, and bin is intended for executable programs rather than loadable library/data files.
+## Native PE and WinBio bridge
 
-The old local NCC matcher research remains in `tools/matcher_ref.py`, `tools/matcher_lab.py`, and related evaluation tooling as historical research only. It is no longer part of the active driver or template format.
+The vendor DLL runs directly on Linux without Wine.
+
+The bridge provides the Windows runtime surface required by the DLL and establishes the per-thread Windows TEB.
+
+StackBase and StackLimit are refreshed from the active Linux pthread because the vendor CRT can enter __chkstk.
+
+## Validation
+
+Offline replay of real FTE4800 captures demonstrated vendor-engine initialization, enrollment-sample acceptance, template creation and same-finger verification.
+
+Live validation demonstrated fresh multi-sample enrollment, FTV1 persistence and subsequent successful fprintd verification on the physical ZERO BOOK 13.
+
+These establish end-to-end functional integration.
+
+They do not establish production FAR/FRR or security certification.
+
+## Security and efficiency interpretation
+
+Using the native FocalTech engine is preferable to the old experimental matcher because it preserves vendor enrollment and verification behavior.
+
+It does not prove 100 percent security or 100 percent efficiency.
+
+The DLL is proprietary and not independently auditable. The compatibility layer adds security-sensitive native code. The biometric evaluation dataset is not large enough for production characterization.
+
+Correct statement:
+
+    The production path uses FocalTech's native biometric engine and has been validated end-to-end on the target hardware.
+
+## Historical matcher
+
+The former matcher tooling remains research-only:
+
+    tools/matcher_ref.py
+    tools/matcher_lab.py
+    tools/offline-biometric-eval.py

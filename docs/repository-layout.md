@@ -1,20 +1,65 @@
-# Repository layout
+# Repository Layout
 
-The public tree contains source, reproducible tooling, documentation, tests, and installation helpers. Machine-specific and potentially non-redistributable research artifacts are preserved locally under the root archive and are ignored by Git.
+    focal_spi.c                         Linux SPI transport
+    protocol/                           FTE4800 protocol definitions
+    libfprint/drivers/                  canonical native FTE4800 sources
+    libfprint-patches/                  downstream libfprint patch
+    packaging/arch/                     complete local Arch package
+    docs/                               hardware and integration documentation
+    install/                            development and recovery helpers
+    tests/                              tests
+    tools/                              diagnostics and historical matcher research
+    LICENSES/                           license texts
+    archive/                            local research and sensitive artifacts
 
-```
-focal_spi.c                         Kernel SPI transport driver
-protocol/                           Shared FTE4800 protocol definitions
-libfprint-patches/                  Downstream libfprint patch
-docs/                               Protocol, hardware, and integration documentation
-install/                            Build, install, and recovery helpers
-tests/                              Source and integration tests
-tools/                              Hardware diagnostics and matcher research tools
-LICENSES/                           License texts referenced by the repository
-.github/workflows/                  Continuous integration
-archive/                            Local-only research and machine artifacts
-```
+## Package
 
-The archive currently preserves ACPI dumps, captured biometric datasets, extracted Windows firmware, legacy driver references, raw reverse-engineering dumps, internal agent material, and generated build artifacts.
+packaging/arch/PKGBUILD is the production packaging entry point.
 
-The public source tree does not depend on those archived files for a normal build or installation.
+It installs:
+
+    DKMS source
+    native FTE4800 libfprint
+    vendor-engine bridge
+    FocalTech vendor DLL
+    udev rule
+    fprintd systemd drop-in
+
+The stock Arch fprintd package is used.
+
+## Installed paths
+
+    /usr/src/focaltech-fte4800-1.0.3/
+    /usr/lib/focaltech-fte4800/lib/
+    /usr/lib/focaltech-fte4800/ftWbioEngineAdapter.dll
+    /usr/lib/systemd/system/fprintd.service.d/00-fte4800.conf
+    /usr/lib/udev/rules.d/70-focal-spi.rules
+
+## Vendor runtime
+
+The PKGBUILD consumes the preserved local vendor DLL from:
+
+    archive/research/windows-package/package/ftWbioEngineAdapter.dll
+
+It is installed by the package under /usr/lib/focaltech-fte4800.
+
+## Source of truth
+
+Active native libfprint:
+
+    libfprint/drivers/fte4800.c
+    libfprint/drivers/fte4800.h
+    libfprint/drivers/vendor-engine.c
+    libfprint/drivers/vendor-engine.h
+
+Packaging:
+
+    packaging/arch/PKGBUILD
+    packaging/arch/focaltech-fte4800.install
+
+Hardware protocol:
+
+    protocol/fte4800_protocol.h
+    docs/ft9368-*.md
+
+Generated package/build trees are ignored.
