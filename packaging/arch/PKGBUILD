@@ -1,0 +1,32 @@
+# Maintainer: Bharath Yadav
+# Local Arch package for the FocalTech FTE4800 / FT9368 SPI transport driver.
+#
+# This package intentionally packages only the reusable DKMS transport layer.
+# The native libfprint vendor-engine integration and proprietary FocalTech DLL
+# remain managed by install/install-native-fte4800.sh.
+
+pkgname=focaltech-spi-dkms
+pkgver=1.0.3
+pkgrel=1
+pkgdesc='FocalTech FTE4800/FT9368 SPI fingerprint transport driver (DKMS)'
+arch=('x86_64')
+license=('GPL-2.0-only')
+depends=('dkms')
+optdepends=('linux-headers: build the module for the stock Arch kernel'
+            'fprintd: fingerprint daemon using the FTE4800 libfprint driver')
+install="$pkgname.install"
+
+# This is a local-source PKGBUILD for the canonical driver repository.
+# For a distributable/AUR package, replace _source_root with a git/archive source.
+_source_root="$startdir/../.."
+
+package() {
+  local src="$pkgdir/usr/src/$pkgname-$pkgver"
+
+  install -d "$src/protocol"
+  install -m 0644     "$_source_root/focal_spi.c"     "$_source_root/Makefile"     "$_source_root/dkms.conf"     "$src/"
+
+  install -m 0644 "$_source_root"/protocol/*.h "$src/protocol/"
+
+  install -Dm0644     "$_source_root/install/70-focal-spi.rules"     "$pkgdir/usr/lib/udev/rules.d/70-focal-spi.rules"
+}

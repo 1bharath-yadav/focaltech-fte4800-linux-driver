@@ -34,3 +34,6 @@ tools/vendor-emulator/*.out
 # Vendor engine test artifacts
 tools/vendor-engine-test
 /tmp/fte4800-vendor-template.bin
+
+# Local Arch package artifacts
+packaging/arch/*.pkg.tar.*
