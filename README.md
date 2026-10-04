@@ -177,19 +177,15 @@ Do not rebuild or patch fprintd unless an independently reproduced fprintd defec
     sudo udevadm control --reload-rules
     sudo udevadm trigger
 
-## Legacy installers
+## Development tooling
 
-The install scripts remain useful for development and recovery.
+The production installation path is the Arch package under `packaging/arch/`.
+The old manual installers and historical custom fprintd deployment scripts have
+been removed from the active tree. Research snapshots remain under `archive/`
+for provenance and reference only.
 
-        kernel transport only
-
-        isolated development libfprint build
-
-        former manual native deployment
-
-        historical custom fprintd build; not production
-
-Use the package for normal installation.
+Use the package for installation and the reusable tools/tests for development,
+diagnostics, and validation.
 
 ## Validation
 
@@ -211,3 +207,9 @@ See docs/omarchy-integration.md.
 The vendor engine improves algorithmic compatibility and removes the experimental matcher from the production path. It is not a security certification.
 
 See SECURITY.md.
+
+## Support
+
+If this project is useful to you, you can support its development:
+
+<a href="https://buymeacoffee.com/bharath44" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me a Coffee" style="height: 60px !important;width: 217px !important;"></a>
