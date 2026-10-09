@@ -22,6 +22,8 @@ INFO_BYTES = 32
 INFO_CHIP_OFFSET = 0x13
 CHIP_ID = 0x9368
 HEADER_SIZE = 5
+WAKE_REQUEST = bytes((0xFF, 0x00, 0x00, 0x00))
+WAKE_SETTLE_SECONDS = 0.005
 
 libc = ctypes.CDLL(None, use_errno=True)
 libc.read.argtypes = [ctypes.c_int, ctypes.c_void_p, ctypes.c_size_t]
@@ -40,6 +42,23 @@ def compat_read_request() -> bytes:
     struct.pack_into("<BHH", request, 0, SPI_READ_WRITE, len(READ_INFO_REQUEST), INFO_BYTES)
     request[HEADER_SIZE:HEADER_SIZE + len(READ_INFO_REQUEST)] = READ_INFO_REQUEST
     return bytes(request)
+
+
+def compat_write_request(payload: bytes) -> bytes:
+    """Build one write request for the kernel misc-device ABI."""
+    request = bytearray(HEADER_SIZE + len(payload))
+    struct.pack_into("<BHH", request, 0, SPI_READ_WRITE, len(payload), 0)
+    request[HEADER_SIZE:] = payload
+    return bytes(request)
+
+
+def wake_sensor(fd: int) -> None:
+    """Send the vendor-documented wake pattern; this is a diagnostic probe."""
+    request = compat_write_request(WAKE_REQUEST)
+    written = os.write(fd, request)
+    if written != len(request):
+        raise RuntimeError(f"wake write returned {written} bytes, expected {len(request)}")
+    time.sleep(WAKE_SETTLE_SECONDS)
 
 
 def read_info_single(fd: int) -> bytes:
@@ -118,6 +137,11 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--device", default=DEV)
     parser.add_argument("--reset", action="store_true")
+    parser.add_argument(
+        "--wake-probe",
+        action="store_true",
+        help="if identity fails, send the documented FF 00 00 00 wake pattern and retry",
+    )
     parser.add_argument("--wait-irq", action="store_true")
     parser.add_argument("--timeout", type=float, default=15.0)
     parser.add_argument("--quiet-seconds", type=float, default=3.0)
@@ -131,14 +155,45 @@ def main() -> int:
 
         info = read_info(fd)
         parsed = parse_info(info)
+        print("identity_phase: without explicit vendor wake")
         print(f"info: {info.hex(' ')}")
         print(f"chip_id: 0x{parsed['chip_id']:04X}")
         print(f"firmware_raw: {parsed['firmware_raw']}")
-        print(f"reported_geometry: {parsed['width']}x{parsed['height']}")
+        if parsed["chip_id"] == CHIP_ID:
+            print(f"reported_geometry: {parsed['width']}x{parsed['height']}")
+        else:
+            print(
+                f"reported_geometry: UNTRUSTED ({parsed['width']}x{parsed['height']}; "
+                "identity response is invalid)",
+                flush=True,
+            )
+
+        if parsed["chip_id"] != CHIP_ID and args.wake_probe:
+            print(
+                "baseline identity failed; sending documented wake pattern "
+                f"{WAKE_REQUEST.hex(' ').upper()} and retrying",
+                flush=True,
+            )
+            wake_sensor(fd)
+            info = read_info(fd)
+            parsed = parse_info(info)
+            print("identity_phase: after explicit vendor wake")
+            print(f"info: {info.hex(' ')}")
+            print(f"chip_id: 0x{parsed['chip_id']:04X}")
+            print(f"firmware_raw: {parsed['firmware_raw']}")
+            if parsed["chip_id"] == CHIP_ID:
+                print(f"reported_geometry: {parsed['width']}x{parsed['height']}")
+            else:
+                print(
+                    f"reported_geometry: UNTRUSTED ({parsed['width']}x{parsed['height']}; "
+                    "identity response is invalid)",
+                    flush=True,
+                )
 
         if parsed["chip_id"] != CHIP_ID:
             print(
-                f"RESULT: FAIL (unexpected physical chip ID 0x{parsed['chip_id']:04X})",
+                f"RESULT: FAIL (no valid physical FT9368 identity; last chip ID "
+                f"0x{parsed['chip_id']:04X})",
                 file=sys.stderr,
             )
             return 1

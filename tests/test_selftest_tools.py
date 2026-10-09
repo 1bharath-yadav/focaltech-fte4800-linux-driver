@@ -8,7 +8,9 @@ from tools.fte4800_selftest import (
     INFO_CHIP_OFFSET,
     READ_REQUEST,
     SPI_READ_WRITE,
+    WAKE_REQUEST,
     compat_read_request,
+    compat_write_request,
     parse_info,
 )
 
@@ -23,6 +25,13 @@ class SelftestToolTests(unittest.TestCase):
         )
         self.assertEqual(request[5:5 + len(READ_REQUEST)], READ_REQUEST)
         self.assertEqual(request[5 + len(READ_REQUEST):], bytes(INFO_BYTES - 5 - len(READ_REQUEST)))
+
+    def test_vendor_wake_probe_write_uses_exact_compat_abi(self):
+        request = compat_write_request(WAKE_REQUEST)
+        self.assertEqual(
+            request,
+            struct.pack("<BHH", SPI_READ_WRITE, 4, 0) + bytes.fromhex("ff 00 00 00"),
+        )
 
     def test_parse_info_uses_verified_chip_offset(self):
         info = bytearray(INFO_BYTES)
