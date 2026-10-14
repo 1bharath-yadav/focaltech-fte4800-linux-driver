@@ -1,6 +1,6 @@
 # FocalTech FTE4800 / FT9368 Linux Driver
 
-Complete Linux support for the FocalTech FTE4800 / FT9368 SPI fingerprint reader in the Infinix ZERO BOOK 13.
+Complete Linux support for the FocalTech FTE4800 / FT9368 SPI fingerprint reader, validated on the Infinix ZERO BOOK 13 and the TECNO MEGABOOK S1.
 
 ## Current state
 
@@ -87,7 +87,7 @@ Do not turn that into a claim of zero FAR, zero FRR or security certification.
 
     ACPI FTE4800:00
     ACPI device FTE4800
-    controller path _SB.PC00.SPI2.FPNT
+    controller path _SB.PC00.SPI2.FPNT (ZERO BOOK 13) / _SB.PC00.SPI0.FGPT (MEGABOOK S1)
     sensor FocalTech FT9368
     image 64x80
     pixels 8-bit grayscale

@@ -16,6 +16,7 @@
 #include <linux/miscdevice.h>
 #include <linux/module.h>
 #include <linux/mutex.h>
+#include <linux/pm.h>
 #include <linux/poll.h>
 #include <linux/slab.h>
 #include <linux/spi/spi.h>
@@ -122,7 +123,14 @@ static int focal_hw_reset(struct focal_fp_data *data)
     gpiod_set_value_cansleep(data->reset_gpio, 0);   /* assert reset LOW */
     msleep(10);
     gpiod_set_value_cansleep(data->reset_gpio, 1);   /* release HIGH */
-    msleep(350);                                      /* FT9368 auto-boots from flash in ~300ms (measured) */
+    /*
+     * FT9368 auto-boots from flash. The Infinix reference measured ~300ms,
+     * but on the TECNO MEGABOOK S1 the sensor reaches application mode at
+     * ~400ms after release (observed: 0x02 ROM state at 350ms, 0x9368 app
+     * mode at 400ms). Wait a bit longer so the first transfer after reset
+     * lands in application mode.
+     */
+    msleep(450);
     return 0;
 }
 
@@ -607,6 +615,47 @@ static void focal_remove(struct spi_device *spi)
     mutex_unlock(&focal_ctl_lock);
 }
 
+static int focal_suspend(struct device *dev)
+{
+    struct spi_device *spi = to_spi_device(dev);
+    struct focal_fp_data *data = spi_get_drvdata(spi);
+
+    if (!data)
+        return 0;
+
+    /*
+     * Hold the sensor in reset across suspend. focal_resume() releases it
+     * and waits for the firmware to re-boot, so the analog front-end and
+     * AGC come back clean instead of in a degraded post-s2idle state.
+     */
+    gpiod_set_value_cansleep(data->reset_gpio, 0);
+    return 0;
+}
+
+static int focal_resume(struct device *dev)
+{
+    struct spi_device *spi = to_spi_device(dev);
+    struct focal_fp_data *data = spi_get_drvdata(spi);
+
+    if (!data)
+        return 0;
+
+    /* The Intel LPSS SPI controller can lose its per-device setup across
+     * s2idle; re-apply mode/speed/bits before the first transfer. */
+    spi->mode = FTE4800_SPI_MODE;
+    spi->bits_per_word = 8;
+    spi->max_speed_hz = FTE4800_SPI_HZ;
+    if (spi_setup(spi))
+        dev_warn(dev, TAG "failed to restore SPI setup on resume\n");
+
+    focal_hw_reset(data);
+    return 0;
+}
+
+static const struct dev_pm_ops focal_pm_ops = {
+    SET_SYSTEM_SLEEP_PM_OPS(focal_suspend, focal_resume)
+};
+
 static const struct acpi_device_id focal_acpi_ids[] = {
     { "FTE4800", 0 },
     { }
@@ -617,6 +666,7 @@ static struct spi_driver focal_driver = {
     .driver = {
         .name = "focal-fte4800",
         .acpi_match_table = ACPI_PTR(focal_acpi_ids),
+        .pm = &focal_pm_ops,
     },
     .probe = focal_probe,
     .remove = focal_remove,
